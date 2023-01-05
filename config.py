@@ -25,7 +25,7 @@ DEFAULT_WISH = '5 5 5 5 5 5 5'
 DEFULT_SECRET = ['ASSBOW', 'DAGGER', 'WAND', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE',
                  'WOOD', 'CAPE', 'TIARA', 'RIBBON', 'RING', 'DEVOUR']
 
-# 装备默认属性，觉得欧狗多就设置的高些
+# 装备默认属性，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复
 DEFAULT_GEAR = {
     'STAFF': {'_PATK': 4000, '_MATK': 4000, 'MTH': 29, 'LCH': 30},
@@ -40,7 +40,7 @@ DEFAULT_GEAR = {
     'BRACELET': {'MATK': 85, 'MTH': 23},
     'VULTURE': {'LCH': 80, '_SPD': 800},
     'CLOAK': {'_SLDR': 20000},
-    'THORN': {'RFL': 70},
+    'THORN': {'RFL': 70},  # 默认带神秘
     'WOOD': {'_HPR': 8000, '_PDEC': 1500, '_MDEC': 1500},
     'CAPE': {'_MDEC': 2000},
     'SCARF': {'_PDEC': 800, '_MDEC': 800, '_HPR': 1500},
@@ -50,7 +50,7 @@ DEFAULT_GEAR = {
     'DEVOUR': {'_MTH': 200, '_SKL': 300},
 }
 
-#默认成长值，目前只影响舞
+# 默认成长值，目前只影响舞
 DEFAULT_G = 50000
 
 # 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解
@@ -192,4 +192,3 @@ INT_MU_MATK = 12
 DIAN_MU_DEF = 1.3
 # 速度葡萄上限
 SPD_MU_MAX = 1.1
-
