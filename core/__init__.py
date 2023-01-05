@@ -49,7 +49,7 @@ def start():
         result_list.append(build_seven_line(attribute_map))
         result_list.append(build_eight_line(attribute_map))
         # 构造9行
-        result_list.append(build_last_line(talent_list))
+        result_list.append(build_last_line(talent_list, attribute_map['gear']))
         # 构造map
         result_str = '\n'.join(result_list) + '\n\n'
         result_map[enemy_name] = result_str
@@ -113,8 +113,12 @@ def build_four_line(attribute_map):
 
 
 # 构造第9行
-def build_last_line(talent_list):
+def build_last_line(talent_list, gear_list):
     result_list = []
+    if gear_list:
+        for gear in gear_list:
+            if gear in DEFULT_SECRET:
+                result_list.append(gear)
     if talent_list:
         for talent in talent_list:
             if talent in TALENT_CONFIG:

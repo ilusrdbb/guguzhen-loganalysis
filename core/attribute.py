@@ -90,6 +90,7 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
         'skl': attribute_skl,
         'rfl': attribute_rfl,
         'lch': attribute_lch,
+        'gear': gear_list,
     }
 
 
