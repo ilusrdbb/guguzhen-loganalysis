@@ -9,8 +9,11 @@ BLACK_LIST = []
 # 最低等级，小于这个等级的跳过不记录
 MIN_LEVEL = 750
 
+# 自身等级，用于计算等级压制/等级挑战
+MY_LEVEL = 850
+
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
-LAST_DATE = '2022-12-01'
+LAST_DATE = '2022-12-23'
 
 # 默认护符
 DEFAULT_AMULET = 'REC 10 SKL 10 CRT 10 PDEF 10 MDEF 10'

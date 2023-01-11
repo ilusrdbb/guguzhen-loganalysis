@@ -170,6 +170,8 @@ def _get_mth(gear_list, talent_list, attribute_mth, cal_int, enemy_level):
         _mth = int(_mth * BI_MU_TH)
     if 'HONG' in talent_list and attribute_mth > HONG_TH_LIMIT:
         _mth = int(_mth + (enemy_level / HONG_DIV_TH))
+    if 'TIAO' in talent_list and enemy_level < MY_LEVEL:
+        _mth = _mth + (MY_LEVEL - enemy_level) * 2
     return _mth
 
 
@@ -181,6 +183,8 @@ def _get_pth(gear_list, talent_list, attribute_pth, cal_str, enemy_level):
         _pth = int(_pth * MO_MU_TH)
     if 'HONG' in talent_list and attribute_pth > HONG_TH_LIMIT:
         _pth = int(_pth + (enemy_level / HONG_DIV_TH))
+    if 'TIAO' in talent_list and enemy_level < MY_LEVEL:
+        _pth = _pth + (MY_LEVEL - enemy_level) * 2
     return _pth
 
 
