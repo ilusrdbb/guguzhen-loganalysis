@@ -129,7 +129,7 @@ def build_last_line(talent_list, gear_list):
 # 构造第一行
 def build_first_line(enemy_card, enemy_name):
     if enemy_card == 'WU':
-        return enemy_card + '_' + enemy_name + 'G=' + str(DEFAULT_G) + ' STAT'
+        return enemy_card + '_' + enemy_name + ' G=' + str(DEFAULT_G) + ' STAT'
     return enemy_card + '_' + enemy_name + ' STAT'
 
 
