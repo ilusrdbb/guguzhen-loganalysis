@@ -59,6 +59,7 @@ def start():
 
 # 写入
 def write_data(path, result_map):
+    print('输出对手数量：%s' % len(result_map))
     for key in result_map:
         str = result_map[key]
         with open(path, 'a', encoding='utf-8') as f:
