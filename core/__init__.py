@@ -29,7 +29,7 @@ def start():
         if enemy_level < MIN_LEVEL:
             continue
         # 日期跳过
-        if LAST_DATE and datetime.datetime.strptime(LAST_DATE, "%Y-%m-%d") < battle_day:
+        if LAST_DATE and datetime.datetime.strptime(LAST_DATE, "%Y-%m-%d") > battle_day:
             continue
         result_list = []
         # 构造第一行
