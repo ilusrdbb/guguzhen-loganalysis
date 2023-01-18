@@ -5,6 +5,7 @@
 import datetime
 import json
 import os
+import time
 
 from config import *
 from core import attribute, talent
@@ -19,7 +20,7 @@ def start():
     for data in json_data:
         enemy_name = data['enemyname']
         enemy_level = int(data['charlevel'])
-        battle_day = datetime.datetime.strptime(data['time'].split('T')[0], "%Y-%m-%d")
+        battle_day = datetime.datetime.strptime(time.strftime("%Y-%m-%d", time.localtime(float(float(data['time'])/1000))), "%Y-%m-%d")
         enemy_card = CARD_MAP[data['char']]
         battle_log_str = data['log']
         # 黑名单跳过
@@ -148,4 +149,4 @@ def build_third_line():
 def load_data():
     with open(INPUT_PATH, encoding='utf-8') as f:
         read = f.read()
-    return json.loads(read)
+    return json.loads(read)['data']['data'][0]['rows']

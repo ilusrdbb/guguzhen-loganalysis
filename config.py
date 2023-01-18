@@ -13,7 +13,7 @@ MIN_LEVEL = 700
 MY_LEVEL = 850
 
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
-LAST_DATE = '2022-12-30'
+LAST_DATE = '2023-01-01'
 
 # 默认护符
 DEFAULT_AMULET = 'REC 10 SKL 10 CRT 10 PDEF 10 MDEF 10'
@@ -151,7 +151,7 @@ MATCH_CONFIG = {
 }
 
 # 输入文件路径
-INPUT_PATH = './source/1.txt'
+INPUT_PATH = './source/韭菜收割机历史数据.ggzjson'
 
 # 输出文件路径
 OUTPUT_PATH = './source/pc.txt'
