@@ -15,8 +15,8 @@ MY_LEVEL = 850
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 LAST_DATE = '2023-01-01'
 
-# 默认护符
-DEFAULT_AMULET = 'REC 10 SKL 10 CRT 10 PDEF 10 MDEF 10'
+# 默认护符 默认带XUE才有REC 10
+DEFAULT_AMULET = 'SKL 10 CRT 10 PDEF 10 MDEF 10'
 
 # 速度阈值，大于此速度的卷逼最终速度再乘1.1的速度葡萄
 SPEED_ADD = 5000

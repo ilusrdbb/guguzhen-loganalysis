@@ -37,10 +37,10 @@ def start():
         result_list.append(build_first_line(enemy_card, enemy_name))
         # 构造第二行
         result_list.append(build_second_line())
-        # 构造第三行
-        result_list.append(build_third_line())
         # 构造天赋list
         talent_list = talent.get_talent_list(battle_log_str)
+        # 构造第三行
+        result_list.append(build_third_line(talent_list))
         # 构造属性map
         attribute_map = attribute.get_attribute_map(battle_log_str, talent_list, enemy_level)
         # 构造4 5 6 7 8行
@@ -141,7 +141,9 @@ def build_second_line():
 
 
 # 构造第三行
-def build_third_line():
+def build_third_line(talent_list):
+    if 'XUE' in talent_list:
+        return 'AMULET REC 10 ' + DEFAULT_AMULET + ' ENDAMULET'
     return 'AMULET ' + DEFAULT_AMULET + ' ENDAMULET'
 
 
