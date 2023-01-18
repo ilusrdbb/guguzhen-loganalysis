@@ -12,8 +12,8 @@ from core import attribute, talent
 
 
 def start():
-    # 解析json
-    json_data = load_data()
+    # 解析json，并按照时间排序
+    json_data = sorted(load_data(), key=lambda x: (x['time']))
     # 删除输出文件
     delFile(OUTPUT_PATH)
     result_map = {}
