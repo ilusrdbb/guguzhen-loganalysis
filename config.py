@@ -6,8 +6,8 @@
 # 黑名单，不记录这个人，优先级最高
 BLACK_LIST = []
 
-# 最低等级，小于这个等级的跳过不记录
-MIN_LEVEL = 700
+# 最低等级，小于这个等级的跳过不记录，如果为空则全量抓取
+MIN_LEVEL = 600
 
 # 自身等级，用于计算等级压制/等级挑战
 MY_LEVEL = 850
@@ -28,29 +28,29 @@ DEFAULT_WISH = '5 5 5 5 5 5 5'
 DEFULT_SECRET = ['ASSBOW', 'DAGGER', 'WAND', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE',
                  'WOOD', 'CAPE', 'TIARA', 'RIBBON', 'RING', 'DEVOUR']
 
-# 装备默认属性，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
+# 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复
 DEFAULT_GEAR = {
-    'STAFF': {'_PATK': 4000, '_MATK': 4000, 'MTH': 29, 'LCH': 30},
-    'BLADE': {'PATK': 80, 'PTH': 36, 'CTH': 36, 'SPD': 115},
-    'ASSBOW': {'PATK': 100, 'PTH': 36, 'CTH': 36, '_PTH': 300},
-    'DAGGER': {'PATK': 75, 'MATK': 75, '_SPD': 1500, 'SPD': 120},
-    'WAND': {'MATK': 210, 'PTH': 21},
-    'SHIELD': {'LCH': 30, 'RFL': 38},  # 默认加反伤樱桃的10反
-    'CLAYMORE': {'_PATK': 10000, 'PATK': 110, 'CTH': 22},
-    'SPEAR': {'PATK': 110, 'PTH': 30, '_MTH': 850, 'LCH': 30},
-    'GLOVES': {'_PATK': 4000, '_MATK': 4000, '_SPD': 850},
-    'BRACELET': {'MATK': 85, 'MTH': 23},
-    'VULTURE': {'LCH': 80, '_SPD': 800},
-    'CLOAK': {'_SLDR': 20000},
-    'THORN': {'RFL': 70},  # 默认带神秘
-    'WOOD': {'_HPR': 8000, '_PDEC': 1500, '_MDEC': 1500},
-    'CAPE': {'_MDEC': 2000},
-    'SCARF': {'_PDEC': 800, '_MDEC': 800, '_HPR': 1500},
-    'TIARA': {'_PDEC': 800},
-    'RIBBON': {'_HPR': 1500, 'SLDR': 12},
-    'RING': {'_PTH': 200, '_MTH': 200, '_CRT': 300, '_SKL': 300},
-    'DEVOUR': {'_MTH': 200, '_SKL': 300},
+    'STAFF': {'_PATK': 130, '_MATK': 130, 'MTH': 150, 'LCH': 100},
+    'BLADE': {'PATK': 100, 'PTH': 150, 'CTH': 150, 'SPD': 140},
+    'ASSBOW': {'PATK': 100, 'PTH': 150, 'CTH': 150, '_PTH': 110},
+    'DAGGER': {'PATK': 100, 'MATK': 110, '_SPD': 150, 'SPD': 150},
+    'WAND': {'MATK': 360, 'PTH': 150},
+    'SHIELD': {'LCH': 100, 'RFL': 150},  # 默认加反伤樱桃的10反
+    'CLAYMORE': {'_PATK': 210, 'PATK': 150, 'CTH': 150},
+    'SPEAR': {'PATK': 110, 'PTH': 150, '_MTH': 150, 'LCH': 100},
+    'GLOVES': {'_PATK': 130, '_MATK': 130, '_SPD': 150},
+    'BRACELET': {'MATK': 150, 'MTH': 150},
+    'VULTURE': {'LCH': 360, '_SPD': 150},
+    'CLOAK': {'_SLDR': 150},
+    'THORN': {'RFL': 150},  # 默认带神秘
+    'WOOD': {'_HPR': 120, '_PDEC': 120, '_MDEC': 120},
+    'CAPE': {'_MDEC': 150},
+    'SCARF': {'_PDEC': 150, '_MDEC': 150, '_HPR': 150},
+    'TIARA': {'_PDEC': 150},
+    'RIBBON': {'_HPR': 150, 'SLDR': 150},
+    'RING': {'_PTH': 120, '_MTH': 120, '_CRT': 150, '_SKL': 150},
+    'DEVOUR': {'_MTH': 150, '_SKL': 150},
 }
 
 # 默认成长值，目前只影响舞
@@ -136,6 +136,7 @@ XPATH_CONFIG = {
     'DATA': '//div[contains(@class,\'alert-info\')]/div//div[contains(@class,\'fyg_tl\')]//text()',
     'TALENT': '//div[contains(@class,\'alert-info\')]/div//div[contains(@class,\'fyg_tr\')]//text()',
     'GEAR': '//button[contains(@class,\'fyg_colpzbg\')]/@data-original-title',
+    'LEVEL': '//button[contains(@class,\'fyg_colpzbg\')]//text()',
 }
 
 # 正则设置

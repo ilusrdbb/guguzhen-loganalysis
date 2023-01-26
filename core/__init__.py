@@ -27,7 +27,7 @@ def start():
         if BLACK_LIST and enemy_name in BLACK_LIST:
             continue
         # 等级跳过
-        if enemy_level < MIN_LEVEL:
+        if MIN_LEVEL and enemy_level < MIN_LEVEL:
             continue
         # 日期跳过
         if LAST_DATE and datetime.datetime.strptime(LAST_DATE, "%Y-%m-%d") > battle_day:
