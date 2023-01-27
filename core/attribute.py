@@ -106,7 +106,7 @@ def get_lch(_gear_list, talent_list):
     return lch
 
 
-# 获取属性 技能
+# 获取属性 反伤
 def get_rfl(_gear_list, talent_list):
     rfl = gear.get_sum_point(_gear_list, 'RFL')
     if 'CI' in talent_list:
@@ -170,7 +170,7 @@ def get_pdec(_gear_list, talent_list, enemy_level):
 def _get_mth(_gear_list, talent_list, attribute_mth, cal_int, enemy_level):
     _mth = gear.get_sum_point(_gear_list, '_MTH')
     _mth = int(_mth + cal_int * INT_MU_MTH)
-    if 'BI' in talent_list:
+    if 'MO' in talent_list:
         _mth = int(_mth * BI_MU_TH)
     if 'HONG' in talent_list and attribute_mth > HONG_TH_LIMIT:
         _mth = int(_mth + (enemy_level / HONG_DIV_TH))
