@@ -18,7 +18,7 @@ MY_LEVEL = 850
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 LAST_DATE = '2023-01-01'
 
-# 默认护符 默认带XUE才有REC 10
+# 默认护符 默认带XUE绑定REC 10
 DEFAULT_AMULET = 'SKL 10 CRT 10 PDEF 10 MDEF 10'
 
 # 速度阈值，大于此速度的卷逼最终速度再乘1.1的速度葡萄
@@ -27,9 +27,11 @@ SPEED_ADD = 5000
 # 默认许愿池
 DEFAULT_WISH = '5 5 5 5 5 5 5'
 
-# 默认携带神秘的装备
-DEFULT_SECRET = ['ASSBOW', 'DAGGER', 'WAND', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE',
-                 'WOOD', 'CAPE', 'TIARA', 'RIBBON', 'RING', 'DEVOUR']
+# 默认携带神秘的装备，角色如携带专属默认神秘不需要额外填写
+DEFULT_SECRET = ['ASSBOW', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE', 'WOOD', 'CAPE', 'THORN']
+
+# 剑盾是否需要加上10反伤樱桃
+IS_ADD_RFL = True
 
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复
@@ -39,14 +41,14 @@ DEFAULT_GEAR = {
     'ASSBOW': {'PATK': 100, 'PTH': 150, 'CTH': 150, '_PTH': 110},
     'DAGGER': {'PATK': 100, 'MATK': 110, '_SPD': 150, 'SPD': 150},
     'WAND': {'MATK': 360, 'PTH': 150},
-    'SHIELD': {'LCH': 100, 'RFL': 150},  # 默认加反伤樱桃的10反
+    'SHIELD': {'LCH': 100, 'RFL': 150},
     'CLAYMORE': {'_PATK': 210, 'PATK': 150, 'CTH': 150},
     'SPEAR': {'PATK': 110, 'PTH': 150, '_MTH': 150, 'LCH': 100},
     'GLOVES': {'_PATK': 130, '_MATK': 130, '_SPD': 150},
     'BRACELET': {'MATK': 150, 'MTH': 150},
     'VULTURE': {'LCH': 360, '_SPD': 150},
     'CLOAK': {'_SLDR': 150},
-    'THORN': {'RFL': 150},  # 默认带神秘
+    'THORN': {'RFL': 150},
     'WOOD': {'_HPR': 120, '_PDEC': 120, '_MDEC': 120},
     'CAPE': {'_MDEC': 150},
     'SCARF': {'_PDEC': 150, '_MDEC': 150, '_HPR': 150},
@@ -199,3 +201,7 @@ INT_MU_MATK = 12
 DIAN_MU_DEF = 1.3
 # 速度葡萄上限
 SPD_MU_MAX = 1.1
+# 重甲神秘
+THRON_ADD_RFL = 30
+# 反伤樱桃上限
+MAX_ADD_RFL = 10

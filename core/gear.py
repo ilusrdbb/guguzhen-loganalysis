@@ -172,9 +172,11 @@ def get_wood(gear, gear_level):
 def get_thorn(gear, gear_level):
     gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
     for key in gear_percent:
-        # 默认带神秘
         if key == 'RFL':
-            gear_percent[key] = int((gear_level / 15 + 10) * (gear_percent[key] / 100)) + 30
+            gear_percent[key] = int((gear_level / 15 + 10) * (gear_percent[key] / 100))
+            # 神秘
+            if gear in DEFULT_SECRET:
+                gear_percent[key] = gear_percent[key] + THRON_ADD_RFL
     return gear_percent
 
 
@@ -250,8 +252,10 @@ def get_shield(gear, gear_level):
         if key == 'LCH':
             gear_percent[key] = int((gear_level / 5 + 10) * (gear_percent[key] / 100))
         elif key == 'RFL':
-            # 默认加反伤樱桃的10反
-            gear_percent[key] = int(gear_level / 15 * (gear_percent[key] / 100)) + 10
+            gear_percent[key] = int(gear_level / 15 * (gear_percent[key] / 100))
+            # 反伤樱桃的10反
+            if IS_ADD_RFL:
+                gear_percent[key] = gear_percent[key] + MAX_ADD_RFL
     return gear_percent
 
 

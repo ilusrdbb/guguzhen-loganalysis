@@ -56,7 +56,7 @@ def start():
         result_list.append(build_seven_line(attribute_map))
         result_list.append(build_eight_line(attribute_map))
         # 构造9行
-        result_list.append(build_last_line(talent_list, attribute_map['gear']))
+        result_list.append(build_last_line(talent_list, attribute_map['gear'], enemy_card))
         # 构造map
         result_str = '\n'.join(result_list) + '\n\n'
         result_map[enemy_name] = result_str
@@ -121,11 +121,25 @@ def build_four_line(attribute_map):
 
 
 # 构造第9行
-def build_last_line(talent_list, gear_list):
+def build_last_line(talent_list, gear_list, enemy_card):
     result_list = []
     if gear_list:
         for gear in gear_list:
-            if gear in DEFULT_SECRET:
+            # 专属
+            if gear == 'DAGGER' and enemy_card == 'AI':
+                result_list.append(gear)
+            elif gear == 'WAND' and enemy_card == 'MO':
+                result_list.append(gear)
+            elif gear == 'RIBBON' and enemy_card == 'LIN':
+                result_list.append(gear)
+            elif gear == 'TIARA' and enemy_card == 'MENG':
+                result_list.append(gear)
+            elif gear == 'RING' and enemy_card == 'WU':
+                result_list.append(gear)
+            elif gear == 'DEVOUR' and enemy_card == 'MING':
+                result_list.append(gear)
+            # 神秘配置
+            if gear in DEFULT_SECRET and gear != 'THORN':
                 result_list.append(gear)
     if talent_list:
         for talent in talent_list:
