@@ -125,8 +125,11 @@ def build_last_line(talent_list, gear_list, enemy_card):
     result_list = []
     if gear_list:
         for gear in gear_list:
+            # 神秘配置
+            if gear in DEFULT_SECRET and gear != 'THORN':
+                result_list.append(gear)
             # 专属
-            if gear == 'DAGGER' and enemy_card == 'AI':
+            elif gear == 'DAGGER' and enemy_card == 'AI':
                 result_list.append(gear)
             elif gear == 'WAND' and enemy_card == 'MO':
                 result_list.append(gear)
@@ -137,9 +140,6 @@ def build_last_line(talent_list, gear_list, enemy_card):
             elif gear == 'RING' and enemy_card == 'WU':
                 result_list.append(gear)
             elif gear == 'DEVOUR' and enemy_card == 'MING':
-                result_list.append(gear)
-            # 神秘配置
-            if gear in DEFULT_SECRET and gear != 'THORN':
                 result_list.append(gear)
     if talent_list:
         for talent in talent_list:
