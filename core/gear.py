@@ -34,9 +34,8 @@ def get_level_list(battle_log_dom):
 
 
 # 获取对应属性总和
-def get_sum_point(gear_list, level_list, type):
+def get_sum_point(_gear_list, type):
     result = 0
-    _gear_list = _get_gear_list(gear_list, level_list)
     for gear_map in _gear_list:
         try:
             result = result + gear_map[type]
@@ -46,7 +45,7 @@ def get_sum_point(gear_list, level_list, type):
 
 
 # 属性百分比转属性
-def _get_gear_list(gear_list, level_list):
+def get_gear_map_list(gear_list, level_list):
     result_list = []
     for i in range(0, 4):
         gear = gear_list[i]

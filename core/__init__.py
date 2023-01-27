@@ -20,7 +20,7 @@ def start():
     for data in json_data:
         enemy_name = data['enemyname']
         enemy_level = int(data['charlevel'])
-        battle_day = datetime.datetime.strptime(time.strftime("%Y-%m-%d", time.localtime(float(float(data['time'])/1000))), "%Y-%m-%d")
+        battle_timestamp = data['time']
         enemy_card = CARD_MAP[data['char']]
         battle_log_str = data['log']
         # 黑名单跳过
@@ -30,8 +30,11 @@ def start():
         if MIN_LEVEL and enemy_level < MIN_LEVEL:
             continue
         # 日期跳过
-        if LAST_DATE and datetime.datetime.strptime(LAST_DATE, "%Y-%m-%d") > battle_day:
-            continue
+        if LAST_DATE:
+            last_datetime = datetime.datetime.strptime(LAST_DATE + ' 00:00:00.000', "%Y-%m-%d %H:%M:%S.%f")
+            last_timestamp = int(time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
+            if last_timestamp > battle_timestamp:
+                continue
         result_list = []
         # 构造第一行
         result_list.append(build_first_line(enemy_card, enemy_name))
