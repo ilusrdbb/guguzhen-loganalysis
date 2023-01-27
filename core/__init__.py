@@ -23,6 +23,9 @@ def start():
         battle_timestamp = data['time']
         enemy_card = CARD_MAP[data['char']]
         battle_log_str = data['log']
+        # 白名单
+        if WHITE_LIST and enemy_name not in WHITE_LIST:
+            continue
         # 黑名单跳过
         if BLACK_LIST and enemy_name in BLACK_LIST:
             continue
@@ -152,6 +155,15 @@ def build_third_line(talent_list):
 
 # 加载数据
 def load_data():
-    with open(INPUT_PATH, encoding='utf-8') as f:
-        read = f.read()
-    return json.loads(read)['data']['data'][0]['rows']
+    result_list = []
+    for file_name in os.listdir(INPUT_PATH):
+        if file_name != 'pc.txt':
+            file_path = INPUT_PATH + file_name
+            with open(file_path, encoding='utf-8') as f:
+                read = f.read()
+                try:
+                    data_list = json.loads(read)['data']['data'][0]['rows']
+                    result_list.extend(data_list)
+                except:
+                    pass
+    return result_list

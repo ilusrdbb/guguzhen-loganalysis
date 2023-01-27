@@ -3,7 +3,10 @@
 # @Time : 2022/12/16 14:16
 # @Author : chaocai
 
-# 黑名单，不记录这个人，优先级最高
+# 白名单，只记录这个人，优先级最高
+WHITE_LIST = []
+
+# 黑名单，不记录这个人，优先级第二高
 BLACK_LIST = []
 
 # 最低等级，小于这个等级的跳过不记录，如果为空则全量抓取
@@ -152,7 +155,7 @@ MATCH_CONFIG = {
 }
 
 # 输入文件路径
-INPUT_PATH = './source/韭菜收割机历史数据.ggzjson'
+INPUT_PATH = './source/'
 
 # 输出文件路径
 OUTPUT_PATH = './source/pc.txt'
