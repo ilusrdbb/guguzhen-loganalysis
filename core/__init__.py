@@ -15,7 +15,7 @@ def start():
     # 解析json，并按照时间排序
     json_data = sorted(load_data(), key=lambda x: (x['time']))
     # 删除输出文件
-    delFile(OUTPUT_PATH)
+    del_file(OUTPUT_PATH)
     result_map = {}
     for data in json_data:
         enemy_name = data['enemyname']
@@ -71,7 +71,7 @@ def start():
 # 防守忽略结果接口
 # attribute_map 属性 enemy_card 卡片类型 enemy_level 卡片等级
 def get_defend_result(attribute_map, enemy_card, enemy_level):
-    # 摆烂琳/希
+    # 摆烂
     if 'SHIELD' in attribute_map['gear'] and enemy_card != 'AI':
         return True
     # 打野韭菜
@@ -94,7 +94,7 @@ def write_data(path, result_map):
 
 
 # 删除输出文件
-def delFile(path):
+def del_file(path):
     if os.path.isfile(path):
         os.remove(path)
 
