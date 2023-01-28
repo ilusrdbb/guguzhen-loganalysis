@@ -56,6 +56,11 @@ DEFAULT_GEAR = {
     'RIBBON': {'_HPR': 150, 'SLDR': 150},
     'RING': {'_PTH': 120, '_MTH': 120, '_CRT': 150, '_SKL': 150},
     'DEVOUR': {'_MTH': 150, '_SKL': 150},
+    'SWORD': {},
+    'BOW': {},
+    'PLATE': {},
+    'LEATHER': {},
+    'CLOTH': {},
 }
 
 # 默认成长值，目前只影响舞
