@@ -68,7 +68,8 @@ def start():
     write_data(OUTPUT_PATH, result_map)
 
 
-# 防守忽略结果 attribute_map 属性map enemy_card 卡片类型
+# 防守忽略结果接口
+# attribute_map 属性 enemy_card 卡片类型 enemy_level 卡片等级
 def get_defend_result(attribute_map, enemy_card, enemy_level):
     # 摆烂琳/希
     if 'SHIELD' in attribute_map['gear'] and enemy_card != 'AI':
