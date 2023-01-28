@@ -45,10 +45,10 @@ def start():
         result_list.append(build_second_line())
         # 构造天赋list
         talent_list = talent.get_talent_list(battle_log_str)
-        # 构造第三行
-        result_list.append(build_third_line(talent_list))
         # 构造属性map
         attribute_map = attribute.get_attribute_map(battle_log_str, talent_list, enemy_level)
+        # 构造第三行
+        result_list.append(build_third_line(talent_list, attribute_map['spd']))
         # 防守模式
         if DEFEND_MODE and enemy_card != 'AI':
             if 'SHIELD' in attribute_map['gear'] or 'SPEAR' in attribute_map['gear']:
@@ -165,10 +165,13 @@ def build_second_line():
 
 
 # 构造第三行
-def build_third_line(talent_list):
-    if 'XUE' in talent_list:
-        return 'AMULET REC 10 ' + DEFAULT_AMULET + ' ENDAMULET'
-    return 'AMULET ' + DEFAULT_AMULET + ' ENDAMULET'
+def build_third_line(talent_list, enemy_speed):
+    aumlet = DEFAULT_AMULET
+    if 'REC' not in aumlet and 'XUE' in talent_list and IS_XUE_ADD_REC:
+        aumlet = aumlet + ' REC ' + str(MAX_ADD_REC)
+    if 'SPD' not in aumlet and enemy_speed > SPEED_ADD:
+        aumlet = aumlet + ' SPD ' + str(MAX_ADD_SPD)
+    return 'AMULET ' + aumlet + ' ENDAMULET'
 
 
 # 加载数据

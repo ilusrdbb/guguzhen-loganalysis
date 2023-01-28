@@ -74,7 +74,7 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
     return {
         'hp': attribute_hp,
         'sld': attribute_sld,
-        'spd': get_final_spd(attribute_spd),
+        'spd': attribute_spd,
         'pdef': attribute_pdef,
         'mdef': attribute_mdef,
         'patk': attribute_patk,
@@ -290,10 +290,3 @@ def get_sld(attribute_str):
 # 获取属性 速度
 def get_spd(attribute_str):
     return int(re.findall(MATCH_CONFIG['SPD'], attribute_str)[0])
-
-
-# 获取属性 最终速度
-def get_final_spd(spd):
-    if spd > SPEED_ADD:
-        spd = int(spd * SPD_MU_MAX)
-    return spd

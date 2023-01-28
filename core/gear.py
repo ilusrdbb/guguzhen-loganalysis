@@ -236,7 +236,7 @@ def get_shield(gear_percent, gear_level):
         elif key == 'RFL':
             gear_percent[key] = int(gear_level / 15 * (gear_percent[key] / 100))
             # 反伤樱桃的10反
-            if IS_ADD_RFL:
+            if 'RFL' not in DEFAULT_AMULET and IS_SHIELD_ADD_RFL:
                 gear_percent[key] = gear_percent[key] + MAX_ADD_RFL
     return gear_percent
 

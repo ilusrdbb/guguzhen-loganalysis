@@ -18,11 +18,11 @@ MY_LEVEL = 850
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 LAST_DATE = '2023-01-01'
 
-# 默认护符 默认带XUE绑定REC 10
+# 默认护符
 DEFAULT_AMULET = 'SKL 10 CRT 10 PDEF 10 MDEF 10'
 
-# 速度阈值，大于此速度的卷逼最终速度再乘1.1的速度葡萄
-SPEED_ADD = 5000
+# 速度阈值，仅当默认护符不存在SPD时判断，大于此速度的卷逼护符会自动加上速度葡萄
+SPEED_ADD = 1000
 
 # 默认许愿池
 DEFAULT_WISH = '5 5 5 5 5 5 5'
@@ -30,8 +30,11 @@ DEFAULT_WISH = '5 5 5 5 5 5 5'
 # 默认携带神秘的装备，角色如携带专属默认神秘不需要额外填写
 DEFULT_SECRET = ['ASSBOW', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE', 'WOOD', 'CAPE', 'THORN']
 
-# 剑盾是否需要加上10反伤樱桃
-IS_ADD_RFL = True
+# 剑盾是否需要加上10反伤樱桃，仅当默认护符中没有RFL时判断
+IS_SHIELD_ADD_RFL = True
+
+# XUE是否需要加上10生命恢复，仅当默认护符中没有REC时判断
+IS_XUE_ADD_REC = True
 
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复
@@ -221,9 +224,11 @@ STR_MU_PATK = 10
 INT_MU_MATK = 12
 # 点到 防御倍率
 DIAN_MU_DEF = 1.3
-# 速度葡萄上限
-SPD_MU_MAX = 1.1
 # 重甲神秘
 THRON_ADD_RFL = 30
 # 反伤樱桃上限
 MAX_ADD_RFL = 10
+# 生命回复葡萄上限
+MAX_ADD_REC = 10
+# 速度葡萄上限
+MAX_ADD_SPD = 10
