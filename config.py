@@ -10,7 +10,7 @@ WHITE_LIST = []
 BLACK_LIST = []
 
 # 最低等级，小于这个等级的跳过不记录，如果为空则全量抓取
-MIN_LEVEL = 600
+MIN_LEVEL = 500
 
 # 自身等级，用于计算等级压制/等级挑战
 MY_LEVEL = 850
