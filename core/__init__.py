@@ -50,8 +50,8 @@ def start():
         # 构造第三行
         result_list.append(build_third_line(talent_list, attribute_map['spd']))
         # 防守模式
-        if DEFEND_MODE and enemy_card != 'AI':
-            if 'SHIELD' in attribute_map['gear'] or 'SPEAR' in attribute_map['gear']:
+        if DEFEND_MODE:
+            if get_defend_result(attribute_map, enemy_card, enemy_level):
                 continue
         # 构造4 5 6 7 8行
         result_list.append(build_four_line(attribute_map))
@@ -66,6 +66,21 @@ def start():
         result_map[enemy_name] = result_str
     # 输出
     write_data(OUTPUT_PATH, result_map)
+
+
+# 防守忽略结果 attribute_map 属性map enemy_card 卡片类型
+def get_defend_result(attribute_map, enemy_card, enemy_level):
+    # 摆烂琳/希
+    if 'SHIELD' in attribute_map['gear'] and enemy_card != 'AI':
+        return True
+    # 打野韭菜
+    elif 'STAFF' in attribute_map['gear'] and enemy_card == 'MO' and enemy_level < 800:
+        return True
+    # 转盘
+    elif 'SPEAR' in attribute_map['gear'] and enemy_card == 'MIN':
+        return True
+    else:
+        return False
 
 
 # 写入
