@@ -47,52 +47,52 @@ def get_gear_map_list(gear_list, level_list):
             gear = gear_list[i]
             gear_level = int(level_list[i])
             _gear = {}
+            gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
             if gear == 'STAFF':
-                _gear = get_staff(gear, gear_level)
+                _gear = get_staff(gear_percent, gear_level)
             elif gear == 'BLADE':
-                _gear = get_blade(gear, gear_level)
+                _gear = get_blade(gear_percent, gear_level)
             elif gear == 'ASSBOW':
-                _gear = get_assbow(gear, gear_level)
+                _gear = get_assbow(gear_percent, gear_level)
             elif gear == 'DAGGER':
-                _gear = get_dagger(gear, gear_level)
+                _gear = get_dagger(gear_percent, gear_level)
             elif gear == 'WAND':
-                _gear = get_wand(gear, gear_level)
+                _gear = get_wand(gear_percent, gear_level)
             elif gear == 'SHIELD':
-                _gear = get_shield(gear, gear_level)
+                _gear = get_shield(gear_percent, gear_level)
             elif gear == 'CLAYMORE':
-                _gear = get_claymore(gear, gear_level)
+                _gear = get_claymore(gear_percent, gear_level)
             elif gear == 'SPEAR':
-                _gear = get_spear(gear, gear_level)
+                _gear = get_spear(gear_percent, gear_level)
             elif gear == 'GLOVES':
-                _gear = get_gloves(gear, gear_level)
+                _gear = get_gloves(gear_percent, gear_level)
             elif gear == 'BRACELET':
-                _gear = get_bracelet(gear, gear_level)
+                _gear = get_bracelet(gear_percent, gear_level)
             elif gear == 'VULTURE':
-                _gear = get_vulture(gear, gear_level)
+                _gear = get_vulture(gear_percent, gear_level)
             elif gear == 'CLOAK':
-                _gear = get_cloak(gear, gear_level)
+                _gear = get_cloak(gear_percent, gear_level)
             elif gear == 'THORN':
-                _gear = get_thorn(gear, gear_level)
+                _gear = get_thorn(gear_percent, gear_level, gear)
             elif gear == 'WOOD':
-                _gear = get_wood(gear, gear_level)
+                _gear = get_wood(gear_percent, gear_level)
             elif gear == 'CAPE':
-                _gear = get_cape(gear, gear_level)
+                _gear = get_cape(gear_percent, gear_level)
             elif gear == 'SCARF':
-                _gear = get_scarf(gear, gear_level)
+                _gear = get_scarf(gear_percent, gear_level)
             elif gear == 'TIARA':
-                _gear = get_tiara(gear, gear_level)
+                _gear = get_tiara(gear_percent, gear_level)
             elif gear == 'RIBBON':
-                _gear = get_ribbon(gear, gear_level)
+                _gear = get_ribbon(gear_percent, gear_level)
             elif gear == 'RING':
-                _gear = get_ring(gear, gear_level)
+                _gear = get_ring(gear_percent, gear_level)
             elif gear == 'DEVOUR':
-                _gear = get_devour(gear, gear_level)
+                _gear = get_devour(gear_percent, gear_level)
             result_list.append(_gear)
     return result_list
 
 
-def get_devour(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_devour(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_MTH':
             gear_percent[key] = int(gear_level * 0.5 * (gear_percent[key] / 100))
@@ -101,8 +101,7 @@ def get_devour(gear, gear_level):
     return gear_percent
 
 
-def get_ring(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_ring(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PTH':
             gear_percent[key] = int(gear_level * 0.5 * (gear_percent[key] / 100))
@@ -115,8 +114,7 @@ def get_ring(gear, gear_level):
     return gear_percent
 
 
-def get_ribbon(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_ribbon(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_HPR':
             gear_percent[key] = int(gear_level * 5 * (gear_percent[key] / 100))
@@ -125,16 +123,14 @@ def get_ribbon(gear, gear_level):
     return gear_percent
 
 
-def get_tiara(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_tiara(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PDEC':
             gear_percent[key] = int(gear_level * 2 * (gear_percent[key] / 100))
     return gear_percent
 
 
-def get_scarf(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_scarf(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PDEC':
             gear_percent[key] = int(gear_level * 2 * (gear_percent[key] / 100))
@@ -145,16 +141,14 @@ def get_scarf(gear, gear_level):
     return gear_percent
 
 
-def get_cape(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_cape(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_MDEC':
             gear_percent[key] = int(gear_level * 5 * (gear_percent[key] / 100))
     return gear_percent
 
 
-def get_wood(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_wood(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_HPR':
             gear_percent[key] = int(gear_level * 20 * (gear_percent[key] / 100))
@@ -165,8 +159,7 @@ def get_wood(gear, gear_level):
     return gear_percent
 
 
-def get_thorn(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_thorn(gear_percent, gear_level, gear):
     for key in gear_percent:
         if key == 'RFL':
             gear_percent[key] = int((gear_level / 15 + 10) * (gear_percent[key] / 100))
@@ -176,16 +169,14 @@ def get_thorn(gear, gear_level):
     return gear_percent
 
 
-def get_cloak(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_cloak(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_SLDR':
             gear_percent[key] = int(gear_level * 60 * (gear_percent[key] / 100))
     return gear_percent
 
 
-def get_vulture(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_vulture(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'LCH':
             gear_percent[key] = int((gear_level / 15 + 1) * (gear_percent[key] / 300)) * 3
@@ -194,8 +185,7 @@ def get_vulture(gear, gear_level):
     return gear_percent
 
 
-def get_bracelet(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_bracelet(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'MATK':
             gear_percent[key] = int((gear_level / 5 + 1) * (gear_percent[key] / 100))
@@ -204,8 +194,7 @@ def get_bracelet(gear, gear_level):
     return gear_percent
 
 
-def get_gloves(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_gloves(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PATK':
             gear_percent[key] = int(gear_level * 10 * (gear_percent[key] / 100))
@@ -216,8 +205,7 @@ def get_gloves(gear, gear_level):
     return gear_percent
 
 
-def get_spear(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_spear(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'PATK':
             gear_percent[key] = int((gear_level / 5 + 50) * (gear_percent[key] / 100))
@@ -230,8 +218,7 @@ def get_spear(gear, gear_level):
     return gear_percent
 
 
-def get_claymore(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_claymore(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PATK':
             gear_percent[key] = int(gear_level * 20 * (gear_percent[key] / 200)) * 2
@@ -242,8 +229,7 @@ def get_claymore(gear, gear_level):
     return gear_percent
 
 
-def get_shield(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_shield(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'LCH':
             gear_percent[key] = int((gear_level / 5 + 10) * (gear_percent[key] / 100))
@@ -255,8 +241,7 @@ def get_shield(gear, gear_level):
     return gear_percent
 
 
-def get_wand(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_wand(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'MATK':
             gear_percent[key] = int(gear_level / 5 * (gear_percent[key] / 300)) * 3
@@ -265,8 +250,7 @@ def get_wand(gear, gear_level):
     return gear_percent
 
 
-def get_dagger(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_dagger(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'PATK':
             gear_percent[key] = int(gear_level / 5 * (gear_percent[key] / 100))
@@ -279,8 +263,7 @@ def get_dagger(gear, gear_level):
     return gear_percent
 
 
-def get_assbow(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_assbow(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'PATK':
             gear_percent[key] = int((gear_level / 5 + 30) * (gear_percent[key] / 100))
@@ -293,8 +276,7 @@ def get_assbow(gear, gear_level):
     return gear_percent
 
 
-def get_staff(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_staff(gear_percent, gear_level):
     for key in gear_percent:
         if key == '_PATK':
             gear_percent[key] = int(gear_level * 10 * (gear_percent[key] / 100))
@@ -307,8 +289,7 @@ def get_staff(gear, gear_level):
     return gear_percent
 
 
-def get_blade(gear, gear_level):
-    gear_percent = copy.deepcopy(DEFAULT_GEAR[gear])
+def get_blade(gear_percent, gear_level):
     for key in gear_percent:
         if key == 'PATK':
             gear_percent[key] = int((gear_level / 5 + 20) * (gear_percent[key] / 100))
