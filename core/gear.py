@@ -10,88 +10,84 @@ from config import *
 # 获取装备list
 def get_gear_list(battle_log_dom):
     result_list = []
-    try:
-        result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[4]])
-        result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[5]])
-        result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[6]])
-        result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[7]])
-    except:
-        pass
+    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[4]])
+    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[5]])
+    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[6]])
+    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[7]])
     return result_list
 
 
 # 获取装备等级list
 def get_level_list(battle_log_dom):
     result_list = []
-    try:
-        result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[4])
-        result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[5])
-        result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[6])
-        result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[7])
-    except:
-        pass
+    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[4])
+    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[5])
+    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[6])
+    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[7])
     return result_list
 
 
 # 获取对应属性总和
 def get_sum_point(_gear_list, type):
     result = 0
-    for gear_map in _gear_list:
-        try:
-            result = result + gear_map[type]
-        except:
-            continue
+    if _gear_list and type:
+        for gear_map in _gear_list:
+            try:
+                result = result + gear_map[type]
+            except:
+                continue
     return result
 
 
 # 属性百分比转属性
 def get_gear_map_list(gear_list, level_list):
     result_list = []
-    for i in range(0, 4):
-        gear = gear_list[i]
-        gear_level = int(level_list[i])
-        _gear = {}
-        if gear == 'STAFF':
-            _gear = get_staff(gear, gear_level)
-        elif gear == 'BLADE':
-            _gear = get_blade(gear, gear_level)
-        elif gear == 'ASSBOW':
-            _gear = get_assbow(gear, gear_level)
-        elif gear == 'DAGGER':
-            _gear = get_dagger(gear, gear_level)
-        elif gear == 'WAND':
-            _gear = get_wand(gear, gear_level)
-        elif gear == 'SHIELD':
-            _gear = get_shield(gear, gear_level)
-        elif gear == 'CLAYMORE':
-            _gear = get_claymore(gear, gear_level)
-        elif gear == 'SPEAR':
-            _gear = get_spear(gear, gear_level)
-        elif gear == 'GLOVES':
-            _gear = get_gloves(gear, gear_level)
-        elif gear == 'BRACELET':
-            _gear = get_bracelet(gear, gear_level)
-        elif gear == 'VULTURE':
-            _gear = get_vulture(gear, gear_level)
-        elif gear == 'CLOAK':
-            _gear = get_cloak(gear, gear_level)
-        elif gear == 'THORN':
-            _gear = get_thorn(gear, gear_level)
-        elif gear == 'WOOD':
-            _gear = get_wood(gear, gear_level)
-        elif gear == 'CAPE':
-            _gear = get_cape(gear, gear_level)
-        elif gear == 'SCARF':
-            _gear = get_scarf(gear, gear_level)
-        elif gear == 'TIARA':
-            _gear = get_tiara(gear, gear_level)
-        elif gear == 'RIBBON':
-            _gear = get_ribbon(gear, gear_level)
-        elif gear == 'RING':
-            _gear = get_ring(gear, gear_level)
-        elif gear == 'DEVOUR':
-            _gear = get_devour(gear, gear_level)
-        result_list.append(_gear)
+    if gear_list and level_list and len(gear_list) == len(level_list):
+        for i in range(0, len(gear_list)):
+            gear = gear_list[i]
+            gear_level = int(level_list[i])
+            _gear = {}
+            if gear == 'STAFF':
+                _gear = get_staff(gear, gear_level)
+            elif gear == 'BLADE':
+                _gear = get_blade(gear, gear_level)
+            elif gear == 'ASSBOW':
+                _gear = get_assbow(gear, gear_level)
+            elif gear == 'DAGGER':
+                _gear = get_dagger(gear, gear_level)
+            elif gear == 'WAND':
+                _gear = get_wand(gear, gear_level)
+            elif gear == 'SHIELD':
+                _gear = get_shield(gear, gear_level)
+            elif gear == 'CLAYMORE':
+                _gear = get_claymore(gear, gear_level)
+            elif gear == 'SPEAR':
+                _gear = get_spear(gear, gear_level)
+            elif gear == 'GLOVES':
+                _gear = get_gloves(gear, gear_level)
+            elif gear == 'BRACELET':
+                _gear = get_bracelet(gear, gear_level)
+            elif gear == 'VULTURE':
+                _gear = get_vulture(gear, gear_level)
+            elif gear == 'CLOAK':
+                _gear = get_cloak(gear, gear_level)
+            elif gear == 'THORN':
+                _gear = get_thorn(gear, gear_level)
+            elif gear == 'WOOD':
+                _gear = get_wood(gear, gear_level)
+            elif gear == 'CAPE':
+                _gear = get_cape(gear, gear_level)
+            elif gear == 'SCARF':
+                _gear = get_scarf(gear, gear_level)
+            elif gear == 'TIARA':
+                _gear = get_tiara(gear, gear_level)
+            elif gear == 'RIBBON':
+                _gear = get_ribbon(gear, gear_level)
+            elif gear == 'RING':
+                _gear = get_ring(gear, gear_level)
+            elif gear == 'DEVOUR':
+                _gear = get_devour(gear, gear_level)
+            result_list.append(_gear)
     return result_list
 
 
