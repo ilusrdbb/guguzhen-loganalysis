@@ -49,6 +49,10 @@ def start():
         result_list.append(build_third_line(talent_list))
         # 构造属性map
         attribute_map = attribute.get_attribute_map(battle_log_str, talent_list, enemy_level)
+        # 防守模式
+        if DEFEND_MODE and enemy_card != 'AI':
+            if 'SHIELD' in attribute_map['gear'] or 'SPEAR' in attribute_map['gear']:
+                continue
         # 构造4 5 6 7 8行
         result_list.append(build_four_line(attribute_map))
         result_list.append(build_five_line(attribute_map))
