@@ -3,10 +3,10 @@
 # @Time : 2022/12/16 14:16
 # @Author : chaocai
 
-# 白名单，只记录这个人，优先级最高
+# 白名单，只记录这个人，优先级最高 例['用户名1', '用户名2', ...]
 WHITE_LIST = []
 
-# 黑名单，不记录这个人，优先级第二高
+# 黑名单，不记录这个人，优先级第二高 例['用户名1', '用户名2', ...]
 BLACK_LIST = []
 
 # 最低等级，小于这个等级的跳过不记录，如果为空则全量抓取
@@ -21,20 +21,20 @@ LAST_DATE = '2023-01-01'
 # 默认护符
 DEFAULT_AMULET = 'SKL 10 CRT 10 PDEF 10 MDEF 10'
 
+# 剑盾是否需要加上10反伤樱桃，仅当默认护符中没有RFL时判断
+IS_SHIELD_ADD_RFL = True
+
+# XUE是否需要加上10生命恢复，仅当默认护符中没有REC时判断
+IS_XUE_ADD_REC = True
+
 # 速度阈值，仅当默认护符不存在SPD时判断，大于此速度的卷逼护符会自动加上速度葡萄
-SPEED_ADD = 1000
+SPEED_ADD_LIMIT = 1000
 
 # 默认许愿池
 DEFAULT_WISH = '5 5 5 5 5 5 5'
 
 # 默认携带神秘的装备，角色如携带专属默认神秘不需要额外填写
 DEFULT_SECRET = ['ASSBOW', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE', 'WOOD', 'CAPE', 'THORN']
-
-# 剑盾是否需要加上10反伤樱桃，仅当默认护符中没有RFL时判断
-IS_SHIELD_ADD_RFL = True
-
-# XUE是否需要加上10生命恢复，仅当默认护符中没有REC时判断
-IS_XUE_ADD_REC = True
 
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复

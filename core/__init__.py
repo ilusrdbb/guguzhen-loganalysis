@@ -184,7 +184,7 @@ def build_third_line(talent_list, enemy_speed):
     aumlet = DEFAULT_AMULET
     if 'REC' not in aumlet and 'XUE' in talent_list and IS_XUE_ADD_REC:
         aumlet = aumlet + ' REC ' + str(MAX_ADD_REC)
-    if 'SPD' not in aumlet and enemy_speed > SPEED_ADD:
+    if 'SPD' not in aumlet and enemy_speed > SPEED_ADD_LIMIT:
         aumlet = aumlet + ' SPD ' + str(MAX_ADD_SPD)
     return 'AMULET ' + aumlet + ' ENDAMULET'
 
