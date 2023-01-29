@@ -3,6 +3,7 @@
 # @Time : 2023/1/4 9:50
 # @Author : chaocai
 import copy
+import re
 
 from config import *
 
@@ -26,10 +27,10 @@ def get_level_list(battle_log_dom):
 # 获取红色装备list
 def get_red_list(battle_log_dom, gear_list):
     result_list = []
-    color_list = [int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4][-7:-6]),
-                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5][-7:-6]),
-                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6][-7:-6]),
-                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7][-7:-6])]
+    color_list = [int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4])[0]),
+                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5])[0]),
+                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6])[0]),
+                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7])[0])]
     if gear_list and color_list and len(gear_list) == len(color_list):
         for i in range(0, len(gear_list)):
             gear = gear_list[i]
