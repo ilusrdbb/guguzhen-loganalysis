@@ -20,7 +20,7 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
     # 获取装备颜色list
     red_list = gear.get_red_list(battle_log_dom, gear_list)
     # 获取装备属性list
-    _gear_list = gear.get_gear_map_list(gear_list, level_list)
+    _gear_list = gear.get_gear_map_list(gear_list, level_list, red_list)
     # 获取全部属性的字符串
     attribute_str = ''.join(battle_log_dom.xpath(XPATH_CONFIG['DATA']))
     # 获取属性 生命

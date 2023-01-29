@@ -154,7 +154,7 @@ def build_last_line(talent_list, attribute_map, enemy_card):
             if gear in DEFULT_SECRET and gear != 'THORN':
                 result_list.append(gear)
             # 红色神秘
-            elif gear in red_list and gear in DEFULT_RED_SECRET:
+            elif gear in red_list and gear in DEFULT_RED_SECRET and gear != 'THORN':
                 result_list.append(gear)
             # 专属
             elif gear == 'DAGGER' and enemy_card == 'AI':
