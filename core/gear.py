@@ -71,7 +71,7 @@ def get_sum_point(_gear_list, type):
 
 
 # 属性百分比转属性
-def get_gear_map_list(gear_list, level_list):
+def get_gear_map_list(gear_list, level_list, red_list):
     result_list = []
     if gear_list and level_list and len(gear_list) == len(level_list):
         for i in range(0, len(gear_list)):
@@ -104,7 +104,7 @@ def get_gear_map_list(gear_list, level_list):
             elif gear == 'CLOAK':
                 _gear = get_cloak(gear_percent, gear_level)
             elif gear == 'THORN':
-                _gear = get_thorn(gear_percent, gear_level, gear)
+                _gear = get_thorn(gear_percent, gear_level, gear, red_list)
             elif gear == 'WOOD':
                 _gear = get_wood(gear_percent, gear_level)
             elif gear == 'CAPE':
@@ -190,12 +190,14 @@ def get_wood(gear_percent, gear_level):
     return gear_percent
 
 
-def get_thorn(gear_percent, gear_level, gear):
+def get_thorn(gear_percent, gear_level, gear, red_list):
     for key in gear_percent:
         if key == 'RFL':
             gear_percent[key] = int((gear_level / 15 + 10) * (gear_percent[key] / 100))
             # 神秘
             if gear in DEFULT_SECRET:
+                gear_percent[key] = gear_percent[key] + THRON_ADD_RFL
+            elif gear in red_list and gear in DEFULT_RED_SECRET:
                 gear_percent[key] = gear_percent[key] + THRON_ADD_RFL
     return gear_percent
 
