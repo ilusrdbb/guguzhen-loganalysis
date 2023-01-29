@@ -27,10 +27,28 @@ def get_level_list(battle_log_dom):
 # 获取红色装备list
 def get_red_list(battle_log_dom, gear_list):
     result_list = []
-    color_list = [int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4])[0]),
-                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5])[0]),
-                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6])[0]),
-                  int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7])[0])]
+    try:
+        color_list = [int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4])[0]),
+                      int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5])[0]),
+                      int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6])[0]),
+                      int(re.findall(MATCH_CONFIG['COLOR'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7])[0])]
+    except:
+        # 未安装装主题包的情况下会报错，再尝试读取
+        try:
+            color_list = [int(re.findall(MATCH_CONFIG['COLOR2'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4])[0]),
+                          int(re.findall(MATCH_CONFIG['COLOR2'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5])[0]),
+                          int(re.findall(MATCH_CONFIG['COLOR2'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6])[0]),
+                          int(re.findall(MATCH_CONFIG['COLOR2'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7])[0])]
+        except:
+            # 最原始的咕咕镇自带路径
+            try:
+                color_list = [5 if re.findall(MATCH_CONFIG['COLOR3'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4])[0] == '#EA644A' else 0,
+                    5 if re.findall(MATCH_CONFIG['COLOR3'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5])[0] == '#EA644A' else 0,
+                    5 if re.findall(MATCH_CONFIG['COLOR3'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6])[0] == '#EA644A' else 0,
+                    5 if re.findall(MATCH_CONFIG['COLOR3'], battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7])[0] == '#EA644A' else 0]
+            except:
+                # 自定义就无能为力了
+                color_list = []
     if gear_list and color_list and len(gear_list) == len(color_list):
         for i in range(0, len(gear_list)):
             gear = gear_list[i]

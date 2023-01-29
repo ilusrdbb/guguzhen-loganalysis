@@ -185,6 +185,8 @@ MATCH_CONFIG = {
     'MDEF': '(?<=\\[魔防:).*?(?=\\])',
     'TALENT': '(?<=\\|).*?(?=\\|)',
     'COLOR': '.*/(.*)\\.gif.*',
+    'COLOR2': '.*_(.*)\\.gif.*',
+    'COLOR3': '.*background-color:(.*);background-image.*',
 }
 
 # 输入文件路径
