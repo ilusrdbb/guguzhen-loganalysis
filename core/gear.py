@@ -9,21 +9,33 @@ from config import *
 
 # 获取装备list
 def get_gear_list(battle_log_dom):
-    result_list = []
-    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[4]])
-    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[5]])
-    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[6]])
-    result_list.append(GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[7]])
-    return result_list
+    return [GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[4]],
+                   GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[5]],
+                   GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[6]],
+                   GEAR_MAP[battle_log_dom.xpath(XPATH_CONFIG['GEAR'])[7]]]
 
 
 # 获取装备等级list
 def get_level_list(battle_log_dom):
+    return [battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[4],
+                   battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[5],
+                   battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[6],
+                   battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[7]]
+
+
+# 获取红色装备list
+def get_red_list(battle_log_dom, gear_list):
     result_list = []
-    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[4])
-    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[5])
-    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[6])
-    result_list.append(battle_log_dom.xpath(XPATH_CONFIG['LEVEL'])[7])
+    color_list = [int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[4][-7:-6]),
+                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[5][-7:-6]),
+                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[6][-7:-6]),
+                  int(battle_log_dom.xpath(XPATH_CONFIG['COLOR'])[7][-7:-6])]
+    if gear_list and color_list and len(gear_list) == len(color_list):
+        for i in range(0, len(gear_list)):
+            gear = gear_list[i]
+            color = color_list[i]
+            if color == 5:
+                result_list.append(gear)
     return result_list
 
 

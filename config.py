@@ -34,7 +34,10 @@ SPEED_ADD_LIMIT = 1000
 DEFAULT_WISH = '5 5 5 5 5 5 5'
 
 # 默认携带神秘的装备，角色如携带专属默认神秘不需要额外填写
-DEFULT_SECRET = ['ASSBOW', 'SHIELD', 'CLAYMORE', 'SPEAR', 'VULTURE', 'WOOD', 'CAPE', 'THORN']
+DEFULT_SECRET = ['SHIELD', 'CLAYMORE', 'SPEAR', 'WOOD', 'CAPE', 'THORN']
+
+# 默认只有红装才携带神秘的装备
+DEFULT_RED_SECRET = ['BLADE', 'ASSBOW', 'BRACELET', 'VULTURE']
 
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 # 带_的属性为加算的附加数值，不带的为乘算比值 TH 穿透 DEC 减伤 R 回复
@@ -168,6 +171,7 @@ XPATH_CONFIG = {
     'TALENT': '//div[contains(@class,\'alert-info\')]/div//div[contains(@class,\'fyg_tr\')]//text()',
     'GEAR': '//button[contains(@class,\'fyg_colpzbg\')]/@data-original-title',
     'LEVEL': '//button[contains(@class,\'fyg_colpzbg\')]//text()',
+    'COLOR': '//button[contains(@class,\'fyg_colpzbg\')]/@style',
 }
 
 # 正则设置

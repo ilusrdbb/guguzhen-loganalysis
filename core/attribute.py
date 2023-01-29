@@ -17,6 +17,8 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
     gear_list = gear.get_gear_list(battle_log_dom)
     # 获取装备等级list
     level_list = gear.get_level_list(battle_log_dom)
+    # 获取装备颜色list
+    red_list = gear.get_red_list(battle_log_dom, gear_list)
     # 获取装备属性list
     _gear_list = gear.get_gear_map_list(gear_list, level_list)
     # 获取全部属性的字符串
@@ -95,6 +97,7 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
         'rfl': attribute_rfl,
         'lch': attribute_lch,
         'gear': gear_list,
+        'red': red_list,
     }
 
 
