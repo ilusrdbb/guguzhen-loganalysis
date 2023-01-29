@@ -21,6 +21,9 @@ def start():
         enemy_name = data['enemyname']
         enemy_level = int(data['charlevel'])
         battle_timestamp = data['time']
+        # 排除野怪结果
+        if data['char'] == '野怪':
+            continue
         enemy_card = CARD_MAP[data['char']]
         battle_log_str = data['log']
         # 白名单
