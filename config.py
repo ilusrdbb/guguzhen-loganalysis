@@ -16,7 +16,7 @@ MIN_LEVEL = 500
 MY_LEVEL = 850
 
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
-LAST_DATE = '2023-01-01'
+LAST_DATE = '2023-01-15'
 
 # 默认护符
 DEFAULT_AMULET = 'SKL 10 CRT 10 PDEF 10 MDEF 10'
@@ -130,7 +130,7 @@ GEAR_MAP = {
 }
 
 # 需要在生成的配置里填写的天赋
-TALENT_CONFIG = ['DUN', 'XUE', 'XIAO', 'SHENG', 'E', 'SHANG', 'SHEN', 'REN'
+TALENT_CONFIG = ['DUN', 'XUE', 'XIAO', 'SHENG', 'E', 'SHANG', 'SHEN', 'REN', 'HONG'
     , 'RE', 'DIAN', 'WU', 'ZHI', 'FEI', 'BO', 'JU', 'JUE', 'HOU', 'DUNH', 'ZI']
 
 # 天赋映射
@@ -216,10 +216,6 @@ FENG_MU_ATK = 5
 STR_MU_PTH = 1
 # 智力 附加魔穿倍率
 INT_MU_MTH = 1.1
-# 红蓝 穿透判定阈值
-HONG_TH_LIMIT = 40
-# 红蓝 附加穿透 倍率
-HONG_DIV_TH = 2
 # 破壁 穿透倍率
 BI_MU_TH = 1.15
 # 破魔 穿透倍率

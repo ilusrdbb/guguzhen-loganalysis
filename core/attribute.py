@@ -50,9 +50,9 @@ def get_attribute_map(battle_log_str, talent_list, enemy_level):
     # 推测加点 敏捷
     cal_agi = get_agi(attribute_spd, _gear_list)
     # 获取属性 附加物穿
-    _attribute_pth = _get_pth(_gear_list, talent_list, attribute_pth, cal_str, enemy_level)
+    _attribute_pth = _get_pth(_gear_list, talent_list, cal_str, enemy_level)
     # 获取属性 附加魔穿
-    _attribute_mth = _get_mth(_gear_list, talent_list, attribute_mth, cal_int, enemy_level)
+    _attribute_mth = _get_mth(_gear_list, talent_list, cal_int, enemy_level)
     # 获取属性 物理减伤
     attribute_pdec = get_pdec(_gear_list, talent_list, enemy_level)
     # 获取属性 魔法减伤
@@ -170,26 +170,22 @@ def get_pdec(_gear_list, talent_list, enemy_level):
 
 
 # 获取属性 附加魔穿
-def _get_mth(_gear_list, talent_list, attribute_mth, cal_int, enemy_level):
+def _get_mth(_gear_list, talent_list, cal_int, enemy_level):
     _mth = gear.get_sum_point(_gear_list, '_MTH')
     _mth = int(_mth + cal_int * INT_MU_MTH)
     if 'MO' in talent_list:
         _mth = int(_mth * BI_MU_TH)
-    if 'HONG' in talent_list and attribute_mth > HONG_TH_LIMIT:
-        _mth = int(_mth + (enemy_level / HONG_DIV_TH))
     if 'TIAO' in talent_list and enemy_level < MY_LEVEL:
         _mth = _mth + (MY_LEVEL - enemy_level) * 2
     return _mth
 
 
 # 获取属性 附加物穿
-def _get_pth(_gear_list, talent_list, attribute_pth, cal_str, enemy_level):
+def _get_pth(_gear_list, talent_list, cal_str, enemy_level):
     _pth = gear.get_sum_point(_gear_list, '_PTH')
     _pth = _pth + cal_str * STR_MU_PTH
     if 'BI' in talent_list:
         _pth = int(_pth * MO_MU_TH)
-    if 'HONG' in talent_list and attribute_pth > HONG_TH_LIMIT:
-        _pth = int(_pth + (enemy_level / HONG_DIV_TH))
     if 'TIAO' in talent_list and enemy_level < MY_LEVEL:
         _pth = _pth + (MY_LEVEL - enemy_level) * 2
     return _pth
@@ -239,8 +235,6 @@ def get_pth(_gear_list, talent_list):
     pth = gear.get_sum_point(_gear_list, 'PTH')
     if 'BI' in talent_list:
         pth = int(pth * BI_MU_TH)
-    if 'HONG' in talent_list and pth < HONG_TH_LIMIT:
-        pth = HONG_TH_LIMIT
     return pth
 
 
@@ -249,8 +243,6 @@ def get_mth(_gear_list, talent_list):
     mth = gear.get_sum_point(_gear_list, 'MTH')
     if 'MO' in talent_list:
         mth = int(mth * MO_MU_TH)
-    if 'HONG' in talent_list and mth < HONG_TH_LIMIT:
-        mth = HONG_TH_LIMIT
     return mth
 
 
