@@ -1,0 +1,165 @@
+# 白名单，只记录这个人，优先级最高 例['用户名1', '用户名2', ...]
+white_list: []
+# 黑名单，不记录这个人，优先级第二高 例['用户名1', '用户名2', ...]
+black_list: []
+# 最低卡片等级，小于这个等级的跳过不记录，如果为空则全量抓取
+min_card_level: 700
+# 最高争夺等级，当对手为850满级卡时的争夺等级，目前最高争夺加成等级为1100
+max_kf_level: 1100
+# 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
+last_date: '2023-03-10'
+# 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
+amulet_config:
+  default: 'SKL 10 PDEF 10 MDEF 10'
+  MO: 'INT 80 SPR 80 MATK 10 SLD 10 RFL 10 PDEF 10 MDEF 10'
+  LIN: 'VIT 80 MND 80 HP 10 RFL 10 PDEF 10 MDEF 10'
+  AI: 'AGI 50 INT 50 VIT 50 MND 50 HP 10 REC 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10'
+  WEI: 'AGI 50 INT 50 VIT 50 MND 50 HP 10 SLD 10 REC 10 CRT 10 SKL 10'
+  MING: 'STR 50 AGI 50 VIT 50 MND 50 HP 10 REC 10 RFL 10 CRT 10 SKL 10'
+  MIN: 'STR 50 AGI 50 INT 50 VIT 50 MND 50 HP 10 RFL 10 SKL 10 PDEF 10 MDEF 10'
+  MENG: 'AGI 80 INT 80 SPR 80 SLD 10 SKL 10 CRT 10'
+  XI: 'STR 50 AGI 50 VIT 50 MND 50 HP 10 REC 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10'
+  YI: 'STR 50 AGI 50 VIT 50 MND 50 HP 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10'
+  XIA: 'AGI 80 INT 80 SPR 80 SLD 10 SKL 10 CRT 10'
+# 默认许愿池
+wish_config: '50 50 50 50 50 50 50 50 50 20 20 20 20 20'
+# 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
+default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND',
+                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL']
+# 默认成长值
+default_g: 50000
+# 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
+gear_config:
+  STAFF: '150 150 150 150'
+  BLADE: '100 150 150 150'
+  ASSBOW: '100 150 150 120'
+  DAGGER: '100 120 150 150'
+  WAND: '120 120 120 150'
+  SHIELD: '100 150 130 130'
+  CLAYMORE: '110 110 150 150'
+  SPEAR: '100 150 150 120'
+  GLOVES: '150 150 150 150'
+  BRACELET: '150 150 100 120'
+  VULTURE: '120 120 120 150'
+  CLOAK: '100 120 150 150'
+  THORN: '150 110 110 150'
+  WOOD: '150 120 120 120'
+  CAPE: '150 150 110 110'
+  SCARF: '150 150 150 150'
+  TIARA: '150 150 110 110'
+  RIBBON: '130 130 130 130'
+  RING: '110 110 150 150'
+  DEVOUR: '100 150 120 150'
+  SWORD: '150 150 150 150'
+  BOW: '150 150 150 150'
+  PLATE: '150 150 150 150'
+  LEATHER: '150 150 150 150'
+  CLOTH: '150 150 150 150'
+  COLORFUL: '110 110 150 150'
+
+# 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解
+# 卡片映射
+card_map:
+  默: 'MO'
+  琳: 'LIN'
+  艾: 'AI'
+  梦: 'MENG'
+  薇: 'WEI'
+  冥: 'MING'
+  命: 'MIN'
+  伊: 'YI'
+  希: 'XI'
+  舞: 'WU'
+  霞: 'XIA'
+# 装备映射
+gear_map:
+  探险者短杖: 'STAFF'
+  狂信者的荣誉之刃: 'BLADE'
+  反叛者的刺杀弓: 'ASSBOW'
+  幽梦匕首: 'DAGGER'
+  光辉法杖: 'WAND'
+  荆棘剑盾: 'SHIELD'
+  陨铁重剑: 'CLAYMORE'
+  饮血长枪: 'SPEAR'
+  探险者手套: 'GLOVES'
+  命师的传承手环: 'BRACELET'
+  秃鹫手套: 'VULTURE'
+  旅法师的灵光袍: 'CLOAK'
+  战线支撑者的荆棘重甲: 'THORN'
+  复苏木甲: 'WOOD'
+  挑战斗篷: 'CAPE'
+  探险者头巾: 'SCARF'
+  占星师的发饰: 'TIARA'
+  天使缎带: 'RIBBON'
+  海星戒指: 'RING'
+  噬魔戒指: 'DEVOUR'
+  探险者之剑: 'SWORD'
+  探险者短弓: 'BOW'
+  探险者铁甲: 'PLATE'
+  探险者皮甲: 'LEATHER'
+  探险者布甲: 'CLOTH'
+  萌爪耳钉: 'RIBBON'
+  荆棘盾剑: 'SHIELD'
+  饮血魔剑: 'SPEAR'
+  探险者手环: 'GLOVES'
+  秃鹫手环: 'VULTURE'
+  复苏战衣: 'WOOD'
+  探险者耳环: 'SCARF'
+  占星师的耳饰: 'TIARA'
+  彩金长剑: 'COLORFUL'
+# 天赋映射
+talent_map:
+  启程之誓: 'SHI'
+  启程之心: 'XIN'
+  启程之风: 'FENG'
+  等级挑战: 'TIAO'
+  等级压制: 'YA'
+  破壁之心: 'BI'
+  破魔之心: 'MO'
+  复合护盾: 'DUN'
+  鲜血渴望: 'XUE'
+  削骨之痛: 'XIAO'
+  圣盾祝福: 'SHENG'
+  恶意抽奖: 'E'
+  伤口恶化: 'SHANG'
+  精神创伤: 'SHEN'
+  铁甲尖刺: 'CI'
+  忍无可忍: 'REN'
+  热血战魂: 'RE'
+  点到为止: 'DIAN'
+  午时已到: 'WU'
+  纸薄命硬: 'ZHI'
+  沸血之志: 'FEI'
+  波澜不惊: 'BO'
+  飓风之力: 'JU'
+  红蓝双刺: 'HONG'
+  荧光护盾: 'JUE'
+  后发制人: 'HOU'
+  钝化锋芒: 'DUNH'
+  自信回头: 'ZI'
+  不动如山: 'SHAN'
+# xpath设置
+xpath_config:
+    attr: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-outline'')]//text()'
+    talent: '//div[contains(@class,''alert-info'')]/div//div[contains(@class,''fyg_tr'')]//text()'
+    gear: '//button[contains(@class,''fyg_colpzbg'')]/@data-original-title'
+    level: '//button[contains(@class,''fyg_colpzbg'')]//text()'
+    color: '//button[contains(@class,''fyg_colpzbg'')]/@style'
+# 正则设置
+match_config:
+    str: "(?<=).*?(?=力)"
+    agi: "(?<=力).*?(?=敏)"
+    int: "(?<=敏).*?(?=智)"
+    vit: "(?<=智).*?(?=体)"
+    spr: "(?<=体).*?(?=精)"
+    mnd: "(?<=精).*?(?=意)"
+    talent: "(?<=\\|).*?(?=\\|)"
+    color: ".*/(.*)\\.gif.*"
+    color2: ".*background-color:(.*);background-image.*"
+# 输入文件路径
+input_path: './source/'
+# 输出文件路径
+output_path: './source/pc.txt'
+
+
+
