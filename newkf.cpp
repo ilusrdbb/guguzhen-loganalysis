@@ -2512,7 +2512,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b[i].role == ROLE_MO)
         {
-            b[i].mBrcA += int((b[i].tSpr + b[i].tMnd) * 0.2);
+            b[i].mBrcA += int((b[i].tSpr + b[i].tInt) * 0.2);
         }
         b[i].hpRecRR -= b[i].amul[AMUL_REC];
         b[i].sldRecRR -= b[i].amul[AMUL_REC];
@@ -2573,7 +2573,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_MO)
             {
-                if (b[i].tMnd > b[i].tSpr) sldMAdd += 40;
+                if (b[i].tSpr > b[i].tInt) sldMAdd += 40;
             }
             if (b[i].role == ROLE_LIN)
             {
@@ -2665,11 +2665,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     int lastSide = 0;
     int roundN[2] = { 0, 0 };
     int renCounter = 4;
-    if (b[0].spdC > b[1].spdC && b[0].spdC > b[1].spdC * 6)
+    if (b[0].tAgi > b[1].tAgi && b[0].tAgi > b[1].tAgi * 6)
     {
         renCounter = 5;
     }
-    if (b[1].spdC > b[0].spdC && b[1].spdC > b[0].spdC * 6)
+    if (b[1].tAgi > b[0].tAgi && b[1].tAgi > b[0].tAgi * 6)
     {
         renCounter = 5;
     }
@@ -2916,13 +2916,13 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             case ROLE_MO:
             {
                 int maDif = 0;
-                if (b0.tSpr > b0.tMnd)
+                if (b0.tSpr > b0.tInt)
                 {
-                    maDif = int((b0.tSpr / b0.tMnd - 1) * 50);
+                    maDif = int((b0.tSpr / b0.tInt - 1) * 50);
                 }
                 else
                 {
-                    maDif = int((b0.tMnd / b0.tSpr - 1) * 50);
+                    maDif = int((b0.tInt / b0.tSpr - 1) * 50);
                 }
                 maDif = maDif > 1000 ? 1000 : maDif;
                 double atk = ((b0.mAtkB + b0.mAtkA) * 0.45 + b0.sldM * 2 / 25) * (1 + maDif / 100.0);

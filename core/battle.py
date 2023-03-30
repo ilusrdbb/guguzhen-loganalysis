@@ -35,10 +35,17 @@ class Battle:
     # 获取装备神秘
     def get_gear_mystery_list(self, battle_log_dom, gear_list):
         result_list = []
-        color_list = [int(re.findall(config.read_config('match_config')['color'], battle_log_dom.xpath(config.read_config('xpath_config')['color'])[4])[0][-1]),
-                      int(re.findall(config.read_config('match_config')['color'], battle_log_dom.xpath(config.read_config('xpath_config')['color'])[5])[0][-1]),
-                      int(re.findall(config.read_config('match_config')['color'], battle_log_dom.xpath(config.read_config('xpath_config')['color'])[6])[0][-1]),
-                      int(re.findall(config.read_config('match_config')['color'], battle_log_dom.xpath(config.read_config('xpath_config')['color'])[7])[0][-1])]
+        try:
+            color_list = [int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[4])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[5])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[6])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[7])[0][-1])]
+        except:
+            color_list = [0, 0, 0, 0]
         for i in range(0, len(gear_list)):
             gear = gear_list[i]
             color = color_list[i]
