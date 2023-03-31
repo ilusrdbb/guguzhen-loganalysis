@@ -2536,11 +2536,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].pRdc += int(b[i].lvl * 2 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
                 b[i].mRdc += int(b[i].lvl * 2 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
             }
-            if (b[i].psvSkl & AURA_XIN)
-            {
-                b[i].hpM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
-                b[i].sldM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
-            }
             if (b[i].psvSkl & AURA_FENG)
             {
                 b[i].pAtkA += int(b[i].lvl * 5 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
@@ -2638,6 +2633,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         b[i].hpM *= 1 + hpMAdd / 100.0;
         b[i].sldM *= 1 + sldMAdd / 100.0;
+        if (!(b[i].psvSkl & FLAG_STAT))
+        {
+            if (b[i].psvSkl & AURA_XIN)
+            {
+                b[i].hpM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+                b[i].sldM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+            }
+        }
         b[i].hp = b[i].hpM;
         b[i].sld = b[i].sldM;
         b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
@@ -3019,7 +3022,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
         int mRfl = (pa[s] + ma[s] * 0.7 + aa[s]) * (rflPFixed / 100.0);
-        if (b1.role == ROLE_MO) mRfl += int(((b0.mAtkB + b0.mAtkA) * 0.5 * (1 + b1.mAtkR * 0.01)) + b0.sldM / 10);
+        if (b1.role == ROLE_MO) mRfl += int(((b1.mAtkB + b1.mAtkA) * 0.5 * (1 + b1.mAtkR * 0.01)) + b1.sldM / 10);
 
         if (b0.role == ROLE_MING)
         {
