@@ -8,7 +8,7 @@ min_card_level: 700
 max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
-last_date: '2023-03-10'
+last_date: '2023-03-20'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: 'SKL 10 PDEF 10 MDEF 10'
@@ -27,7 +27,7 @@ amulet_config:
 wish_config: '50 50 50 50 50 50 50 50 50 20 20 20 20 20'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
 default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND',
-                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL']
+                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK']
 # 默认成长值
 default_g: 50000
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
