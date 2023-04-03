@@ -2667,14 +2667,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     int roundCounter = 0;
     int lastSide = 0;
     int roundN[2] = { 0, 0 };
-    int renCounter = 4;
+    int renCounter = 3;
     if (b[0].tAgi > b[1].tAgi && b[0].tAgi > b[1].tAgi * 6)
     {
-        renCounter = 5;
+        renCounter = 4;
     }
     if (b[1].tAgi > b[0].tAgi && b[1].tAgi > b[0].tAgi * 6)
     {
-        renCounter = 5;
+        renCounter = 4;
     }
     for (int round = 1;; ++round)
     {
@@ -2921,11 +2921,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 int maDif = 0;
                 if (b0.tSpr > b0.tInt)
                 {
-                    maDif = int((b0.tSpr / b0.tInt - 1) * 50);
+                    maDif = int(int((b0.tSpr / b0.tInt - 1) * 100) / 2);
                 }
                 else
                 {
-                    maDif = int((b0.tInt / b0.tSpr - 1) * 50);
+                    maDif = int(int((b0.tInt / b0.tSpr - 1) * 100) / 2);
                 }
                 maDif = maDif > 1000 ? 1000 : maDif;
                 double atk = ((b0.mAtkB + b0.mAtkA) * 0.45 + b0.sldM * 2 / 25) * (1 + maDif / 100.0);
