@@ -2195,9 +2195,8 @@ void preparePcBStat(const Player& pc, BStat& b)
         case GEAR_DEVOUR:
             b.mBrcA += int(g.lvl * 0.5 * (g.percent[0] / 10.0)) / 10.0;
             b.sRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
-            // TODO 与实际不符，需确认
-            hpAdd += tStr * int(int(g.lvl * 0.08) * (g.percent[2] / 100.0));
-            hpPlus += int(b.hpM * (int(int(g.lvl * 0.07) * (g.percent[3] / 100.0)) / 100.0));
+            hpAdd += tStr * (int(int(g.lvl * 0.08) * (g.percent[2] / 10.0)) / 10.0);
+            hpPlus += round(b.hpM * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_DEVOUR;
             break;
         case GEAR_PLATE:
@@ -2255,7 +2254,6 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_TIARA;
             break;
         case GEAR_RIBBON:
-            // TODO 与实际不符，需确认
             b.pRdc += b.tVit * (int(g.lvl / 120.0 * (g.percent[0] / 10.0)) / 10.0);
             b.mRdc += b.tMnd * (int(g.lvl / 120.0 * (g.percent[1] / 10.0)) / 10.0);
             hpAdd += b.tVit * (int(g.lvl / 30.0 * (g.percent[2] / 10.0)) / 10.0);
