@@ -2254,10 +2254,10 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_TIARA;
             break;
         case GEAR_RIBBON:
-            b.pRdc += tVit * int(g.lvl / 120 * (g.percent[0] / 100.0));
-            b.mRdc += tMnd * int(g.lvl / 120 * (g.percent[0] / 100.0));
-            hpAdd += tVit * int(g.lvl / 30 * (g.percent[0] / 100.0));
-            hpAdd += tMnd * int(g.lvl / 30 * (g.percent[0] / 100.0));
+            b.pRdc += b.tVit * int(g.lvl / 120 * (g.percent[0] / 100.0));
+            b.mRdc += b.tMnd * int(g.lvl / 120 * (g.percent[0] / 100.0));
+            hpAdd += b.tVit * int(g.lvl / 30 * (g.percent[0] / 100.0));
+            hpAdd += b.tMnd * int(g.lvl / 30 * (g.percent[0] / 100.0));
             if (g.isMyst) b.myst |= MYST_RIBBON;
             break;
         }
