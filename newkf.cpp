@@ -2529,7 +2529,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].myst & MYST_THORN)
             {
-                b[i].rflP += 30;
+                b[i].rflP += 25;
             }
             if (b[i].psvSkl & AURA_SHI)
             {
@@ -2559,7 +2559,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 b[i].pDefB += b[i].pDefB / 10;
                 b[i].mDefB += b[i].mDefB / 10;
-                b[i].rflP += 20;
+                b[i].rflP += 10;
             }
             if (b[i].psvSkl & AURA_JU)
             {
@@ -2568,7 +2568,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_MO)
             {
-                if (b[i].tSpr > b[i].tInt) sldMAdd += 40;
+                sldMAdd += 40;
             }
             if (b[i].role == ROLE_LIN)
             {
@@ -2928,7 +2928,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                     maDif = int(int((b0.tInt / b0.tSpr - 1) * 100) / 2);
                 }
                 maDif = maDif > 1000 ? 1000 : maDif;
-                double atk = ((b0.mAtkB + b0.mAtkA) * 0.45 + b0.sldM * 2 / 25) * (1 + maDif / 100.0);
+                double atk = ((b0.mAtkB + b0.mAtkA) * 0.35 + b0.sldM * 0.05) * (1 + maDif / 100.0);
                 ma[s] += int(atk);
                 if (b0.myst & MYST_WAND) ma[s] += int(atk * 0.4);
                 break;
@@ -3002,7 +3002,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += (b1.hpM + b1.sldM) * 7 / 50;
             if (b0.sklC) pa[s] = int(pa[s] * 1.4);
-            ma[s] = ma[s] * 3 / 10;
         }
         if (isMC)
         {
@@ -3022,7 +3021,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
         int mRfl = (pa[s] + ma[s] * 0.7 + aa[s]) * (rflPFixed / 100.0);
-        if (b1.role == ROLE_MO) mRfl += int(((b1.mAtkB + b1.mAtkA) * 0.5 * (1 + b1.mAtkR * 0.01)) + b1.sldM / 10);
+        if (b1.role == ROLE_MO) mRfl += int(((b1.mAtkB + b1.mAtkA) * 0.5 * (1 + b1.mAtkR * 0.01)) + b1.sldM * 0.08);
 
         if (b0.role == ROLE_MING)
         {
@@ -3264,7 +3263,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b1.myst & MYST_VULTURE) hr[1 - s] += ((int64_t)sd[s]) * b1.lchP / 1250;
         if (b1.myst & MYST_WOOD)
         {
-            hr[1 - s] += b1.hpM / 10;
+            hr[1 - s] += b1.hpM / 20;
         }
         if (!b1.hpPot && b1.hp <= b1.hpM * 4 / 5)
         {
@@ -3298,7 +3297,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 {
                     if (b[i].myst & MYST_RIBBON)
                     {
-                        hr[i] += b[i].hpM * 8 / 100;
+                        hr[i] += b[i].hpM * 3 / 50;
                     }
                     else
                     {
