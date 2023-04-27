@@ -4,6 +4,7 @@
 # @Author : chaocai
 import datetime
 import time
+from collections import Counter
 
 from core import config, file, enemy, battle
 
@@ -13,6 +14,8 @@ def start():
     config._init()
     # 解析json
     json_data = file.file_load()
+    # 权重统计
+    w_map = get_w_map(json_data);
     # 删除输出文件
     file.del_file(config.read_config('output_path'))
     # 利用dict的特性新的覆盖旧的
@@ -43,7 +46,7 @@ def start():
         battle_data = battle.Battle(enemy_data.battle_log)
         result_list = []
         # 构造角色
-        result_list.append(build_first_line(enemy_data))
+        result_list.append(build_first_line(enemy_data, w_map))
         # 构造许愿池
         result_list.append(build_second_line())
         # 构造护符
@@ -107,15 +110,19 @@ def build_last_line(talent_list):
 
 
 # 构造第一行
-def build_first_line(enemy_data):
+def build_first_line(enemy_data, w_map):
     enemy_card = enemy_data.enemy_card
+    enemy_name = enemy_data.enemy_name
+    w_str = ''
+    if config.read_config('is_add_w'):
+        w_str = 'W=' + str(w_map[enemy_name]) + ' '
     if enemy_card == 'WU' or enemy_card == 'XI' or enemy_card == 'XIA':
-        return enemy_card + '_' + enemy_data.enemy_name + ' G=' + str(enemy_data.card_g) \
+        return w_str + enemy_card + '_' + enemy_data.enemy_name + ' G=' + str(enemy_data.card_g) \
                + ' ' + str(enemy_data.card_level) \
                + ' ' + str(enemy_data.kf_level) \
                + ' ' + str(enemy_data.skill_num) \
                + ' ' + str(enemy_data.card_quality)
-    return enemy_card + '_' + enemy_data.enemy_name \
+    return w_str + enemy_card + '_' + enemy_data.enemy_name \
            + ' ' + str(enemy_data.card_level) \
            + ' ' + str(enemy_data.kf_level) \
            + ' ' + str(enemy_data.skill_num) \
@@ -136,3 +143,34 @@ def build_third_line(enemy_card, weapon):
     else:
         aumlet = config.read_config('amulet_config')['default']
     return 'AMULET ' + aumlet + ' ENDAMULET'
+
+# 统计
+def get_w_map(json_data):
+    result_map = {}
+    for data in json_data:
+        # 排除野怪结果
+        if data['char'] == '野怪':
+            continue
+        # 白名单
+        if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
+            continue
+        # 黑名单跳过
+        if config.read_config('black_list') and data['enemyname'] in config.read_config('black_list'):
+            continue
+        # 等级跳过
+        if config.read_config('min_card_level') and int(data['charlevel']) < config.read_config('min_card_level'):
+            continue
+        # 日期跳过
+        if config.read_config('last_date'):
+            last_datetime = datetime.datetime.strptime(config.read_config('last_date') + ' 00:00:00.000',
+                                                       "%Y-%m-%d %H:%M:%S.%f")
+            last_timestamp = int(
+                time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
+            if last_timestamp > data['time']:
+                continue
+        # 计数
+        if data["enemyname"] in result_map:
+            result_map[data["enemyname"]] += 1
+        else:
+            result_map[data["enemyname"]] = 1
+    return Counter(result_map)
