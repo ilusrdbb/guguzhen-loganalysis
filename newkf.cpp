@@ -2661,7 +2661,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         printf("  VS  ");
         showRole(b[1]);
         printf("\n");
-        printf("HP:%d SLD:%d  --  HP:%d SLD:%d\n", b[0].hp, b[0].sld, b[1].hp, b[1].sld);
+        printf("HP:%d SLD:%d  --  HP:%d SLD:%d\n", int(b[0].hp), int(b[0].sld), int(b[1].hp), int(b[1].sld));
     }
     //int roundFlag = 0;
     int roundCounter = 0;
@@ -3379,7 +3379,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             showRound(s == 1 && isC, s == 1 && isS,
                 pa[1], ma[1], aa[1], hd[1], sd[1], hr[1], sr[1]);
             printf("\n");
-            printf("HP:%d SLD:%d  --  HP:%d SLD:%d\n", b[0].hp, b[0].sld, b[1].hp, b[1].sld);
+            printf("HP:%d SLD:%d  --  HP:%d SLD:%d\n", int(b[0].hp), int(b[0].sld), int(b[1].hp), int(b[1].sld));
         }
 
         int wf = 0;
@@ -3399,7 +3399,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             return br;
         }
 
-        b1.spdC = (b1.spdB + b1.spdA) * (1 - b1.spdRR / 100.0);
+        b1.spdC = b1.psvSkl & AURA_SHAN ? 1 : (b1.spdB + b1.spdA) * (1 - b1.spdRR / 100.0);
         if (b1.spdC <= 0) b1.spdC = 1;
 
         if (round == 100) break;
