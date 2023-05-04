@@ -2805,7 +2805,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b0.role == ROLE_YI)
         {
             int atkPlus = (int)((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 1.4);
-            if (MYST_COLORFUL)
+            if (b0.myst & MYST_COLORFUL)
             {
                 ma[s] += atkPlus;
                 pa[s] += atkPlus;
