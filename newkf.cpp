@@ -276,6 +276,8 @@ struct BStat
     int tSpr; // 精神加点
     int tMnd; // 意志加点
 
+    int mode; // 雅状态 0白天1黑夜2凶神
+
     std::string alias;
 };
 
@@ -2021,6 +2023,8 @@ void preparePcBStat(const Player& pc, BStat& b)
         b = *pc.pBStat;
         return;
     }
+
+    b.mode = pc.mode;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
