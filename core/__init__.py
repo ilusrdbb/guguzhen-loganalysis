@@ -116,7 +116,13 @@ def build_first_line(enemy_data, w_map):
     w_str = ''
     if config.read_config('is_add_w'):
         w_str = 'W=' + str(w_map[enemy_name]) + ' '
-    if enemy_card == 'WU' or enemy_card == 'XI' or enemy_card == 'XIA':
+    if enemy_card == 'YA':
+        return enemy_card + '_' + enemy_data.enemy_name + ' M=' + str(enemy_data.ya_mode) \
+               + ' ' + str(enemy_data.card_level) \
+               + ' ' + str(enemy_data.kf_level) \
+               + ' ' + str(enemy_data.skill_num) \
+               + ' ' + str(enemy_data.card_quality)
+    elif enemy_card == 'WU' or enemy_card == 'XI' or enemy_card == 'XIA':
         return w_str + enemy_card + '_' + enemy_data.enemy_name + ' G=' + str(enemy_data.card_g) \
                + ' ' + str(enemy_data.card_level) \
                + ' ' + str(enemy_data.kf_level) \

@@ -25,6 +25,8 @@ class Enemy:
     card_quality = 11
     # 战斗记录
     battle_log = None
+    # 雅的模式 0白天1黑夜2凶神
+    ya_mode = 0
 
     # 初始化对手数据
     def __init__(self, data):
@@ -37,4 +39,8 @@ class Enemy:
             self.kf_level = self.card_level - 200
         self.battle_timestamp = data['time']
         self.enemy_card = config.read_config('card_map').get(data['char'])
+        self.ya_mode = config.read_config('ya_mode')
+        if self.enemy_card == 'YA2':
+            self.enemy_card = 'YA'
+            self.ya_mode = 2
         self.battle_log = data['log']
