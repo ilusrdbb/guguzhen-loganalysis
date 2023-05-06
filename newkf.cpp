@@ -3057,6 +3057,20 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 ma[s] += (b0.mAtkB + b0.mAtkA) * 2 * (1 + dmgAdd / 100.0);
                 break;
             }
+            case ROLE_YA:
+            {
+                if (b0.mode != 2)
+                {
+                    pa[s] += (b1.hpM + b1.sldM) * 0.15
+                    b1.hpM *= 0.95
+                    b1.sldM *= 0.95
+                }
+                else
+                {
+                    // TODO
+                }
+                break;
+            }
             }
         }
         if (b0.role == ROLE_WEI)
