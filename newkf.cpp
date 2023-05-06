@@ -949,7 +949,7 @@ bool readPlayer(FILE* fp, Player& pc)
     if (buf[0] == 'G' && buf[1] == '=')
     {
         if (!isNumber(buf + 2) || sscanf(buf + 2, "%d", &pc.growth) != 1 ||
-            pc.growth < 0 || pc.growth > 106800)
+            pc.growth < 0)
         {
             printf("Error: Invalid \"G=\" parameter: %s\n", buf + 2);
             fseek(fp, pos, SEEK_SET);
@@ -2270,7 +2270,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.hpM += hpPlus + hpAdd;
     if (pc.role == ROLE_XI)
     {
-        b.hpM += pc.growth;
+        b.hpM += pc.growth > 100000 ? 100000 : pc.growth;
     }
     b.pAtkB += pAtkPlus;
     b.mAtkB += mAtkPlus;
@@ -2280,7 +2280,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sldM += sldPlus + sldAdd;
     if (pc.role == ROLE_XIA)
     {
-        b.sldM += pc.growth;
+        b.sldM += pc.growth > 100000 ? 100000 : pc.growth;
     }
     b.hp = b.hpM;
     b.spdRR = 0.0;
