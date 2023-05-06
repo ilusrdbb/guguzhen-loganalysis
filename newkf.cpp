@@ -71,6 +71,7 @@ enum
     ROLE_WU,       // 舞
     ROLE_XI,       // 希
     ROLE_XIA,      // 霞
+    ROLE_YA,       // 雅
     PC_COUNT = 11,
 
     ATTR_STR = 0, // 力量
@@ -302,6 +303,7 @@ struct Player
     int sklSlot;
     int quality;
     int growth;
+    int mode;
     int attr[ATTR_COUNT];
     int auraSkl;
     Gear gear[4];
@@ -965,6 +967,26 @@ bool readPlayer(FILE* fp, Player& pc)
     else
     {
         pc.growth = 0;
+    }
+    if (buf[0] == 'M' && buf[1] == '=')
+    {
+        if (!isNumber(buf + 2) || sscanf(buf + 2, "%d", &pc.mode) != 1 ||
+            pc.mode < 0 || pc.mode > 2)
+        {
+            printf("Error: Invalid \"M=\" parameter: %s\n", buf + 2);
+            fseek(fp, pos, SEEK_SET);
+            return false;
+        }
+        if (fscanf(fp, "%s", buf) != 1)
+        {
+            printf("Error: EOF after \"M=\"\n");
+            fseek(fp, pos, SEEK_SET);
+            return false;
+        }
+    }
+    else
+    {
+        pc.mode = 0;
     }
     if (strcmp(buf, "STAT") == 0)
     {
@@ -2638,6 +2660,32 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].spdA *= 1.3;
             }
         }
+        if (b[i].role == ROLE_YA)
+        {
+            if (b[i].mode == 0)
+            {
+                b[i].lchP += 50;
+                b[i].pDefB *= 1.2;
+                b[i].mDefB *= 1.2;
+            }
+            if (b[i].mode == 1)
+            {
+                b[i].lchP += 50;
+                b[1 - i].mAtkB *= 0.7;
+                b[1 - i].mAtkA *= 0.7;
+                b[i - i].spdB *= 0.7;
+                b[i - i].spdA *= 0.7;
+            }
+            if (b[i].mode == 2)
+            {
+                b[i].pDefB *= 1.2;
+                b[i].mDefB *= 1.2;
+                b[1 - i].mAtkB *= 0.7;
+                b[1 - i].mAtkA *= 0.7;
+                b[i - i].spdB *= 0.7;
+                b[i - i].spdA *= 0.7;
+            }
+        }
         b[i].hpM *= 1 + hpMAdd / 100.0;
         b[i].sldM *= 1 + sldMAdd / 100.0;
         if (!(b[i].psvSkl & FLAG_STAT))
@@ -3447,8 +3495,8 @@ void showState(const BStat& b)
     printf("Max Shield             : %.2f\n", b.sldM);
     printf("Shield Recover         : %.2f%%+%.2f\n", b.sldRecP, b.sldRecA);
     printf("Damage Reflection      : %.2f%%\n", b.rflP);
-    printf("Critical Defence      : %.2f%%\n", b.cDef);
-    printf("Skill Defence      : %.2f%%\n", b.sDef);
+    printf("Critical Defence       : %.2f%%\n", b.cDef);
+    printf("Skill Defence          : %.2f%%\n", b.sDef);
     printf("Aura Skill Set         :");
     for (int i = 0; i < AURA_COUNT; ++i)
     {
