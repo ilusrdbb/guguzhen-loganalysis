@@ -2895,6 +2895,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 0.25);
         }
+        if (b0.role == ROLE_YA && b0.mode == 2)
+        {
+            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.1 * round);
+            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.1 * round);
+            aa[s] += (int)((b0.aAtk) * 0.1 * round);
+        }
         if (b0.psvSkl & AURA_FEI)
         {
             pa[s] += int(b0.hpM * 0.18);
