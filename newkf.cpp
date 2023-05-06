@@ -2769,7 +2769,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int sd[2] = { 0, 0 };
         int sr[2] = { 0, 0 };
 
-        bool isS, isC, isMC, isE;
+        bool isS, isC, isMC, isE, isN;
         int sklType = 0;
         if (interact)
         {
@@ -2918,6 +2918,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             pa[s] += (b0.pAtkB + b0.pAtkA) * 30;
             ma[s] += (b0.mAtkB + b0.mAtkA) * 30;
         }
+        if (isN)
+        {
+            isC = false;
+            isS = false;
+        }
         if (isC)
         {
             pa[s] *= 2;
@@ -3061,13 +3066,13 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 if (b0.mode != 2)
                 {
-                    pa[s] += (b1.hpM + b1.sldM) * 0.15
-                    b1.hpM *= 0.95
-                    b1.sldM *= 0.95
+                    pa[s] += (b1.hpM + b1.sldM) * 0.15;
+                    b1.hpM *= 0.95;
+                    b1.sldM *= 0.95;
                 }
                 else
                 {
-                    // TODO
+                    isN = true;
                 }
                 break;
             }
@@ -3430,8 +3435,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         for (int i = 0; i < 2; ++i)
         {
-            hr[i] = hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
-            sr[i] = sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
+            hr[i] = isN ? 0 : hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
+            sr[i] = isN ? 0 : sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
             if (i == 1 - s && b[i].role == ROLE_LIN && b[i].sklC == 0 && hd[i] >= b[i].hp + hr[i])
             {
                 hd[i] = 0;
