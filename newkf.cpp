@@ -208,6 +208,9 @@ enum
     AMUL_SKL,     // 技能几率
     AMUL_PDEF,    // 物理防御
     AMUL_MDEF,    // 魔法防御
+    AMUL_ALL,     // 全属性
+    AMUL_CDEF,    // 暴击抵抗
+    AMUL_SDEF,    // 技能抵抗
     AMUL_COUNT,
 };
 
@@ -253,6 +256,8 @@ struct BStat
     double sldRecA; // 附加护盾回复
     double sldRecRR;// 护盾回复减少率(百分比)
     double rflP;    // 百分比伤害反弹
+    double cDef;   // 基础暴击抵抗
+    double sDef;   // 基础技能防御
     int psvSkl;  // 被动技能组合(光环、flag)
     int myst;    // 神秘属性组合 
     int sklC;    // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
@@ -340,7 +345,7 @@ int prefTable[1 << PREF_COUNT][5][PREF_COUNT * (PREF_COUNT - 1) * (PREF_COUNT - 
 const char* const amulName[AMUL_COUNT] = {
     "STR", "AGI", "INT", "VIT", "SPR", "MND",
     "PATK", "MATK", "SPD", "REC", "HP", "SLD",
-    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF" };
+    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "ALL", "CDEF", "SDEF" };
 const int profitRate[4] = { 2, 3, 4, 6 }; // *50%
 
 int sklRate[NPC_COUNT][2] = { {1, 1}, {3, 1}, {8, 1}, {1, 1},
@@ -1161,7 +1166,7 @@ bool readPlayer(FILE* fp, Player& pc)
         b.mDefA = 0;
         b.sld = b.sldM;
         b.sldRecRR = 0;
-        b.sklC = (b.role == ROLE_MIN ? 3 : b.role == ROLE_WU ? pc.growth : 0);
+        b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? pc.growth : 0);
         b.houC = 0;
         b.alias = pc.alias;
     }
@@ -2002,12 +2007,12 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.tSpr = pc.attr[ATTR_SPR];
     b.tMnd = pc.attr[ATTR_MND];
 
-    int tStr = pc.attr[ATTR_STR] + pc.amul[AMUL_STR];
-    int tAgi = pc.attr[ATTR_AGI] + pc.amul[AMUL_AGI];
-    int tInt = pc.attr[ATTR_INT] + pc.amul[AMUL_INT];
-    int tVit = pc.attr[ATTR_VIT] + pc.amul[AMUL_VIT];
-    int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR];
-    int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND];
+    int tStr = pc.attr[ATTR_STR] + pc.amul[AMUL_STR] + pc.amul[AMUL_ALL];
+    int tAgi = pc.attr[ATTR_AGI] + pc.amul[AMUL_AGI] + pc.amul[AMUL_ALL];
+    int tInt = pc.attr[ATTR_INT] + pc.amul[AMUL_INT] + pc.amul[AMUL_ALL];
+    int tVit = pc.attr[ATTR_VIT] + pc.amul[AMUL_VIT] + pc.amul[AMUL_ALL];
+    int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_ALL];
+    int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_ALL];
     int vitMnd = tVit + tMnd;
     b.role = pc.role;
     b.lvl = pc.lvl;
@@ -2068,7 +2073,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.rflP = 0.0;
     b.psvSkl = pc.auraSkl;
     b.myst = 0;
-    b.sklC = (b.role == ROLE_MIN ? 3 : b.role == ROLE_WU ? pc.growth : 0);
+    b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? pc.growth : 0);
     b.houC = 0;
     for (int i = 0; i < WISH_COUNT; ++i)
     {
@@ -2301,7 +2306,7 @@ inline int calcDefRate(int def, int defP, int brc, int cBrc, int brcA, int defMa
     int brcP = (int)(brc * (isDunh ? 0.65 : 1.0)) + (int)(cBrc * (isDunh ? 0.65 : 1.0));
     int r = def * (100 + defP - brcP);
     r = (r >= 0 ? r : r - 99) / 100 - brcA;
-    r = (r >= 0 ? r / 10 : isZhi ? 0 : -30);
+    r = (r >= 0 ? r / 10 : isZhi && isDunh ? 5 : isZhi ? 10 : -30);
     if (r > defMax) r = defMax;
     if (debug)
     {
@@ -2519,6 +2524,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].spdRR -= b[i].amul[AMUL_SPD];
         b[i].cRateP += b[i].amul[AMUL_CRT];
         b[i].sRateP += b[i].amul[AMUL_SKL];
+        b[i].cDef += b[i].amul[AMUL_CDEF];
+        b[i].sDef += b[i].amul[AMUL_SDEF];
         if (b[i].cRateP > 100) b[i].cRateP = 100;
         if (b[i].sRateP > 100) b[i].sRateP = 100;
         if (!(b[i].psvSkl & FLAG_STAT))
@@ -3195,7 +3202,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int ma2 = mRfl;
             if (b0.role == ROLE_MIN && b0.sklC == -2) ma2 = 0;
             if (b0.psvSkl & AURA_JUE) ma2 *= 0.8;
-            if (b1.role == ROLE_MIN && b1.sklC > 0) ma2 *= 0.45;
+            if (b1.role == ROLE_MIN && b1.sklC > 0) ma2 *= 1;
             if (sldActive)
             {
                 int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b0.mRdc;
@@ -3440,6 +3447,8 @@ void showState(const BStat& b)
     printf("Max Shield             : %.2f\n", b.sldM);
     printf("Shield Recover         : %.2f%%+%.2f\n", b.sldRecP, b.sldRecA);
     printf("Damage Reflection      : %.2f%%\n", b.rflP);
+    printf("Critical Defence      : %.2f%%\n", b.cDef);
+    printf("Skill Defence      : %.2f%%\n", b.sDef);
     printf("Aura Skill Set         :");
     for (int i = 0; i < AURA_COUNT; ++i)
     {
