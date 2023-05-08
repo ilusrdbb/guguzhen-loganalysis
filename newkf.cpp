@@ -209,9 +209,9 @@ enum
     AMUL_SKL,     // 技能几率
     AMUL_PDEF,    // 物理防御
     AMUL_MDEF,    // 魔法防御
-    AMUL_ALL,     // 全属性
-    AMUL_CDEF,    // 暴击抵抗
-    AMUL_SDEF,    // 技能抵抗
+    AMUL_AAA,     // 全属性
+    AMUL_CRTR,    // 暴击抵抗
+    AMUL_SKLR,    // 技能抵抗
     AMUL_COUNT,
 };
 
@@ -349,7 +349,7 @@ int prefTable[1 << PREF_COUNT][5][PREF_COUNT * (PREF_COUNT - 1) * (PREF_COUNT - 
 const char* const amulName[AMUL_COUNT] = {
     "STR", "AGI", "INT", "VIT", "SPR", "MND",
     "PATK", "MATK", "SPD", "REC", "HP", "SLD",
-    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "ALL", "CDEF", "SDEF" };
+    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "ALL", "CRTR", "SKLR" };
 const int profitRate[4] = { 2, 3, 4, 6 }; // *50%
 
 int sklRate[NPC_COUNT][2] = { {1, 1}, {3, 1}, {8, 1}, {1, 1},
@@ -2033,12 +2033,12 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.tSpr = pc.attr[ATTR_SPR];
     b.tMnd = pc.attr[ATTR_MND];
 
-    int tStr = pc.attr[ATTR_STR] + pc.amul[AMUL_STR] + pc.amul[AMUL_ALL];
-    int tAgi = pc.attr[ATTR_AGI] + pc.amul[AMUL_AGI] + pc.amul[AMUL_ALL];
-    int tInt = pc.attr[ATTR_INT] + pc.amul[AMUL_INT] + pc.amul[AMUL_ALL];
-    int tVit = pc.attr[ATTR_VIT] + pc.amul[AMUL_VIT] + pc.amul[AMUL_ALL];
-    int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_ALL];
-    int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_ALL];
+    int tStr = pc.attr[ATTR_STR] + pc.amul[AMUL_STR] + pc.amul[AMUL_AAA];
+    int tAgi = pc.attr[ATTR_AGI] + pc.amul[AMUL_AGI] + pc.amul[AMUL_AAA];
+    int tInt = pc.attr[ATTR_INT] + pc.amul[AMUL_INT] + pc.amul[AMUL_AAA];
+    int tVit = pc.attr[ATTR_VIT] + pc.amul[AMUL_VIT] + pc.amul[AMUL_AAA];
+    int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_AAA];
+    int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_AAA];
     int vitMnd = tVit + tMnd;
     b.role = pc.role;
     b.lvl = pc.lvl;
@@ -2050,6 +2050,8 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
     b.hpRecA = 0.0;
     b.hpRecRR = 0.0;
+    b.cDef = 0.0;
+    b.sDef = 0.0;
     b.pAtkB = tStr * (10.0 +
         (pc.kfLvl >= 50 ? 3.0 : 0.0) +
         (pc.kfLvl >= 200 && tStr >= 200 ? 4.0 : 0.0) +
@@ -2550,8 +2552,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].spdRR -= b[i].amul[AMUL_SPD];
         b[i].cRateP += b[i].amul[AMUL_CRT];
         b[i].sRateP += b[i].amul[AMUL_SKL];
-        b[i].cDef += b[i].amul[AMUL_CDEF];
-        b[i].sDef += b[i].amul[AMUL_SDEF];
+        b[i].cDef += b[i].amul[AMUL_CRTR];
+        b[i].sDef += b[i].amul[AMUL_SKLR];
         if (b[i].cRateP > 100) b[i].cRateP = 100;
         if (b[i].sRateP > 100) b[i].sRateP = 100;
         if (!(b[i].psvSkl & FLAG_STAT))
@@ -3149,6 +3151,18 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 ma[s] *= 0.9;
                 aa[s] *= 0.9;
             }
+        }
+        if (isC)
+        {
+            pa[s] *= (1 - b1.cDef / 100.0);
+            ma[s] *= (1 - b1.cDef / 100.0);
+            aa[s] *= (1 - b1.cDef / 100.0);
+        }
+        if (isS)
+        {
+            pa[s] *= (1 - b1.sDef / 100.0);
+            ma[s] *= (1 - b1.sDef / 100.0);
+            aa[s] *= (1 - b1.sDef / 100.0);
         }
 
         int sldRemain = b1.sld;
