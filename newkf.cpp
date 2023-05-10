@@ -349,7 +349,7 @@ int prefTable[1 << PREF_COUNT][5][PREF_COUNT * (PREF_COUNT - 1) * (PREF_COUNT - 
 const char* const amulName[AMUL_COUNT] = {
     "STR", "AGI", "INT", "VIT", "SPR", "MND",
     "PATK", "MATK", "SPD", "REC", "HP", "SLD",
-    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "ALL", "CRTR", "SKLR" };
+    "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "AAA", "CRTR", "SKLR" };
 const int profitRate[4] = { 2, 3, 4, 6 }; // *50%
 
 int sklRate[NPC_COUNT][2] = { {1, 1}, {3, 1}, {8, 1}, {1, 1},
