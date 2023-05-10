@@ -2576,6 +2576,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].pAtkA += int(b[i].lvl * 5 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
                 b[i].mAtkA += int(b[i].lvl * 5 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
             }
+            if (b[i].psvSkl & AURA_XIN)
+            {
+                b[i].hpM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+                b[i].sldM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+            }
             if (b[i].psvSkl & AURA_BI)
             {
                 b[i].pBrcP *= 1.15;
@@ -2694,14 +2699,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         b[i].hpM *= 1 + hpMAdd / 100.0;
         b[i].sldM *= 1 + sldMAdd / 100.0;
-        if (!(b[i].psvSkl & FLAG_STAT))
-        {
-            if (b[i].psvSkl & AURA_XIN)
-            {
-                b[i].hpM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
-                b[i].sldM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
-            }
-        }
         b[i].hp = b[i].hpM;
         b[i].sld = b[i].sldM;
         b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
