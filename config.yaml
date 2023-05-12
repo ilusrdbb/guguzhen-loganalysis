@@ -8,7 +8,7 @@ min_card_level: 700
 max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
-last_date: '2023-04-27'
+last_date: '2023-05-05'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: ''
@@ -23,6 +23,7 @@ amulet_config:
   YI: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 4'
   XIA: 'AGI 80 INT 80 SPR 80 SLD 10 SPD 10 MATK 10 CRT 10 SKL 10 RFL 10 AAA 4'
   WU: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 4'
+  YA: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 SKL 10 RFL 10 PDEF 10 MDEF 10 AAA 4'
 # 默认许愿池
 wish_config: '80 80 80 80 80 80 80 80 80 40 40 40 40 40'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
@@ -62,24 +63,8 @@ gear_config:
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
 ya_mode: 1
-
-# 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解
-# 卡片映射
-card_map:
-  默: 'MO'
-  琳: 'LIN'
-  艾: 'AI'
-  梦: 'MENG'
-  薇: 'WEI'
-  冥: 'MING'
-  命: 'MIN'
-  伊: 'YI'
-  希: 'XI'
-  舞: 'WU'
-  霞: 'XIA'
-  雅: 'YA'
-  雅(凶神): 'YA2'
 # 装备映射
+# 如果是自定义主题的装备，需要在这里补充映射
 gear_map:
   探险者短杖: 'STAFF'
   狂信者的荣誉之刃: 'BLADE'
@@ -115,6 +100,55 @@ gear_map:
   探险者耳环: 'SCARF'
   占星师的耳饰: 'TIARA'
   彩金长剑: 'COLORFUL'
+  香木法杖: 'STAFF'
+  妖刀血鸦: 'BLADE'
+  深渊之弓: 'ASSBOW'
+  黑曜石天黑剑: 'DAGGER'
+  棒棒糖手杖: 'WAND'
+  盖亚之斧: 'SHIELD'
+  勇气星核剑: 'CLAYMORE'
+  混沌之刃: 'SPEAR'
+  毁灭之伤冥神枪: 'SPEAR'
+  旅者手镯: 'GLOVES'
+  旅者拳套: 'GLOVES'
+  睿智手镯: 'BRACELET'
+  朋克手镯: 'VULTURE'
+  深红爪: 'VULTURE'
+  魔导师的长袍: 'CLOAK'
+  霸王树之棘针铠: 'THORN'
+  翠绿灵衣: 'WOOD'
+  黑玛瑙之祈装衣: 'CAPE'
+  旅者耳环: 'SCARF'
+  旅者头巾: 'SCARF'
+  海神耳饰: 'TIARA'
+  樱花的月夜簪: 'TIARA'
+  精灵王护石: 'RIBBON'
+  细冰姬的蝴蝶结: 'RIBBON'
+  永恒绿戒: 'RING'
+  深结晶变异水晶: 'DEVOUR'
+  旅人剑: 'SWORD'
+  猎人弓: 'BOW'
+  重金属护甲: 'PLATE'
+  皮革工作服: 'LEATHER'
+  旅者长袍: 'CLOTH'
+  辉光剑雅德玛斯: 'COLORFUL'
+
+# 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解
+# 卡片映射
+card_map:
+  默: 'MO'
+  琳: 'LIN'
+  艾: 'AI'
+  梦: 'MENG'
+  薇: 'WEI'
+  冥: 'MING'
+  命: 'MIN'
+  伊: 'YI'
+  希: 'XI'
+  舞: 'WU'
+  霞: 'XIA'
+  雅: 'YA'
+  雅(凶神): 'YA2'
 # 天赋映射
 talent_map:
   启程之誓: 'SHI'
