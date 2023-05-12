@@ -2734,6 +2734,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     {
         renCounter = 4;
     }
+    bool isYS = false;
     for (int round = 1;; ++round)
     {
         int s = b[0].spdC >= b[1].spdC ? 0 : 1;
@@ -2772,7 +2773,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int sd[2] = { 0, 0 };
         int sr[2] = { 0, 0 };
 
-        bool isS, isC, isMC, isE, isN;
+        bool isS, isC, isMC, isE;
         int sklType = 0;
         if (interact)
         {
@@ -2921,7 +2922,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             pa[s] += (b0.pAtkB + b0.pAtkA) * 30;
             ma[s] += (b0.mAtkB + b0.mAtkA) * 30;
         }
-        if (isN)
+        if (isYS)
         {
             isC = false;
             isS = false;
@@ -3075,7 +3076,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 }
                 else
                 {
-                    isN = true;
+                    isYS = true;
                 }
                 break;
             }
@@ -3450,8 +3451,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         for (int i = 0; i < 2; ++i)
         {
-            hr[i] = isN ? 0 : hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
-            sr[i] = isN ? 0 : sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
+            hr[i] = isYS ? 0 : hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
+            sr[i] = isYS ? 0 : sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
             if (i == 1 - s && b[i].role == ROLE_LIN && b[i].sklC == 0 && hd[i] >= b[i].hp + hr[i])
             {
                 hd[i] = 0;
