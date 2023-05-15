@@ -3162,7 +3162,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.atkLvl > b1.atkLvl)
         {
-            int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
+            int lvlDiff = b0.atkLvl - b1.atkLvl > 20 ? 20 : b0.atkLvl - b1.atkLvl;
             pa[s] *= 1 + 0.03 * lvlDiff;
             ma[s] *= 1 + 0.03 * lvlDiff;
             aa[s] *= 1 + 0.03 * lvlDiff;
