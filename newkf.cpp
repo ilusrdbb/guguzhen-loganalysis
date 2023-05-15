@@ -1195,7 +1195,7 @@ bool readPlayer(FILE* fp, Player& pc)
         b.mDefA = 0;
         b.sld = b.sldM;
         b.sldRecRR = 0;
-        b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? pc.growth : 0);
+        b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
         b.houC = 0;
         b.alias = pc.alias;
     }
@@ -2111,7 +2111,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.rflP = 0.0;
     b.psvSkl = pc.auraSkl;
     b.myst = 0;
-    b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? pc.growth : 0);
+    b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
     b.houC = 0;
     for (int i = 0; i < WISH_COUNT; ++i)
     {
