@@ -278,6 +278,9 @@ struct BStat
 
     int mode; // 雅状态 0白天1黑夜2凶神
 
+    int atkLvl; // 进攻等级
+    int defLvl; // 防御等级
+
     std::string alias;
 };
 
@@ -306,6 +309,8 @@ struct Player
     int quality;
     int growth;
     int mode;
+    int atkLvl;
+    int defLvl;
     int attr[ATTR_COUNT];
     int auraSkl;
     Gear gear[4];
@@ -1200,8 +1205,10 @@ bool readPlayer(FILE* fp, Player& pc)
             fscanf(fp, "%d", &pc.kfLvl) != 1 ||
             fscanf(fp, "%d", &pc.sklSlot) != 1 ||
             fscanf(fp, "%d", &pc.quality) != 1 ||
+            fscanf(fp, "%d", &pc.atkLvl) != 1 ||
+            fscanf(fp, "%d", &pc.defLvl) != 1 ||
             pc.lvl < 0 || pc.kfLvl < 0 || pc.sklSlot < 1 || pc.sklSlot > 7 ||
-            pc.quality < 0 || pc.quality > 11)
+            pc.quality < 0 || pc.quality > 11 || pc.atkLvl < 0 || pc.defLvl < 0)
         {
             fseek(fp, pos, SEEK_SET);
             return false;
@@ -2025,6 +2032,9 @@ void preparePcBStat(const Player& pc, BStat& b)
     }
 
     b.mode = pc.mode;
+
+    b.atkLvl = pc.atkLvl;
+    b.defLvl = pc.defLvl;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
@@ -3150,6 +3160,13 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 aa[s] *= 0.9;
             }
         }
+        if (b0.atkLvl > b1.atkLvl)
+        {
+            int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
+            pa[s] *= 1 + 0.03 * lvlDiff;
+            ma[s] *= 1 + 0.03 * lvlDiff;
+            aa[s] *= 1 + 0.03 * lvlDiff;
+        }
         if (isC)
         {
             pa[s] *= (1 - b1.cDef / 100.0);
@@ -3178,6 +3195,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -2)) ma2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) ma2 /= 10;
             if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
+            if (b1.defLvl > b0.defLvl)
+            {
+                int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
+                ma2 *= 1 - 0.03 * lvlDiff;
+            }
             if (sldActive)
             {
                 int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
@@ -3219,6 +3241,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -1)) pa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) pa2 /= 10;
             if (b1.psvSkl & AURA_JUE) pa2 *= 0.8;
+            if (b1.defLvl > b0.defLvl)
+            {
+                int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
+                pa2 *= 1 - 0.03 * lvlDiff;
+            }
             if (sldActive)
             {
                 int sdMax = int(pa2 * (b1.psvSkl & AURA_DUN ? 1.25 : 1.5) * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.pRdc;
@@ -3255,6 +3282,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -3)) aa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
             if (b1.psvSkl & AURA_JUE) aa2 *= 1;
+            if (b1.defLvl > b0.defLvl)
+            {
+                int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
+                aa2 *= 1 - 0.03 * lvlDiff;
+            }
             if (sldActive)
             {
                 if (aa2 <= sldRemain)
@@ -3538,6 +3570,8 @@ void showState(const BStat& b)
     printf("Damage Reflection      : %.2f%%\n", b.rflP);
     printf("Critical Defence       : %.2f%%\n", b.cDef);
     printf("Skill Defence          : %.2f%%\n", b.sDef);
+    printf("Attack Level           : %d\n", b.atkLvl);
+    printf("Defence Level          : %d\n", b.defLvl);
     printf("Aura Skill Set         :");
     for (int i = 0; i < AURA_COUNT; ++i)
     {
@@ -4986,7 +5020,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
+                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");
@@ -5025,7 +5059,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
+                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");
@@ -5165,7 +5199,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
+                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");

@@ -27,6 +27,10 @@ class Enemy:
     battle_log = None
     # 雅的模式 0白天1黑夜2凶神
     ya_mode = 0
+    # 进攻等级
+    atk_level = 0
+    # 防御等级
+    def_level = 0
 
     # 初始化对手数据
     def __init__(self, data):
@@ -44,3 +48,13 @@ class Enemy:
             self.enemy_card = 'YA'
             self.ya_mode = 2
         self.battle_log = data['log']
+        self.atk_level = config.read_config('level_config')['default']
+        self.def_level = self.atk_level
+        if config.read_config('level_config').get(data['enemyname']):
+            self.atk_level = config.read_config('level_config').get(data['enemyname'])
+            self.def_level = self.atk_level
+        # TODO 测试结束后删掉
+        if self.atk_level > 2:
+            self.atk_level = 2
+        if self.def_level > 2:
+            self.def_level = 2
