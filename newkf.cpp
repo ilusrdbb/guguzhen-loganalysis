@@ -812,7 +812,7 @@ bool readGear(FILE* fp, Gear& gear)
     {
         int b;
         if (fscanf(fp, "%d%d%d%d%d%d%d%d", &gear.lvl, &gear.atkLvl, &gear.defLvl, &gear.percent[0], &gear.percent[1],
-            &gear.percent[2], &gear.percent[3], &b) != 6 ||
+            &gear.percent[2], &gear.percent[3], &b) != 8 ||
             gear.lvl < 1 || gear.atkLvl < 0 || gear.defLvl < 0 ||
             gear.percent[0] < 50 || gear.percent[0] > 150 ||
             gear.percent[1] < 50 || gear.percent[1] > 150 ||
