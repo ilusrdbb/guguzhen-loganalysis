@@ -54,7 +54,7 @@ def start():
         # 构造六围
         result_list.append(build_four_line(battle_data.attr_list))
         # 构造装备
-        result_list.append(build_five_line(battle_data))
+        result_list.append(build_five_line(enemy_data, battle_data))
         result_list.append(build_six_line(battle_data))
         result_list.append(build_seven_line(battle_data))
         result_list.append(build_eight_line(battle_data))
@@ -69,44 +69,46 @@ def start():
 
 # 构造第8行
 def build_eight_line(battle_data):
-    return battle_data.gear_list[3] + " " \
-           + battle_data.gear_level_list[3] + " " \
-           + config.read_config('gear_config')[battle_data.gear_list[3]] + " " \
+    return battle_data.gear_list[3] + ' ' \
+           + battle_data.gear_level_list[3] + ' 0 0 ' \
+           + config.read_config('gear_config')[battle_data.gear_list[3]] + ' ' \
            + battle_data.gear_mystery_list[3]
 
 
 # 构造第7行
 def build_seven_line(battle_data):
-    return battle_data.gear_list[2] + " " \
-           + battle_data.gear_level_list[2] + " " \
-           + config.read_config('gear_config')[battle_data.gear_list[2]] + " " \
+    return battle_data.gear_list[2] + ' ' \
+           + battle_data.gear_level_list[2] + ' 0 0 ' \
+           + config.read_config('gear_config')[battle_data.gear_list[2]] + ' ' \
            + battle_data.gear_mystery_list[2]
 
 
 # 构造第6行
 def build_six_line(battle_data):
-    return battle_data.gear_list[1] + " " \
-           + battle_data.gear_level_list[1] + " " \
-           + config.read_config('gear_config')[battle_data.gear_list[1]] + " " \
+    return battle_data.gear_list[1] + ' ' \
+           + battle_data.gear_level_list[1] + ' 0 0 ' \
+           + config.read_config('gear_config')[battle_data.gear_list[1]] + ' ' \
            + battle_data.gear_mystery_list[1]
 
 
 # 构造第5行
-def build_five_line(battle_data):
-    return battle_data.gear_list[0] + " " \
-        + battle_data.gear_level_list[0] + " " \
-        + config.read_config('gear_config')[battle_data.gear_list[0]] + " " \
+def build_five_line(enemy_data, battle_data):
+    return battle_data.gear_list[0] + ' ' \
+        + battle_data.gear_level_list[0] + ' ' \
+        + enemy_data.atk_level + ' ' \
+        + enemy_data.def_level + ' ' \
+        + config.read_config('gear_config')[battle_data.gear_list[0]] + ' ' \
         + battle_data.gear_mystery_list[0]
 
 
 # 构造第4行
 def build_four_line(attr_list):
-    return " ".join(attr_list)
+    return ' '.join(attr_list)
 
 
 # 构造第9行
 def build_last_line(talent_list):
-    return str(len(talent_list)) + " " + " ".join(talent_list)
+    return str(len(talent_list)) + ' ' + ' '.join(talent_list)
 
 
 # 构造第一行
@@ -121,24 +123,18 @@ def build_first_line(enemy_data, w_map):
                + ' ' + str(enemy_data.card_level) \
                + ' ' + str(enemy_data.kf_level) \
                + ' ' + str(enemy_data.skill_num) \
-               + ' ' + str(enemy_data.card_quality) \
-               + ' ' + str(enemy_data.atk_level) \
-               + ' ' + str(enemy_data.def_level)
+               + ' ' + str(enemy_data.card_quality)
     elif enemy_card == 'WU' or enemy_card == 'XI' or enemy_card == 'XIA':
         return w_str + enemy_card + '_' + enemy_data.enemy_name + ' G=' + str(enemy_data.card_g) \
                + ' ' + str(enemy_data.card_level) \
                + ' ' + str(enemy_data.kf_level) \
                + ' ' + str(enemy_data.skill_num) \
-               + ' ' + str(enemy_data.card_quality) \
-               + ' ' + str(enemy_data.atk_level) \
-               + ' ' + str(enemy_data.def_level)
+               + ' ' + str(enemy_data.card_quality)
     return w_str + enemy_card + '_' + enemy_data.enemy_name \
            + ' ' + str(enemy_data.card_level) \
            + ' ' + str(enemy_data.kf_level) \
            + ' ' + str(enemy_data.skill_num) \
-           + ' ' + str(enemy_data.card_quality) \
-           + ' ' + str(enemy_data.atk_level) \
-           + ' ' + str(enemy_data.def_level)
+           + ' ' + str(enemy_data.card_quality)
 
 
 # 构造第二行

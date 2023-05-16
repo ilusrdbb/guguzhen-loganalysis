@@ -31,11 +31,10 @@ default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER',
                        'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK']
 # 默认成长值
 default_g: 80000
-# 进攻/防御等级配置 可单独配置用户 default默认值 格式见下
-# 由于咕咕镇测试阶段，目前暂时在程序中写死上限为2级
+# 进攻/防御等级配置 可单独配置用户 default默认值 格式用户名: '进攻等级 防御等级'
 level_config:
-  default: 20
-  conans1009: 32
+  default: '20 20'
+  conans1009: '32 32'
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 gear_config:
   STAFF: '150 150 150 150'

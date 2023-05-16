@@ -288,6 +288,8 @@ struct Gear
 {
     int type;
     int lvl;
+    int atkLvl;
+    int defLvl;
     int percent[4];
     bool isMyst;
 };
@@ -309,8 +311,6 @@ struct Player
     int quality;
     int growth;
     int mode;
-    int atkLvl;
-    int defLvl;
     int attr[ATTR_COUNT];
     int auraSkl;
     Gear gear[4];
@@ -414,7 +414,7 @@ struct AttrKey
             printf("%s", gearName[gear.type]);
             if (gear.type != GEAR_NONE)
             {
-                printf(" %d %d %d %d %d %d", gear.lvl, gear.percent[0], gear.percent[1], gear.percent[2], gear.percent[3], gear.isMyst ? 1 : 0);
+                printf(" %d %d %d %d %d %d %d %d", gear.lvl, gear.atkLvl, gear.defLvl, gear.percent[0], gear.percent[1], gear.percent[2], gear.percent[3], gear.isMyst ? 1 : 0);
             }
             printf("\n");
         }
@@ -811,9 +811,9 @@ bool readGear(FILE* fp, Gear& gear)
     if (gear.type != GEAR_NONE)
     {
         int b;
-        if (fscanf(fp, "%d%d%d%d%d%d", &gear.lvl, &gear.percent[0], &gear.percent[1],
+        if (fscanf(fp, "%d%d%d%d%d%d%d%d", &gear.lvl, &gear.atkLvl, &gear.defLvl, &gear.percent[0], &gear.percent[1],
             &gear.percent[2], &gear.percent[3], &b) != 6 ||
-            gear.lvl < 1 ||
+            gear.lvl < 1 || gear.atkLvl < 0 || gear.defLvl < 0 ||
             gear.percent[0] < 50 || gear.percent[0] > 150 ||
             gear.percent[1] < 50 || gear.percent[1] > 150 ||
             gear.percent[2] < 50 || gear.percent[2] > 150 ||
@@ -1205,10 +1205,8 @@ bool readPlayer(FILE* fp, Player& pc)
             fscanf(fp, "%d", &pc.kfLvl) != 1 ||
             fscanf(fp, "%d", &pc.sklSlot) != 1 ||
             fscanf(fp, "%d", &pc.quality) != 1 ||
-            fscanf(fp, "%d", &pc.atkLvl) != 1 ||
-            fscanf(fp, "%d", &pc.defLvl) != 1 ||
             pc.lvl < 0 || pc.kfLvl < 0 || pc.sklSlot < 1 || pc.sklSlot > 7 ||
-            pc.quality < 0 || pc.quality > 11 || pc.atkLvl < 0 || pc.defLvl < 0)
+            pc.quality < 0 || pc.quality > 11)
         {
             fseek(fp, pos, SEEK_SET);
             return false;
@@ -2033,8 +2031,8 @@ void preparePcBStat(const Player& pc, BStat& b)
 
     b.mode = pc.mode;
 
-    b.atkLvl = pc.atkLvl;
-    b.defLvl = pc.defLvl;
+    b.atkLvl = pc.gear[0].atkLvl + pc.gear[1].atkLvl + pc.gear[2].atkLvl + pc.gear[3].atkLvl;
+    b.defLvl = pc.gear[0].defLvl + pc.gear[1].defLvl + pc.gear[2].defLvl + pc.gear[3].defLvl;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
@@ -5020,7 +5018,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
+                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");
@@ -5059,7 +5057,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
+                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");
@@ -5199,7 +5197,7 @@ int main(int argc, char* argv[])
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
-                printf(" %d %d %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality, myself.atkLvl, myself.defLvl);
+                printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
                 ap.first.print();
                 printf("\n");
