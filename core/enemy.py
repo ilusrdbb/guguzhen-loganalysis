@@ -27,10 +27,6 @@ class Enemy:
     battle_log = None
     # 雅的模式 0白天1黑夜2凶神
     ya_mode = 0
-    # 进攻等级
-    atk_level = None
-    # 防御等级
-    def_level = None
 
     # 初始化对手数据
     def __init__(self, data):
@@ -48,13 +44,3 @@ class Enemy:
             self.enemy_card = 'YA'
             self.ya_mode = 2
         self.battle_log = data['log']
-        self.atk_level = config.read_config('level_config')['default'].split(' ')[0]
-        self.def_level = config.read_config('level_config')['default'].split(' ')[1]
-        if config.read_config('level_config').get(data['enemyname']):
-            self.atk_level = config.read_config('level_config').get(data['enemyname']).split(' ')[0]
-            self.def_level = config.read_config('level_config').get(data['enemyname']).split(' ')[1]
-        if self.card_level != 850:
-            if int(self.kf_level / 100) < int(self.atk_level):
-                self.atk_level = str(int(self.kf_level / 100))
-            if int(self.kf_level / 100) < int(self.def_level):
-                self.def_level = str(int(self.kf_level / 100))

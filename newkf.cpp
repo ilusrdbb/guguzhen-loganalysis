@@ -288,8 +288,6 @@ struct Gear
 {
     int type;
     int lvl;
-    int atkLvl;
-    int defLvl;
     int percent[4];
     bool isMyst;
 };
@@ -414,7 +412,7 @@ struct AttrKey
             printf("%s", gearName[gear.type]);
             if (gear.type != GEAR_NONE)
             {
-                printf(" %d %d %d %d %d %d %d %d", gear.lvl, gear.atkLvl, gear.defLvl, gear.percent[0], gear.percent[1], gear.percent[2], gear.percent[3], gear.isMyst ? 1 : 0);
+                printf(" %d %d %d %d %d %d", gear.lvl, gear.percent[0], gear.percent[1], gear.percent[2], gear.percent[3], gear.isMyst ? 1 : 0);
             }
             printf("\n");
         }
@@ -811,9 +809,9 @@ bool readGear(FILE* fp, Gear& gear)
     if (gear.type != GEAR_NONE)
     {
         int b;
-        if (fscanf(fp, "%d%d%d%d%d%d%d%d", &gear.lvl, &gear.atkLvl, &gear.defLvl, &gear.percent[0], &gear.percent[1],
-            &gear.percent[2], &gear.percent[3], &b) != 8 ||
-            gear.lvl < 1 || gear.atkLvl < 0 || gear.defLvl < 0 ||
+        if (fscanf(fp, "%d%d%d%d%d%d", &gear.lvl, &gear.percent[0], &gear.percent[1],
+            &gear.percent[2], &gear.percent[3], &b) != 6 ||
+            gear.lvl < 1 ||
             gear.percent[0] < 50 || gear.percent[0] > 150 ||
             gear.percent[1] < 50 || gear.percent[1] > 150 ||
             gear.percent[2] < 50 || gear.percent[2] > 150 ||
@@ -2031,8 +2029,8 @@ void preparePcBStat(const Player& pc, BStat& b)
 
     b.mode = pc.mode;
 
-    b.atkLvl = pc.gear[0].atkLvl + pc.gear[1].atkLvl + pc.gear[2].atkLvl + pc.gear[3].atkLvl;
-    b.defLvl = pc.gear[0].defLvl + pc.gear[1].defLvl + pc.gear[2].defLvl + pc.gear[3].defLvl;
+    b.atkLvl = pc.kfLvl > 1100 ? 11 : pc.kfLvl / 100;
+    b.defLvl = pc.kfLvl > 1100 ? 11 : pc.kfLvl / 100;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
