@@ -3111,7 +3111,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
         int mRfl = (pa[s] + ma[s] * 0.7 + aa[s]) * (rflPFixed / 100.0);
-        if (b1.role == ROLE_MO) mRfl += int(((b1.mAtkB + b1.mAtkA) * 0.5 * (1 + b1.mAtkR * 0.01)) + b1.sldM * 0.08);
+        if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.5) + b1.sldM * 0.08) * (1 + b1.mAtkR * 0.01));
 
         if (b0.role == ROLE_MING)
         {
