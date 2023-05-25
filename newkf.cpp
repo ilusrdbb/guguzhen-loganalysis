@@ -2889,8 +2889,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WU && b0.myst & MYST_RING)
         {
-            pa[s] += (b0.sklC + 100) / 5;
-            ma[s] += (b0.sklC + 100) / 5;
+            pa[s] += (b0.sklC + 100) * 0.4;
+            ma[s] += (b0.sklC + 100) * 0.4;
         }
         if (b0.role == ROLE_XI && b0.hp < b0.hpM / 2)
         {
