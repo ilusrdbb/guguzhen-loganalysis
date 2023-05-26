@@ -3311,15 +3311,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         sldActive = (sldRemain > 0);
         if (mRfl > 0)
         {
-            ma[1 - s] = mRfl;
             int dr = calcDefRate(b0.mDefB + b0.mDefA, b0.amul[AMUL_MDEF],
                 b1.mBrcP + (b1.psvSkl & AURA_BO && b1.hp == b1.hpM ? 32 : 0),
                 0, b1.mBrcA, (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
             int ma2 = mRfl;
-            if (b0.role == ROLE_MIN && b0.sklC == -2) ma2 = 0;
-            if (b0.psvSkl & AURA_JUE) ma2 *= 0.8;
-            if (b1.role == ROLE_MIN && b1.sklC > 0) ma2 *= 1;
             if (b1.atkLvl > b0.atkLvl)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
@@ -3330,6 +3326,10 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
                 ma2 *= 1 - 0.03 * lvlDiff;
             }
+            ma[1 - s] = ma2;
+            if (b0.role == ROLE_MIN && b0.sklC == -2) ma2 = 0;
+            if (b0.psvSkl & AURA_JUE) ma2 *= 0.8;
+            if (b1.role == ROLE_MIN && b1.sklC > 0) ma2 *= 1;
             if (sldActive)
             {
                 int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b0.mRdc;
@@ -3358,14 +3358,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (pRfl > 0)
         {
-            pa[1 - s] = pRfl;
             int dr = calcDefRate(b0.pDefB + b0.pDefA, b0.amul[AMUL_PDEF],
                 b1.pBrcP, 0, b1.pBrcA,
                 (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
             int pa2 = pRfl;
-            if (b0.role == ROLE_MIN && b0.sklC == -1) pa2 = 0;
-            if (b0.psvSkl & AURA_JUE) pa2 *= 0.8;
             if (b1.atkLvl > b0.atkLvl)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
@@ -3376,6 +3373,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
                 pa2 *= 1 - 0.03 * lvlDiff;
             }
+            pa[1 - s] = pa2;
+            if (b0.role == ROLE_MIN && b0.sklC == -1) pa2 = 0;
+            if (b0.psvSkl & AURA_JUE) pa2 *= 0.8;
             if (sldActive)
             {
                 int sdMax = int(pa2 * (b0.psvSkl & AURA_DUN ? 1.25 : 1.5) * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b0.pRdc;
