@@ -180,15 +180,15 @@ enum
     WISH_SHI_BUF,    // 启程之誓强化 效果增加5%*W倍 最大100
     WISH_XIN_BUF,    // 启程之心强化 效果增加5%*W倍 最大100
     WISH_FENG_BUF,   // 启程之风强化 效果增加5%*W倍 最大100
-    WISH_PATKA,      // 附加物伤增加5*W 最大200
-    WISH_MATKA,      // 附加魔伤增加5*W 最大200
-    WISH_HPM,        // 附加生命增加12*W 最大200
-    WISH_SLDM,       // 附加护盾增加20*W 最大200
-    WISH_SPDA,       // 附加攻速增加W 最大100
-    WISH_PBRCA,      // 物理附加穿透增加W 最大100
-    WISH_MBRCA,      // 魔法附加穿透增加W 最大100
-    WISH_PDEFA,      // 物理附加防御增加W 最大100
-    WISH_MDEFA,      // 魔法附加防御增加W 最大100
+    WISH_PATKA,      // 附加物伤增加5*W 最大1000
+    WISH_MATKA,      // 附加魔伤增加5*W 最大1000
+    WISH_HPM,        // 附加生命增加12*W 最大1000
+    WISH_SLDM,       // 附加护盾增加20*W 最大1000
+    WISH_SPDA,       // 附加攻速增加W 最大200
+    WISH_PBRCA,      // 物理附加穿透增加W 最大200
+    WISH_MBRCA,      // 魔法附加穿透增加W 最大200
+    WISH_PDEFA,      // 物理附加防御增加W 最大200
+    WISH_MDEFA,      // 魔法附加防御增加W 最大200
     WISH_COUNT,
 
     AMUL_STR = 0, // 力量
@@ -340,7 +340,7 @@ const int auraCost[AURA_COUNT] = {
     100, 100, 100, 100, 100, 100, 100, 100,
     0 };
 int auraRandCount = 1;
-int wishMax[WISH_COUNT] = { 100, 100, 100, 100, 100, 200, 200, 200, 200, 100, 100, 100, 100, 100 };
+int wishMax[WISH_COUNT] = { 100, 100, 100, 100, 100, 1000, 1000, 1000, 1000, 200, 200, 200, 200, 200 };
 const char* const prefName[PREF_COUNT] = {
     "SHANG", "BO", "FEI", "HOU", "JU", "HONG", "DIAN", "CI", "JUE" };
 const int prefAura[PREF_COUNT] = {
@@ -2507,8 +2507,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].mDefA += lvlDiff * 3;
                 if (b[i].role == ROLE_MING)
                 {
-                    b[i].pDefA *= 0.3;
-                    b[i].mDefA *= 0.3;
+                    b[i].pDefA *= 0.5;
+                    b[i].mDefA *= 0.5;
                 }
                 if (b[i].psvSkl & AURA_DIAN)
                 {
@@ -2889,8 +2889,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WU && b0.myst & MYST_RING)
         {
-            pa[s] += (b0.sklC + 100) * 0.4;
-            ma[s] += (b0.sklC + 100) * 0.4;
+            pa[s] += (b0.sklC + 100) * 0.2;
+            ma[s] += (b0.sklC + 100) * 0.2;
         }
         if (b0.role == ROLE_XI && b0.hp < b0.hpM / 2)
         {
@@ -2940,9 +2940,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             aa[s] *= 2;
             if (b0.role == ROLE_MIN)
             {
-                pa[s] += pa[s] * 0.45;
-                ma[s] += ma[s] * 0.45;
-                aa[s] += aa[s] * 0.45;
+                pa[s] += pa[s] * 0.65;
+                ma[s] += ma[s] * 0.65;
+                aa[s] += aa[s] * 0.65;
             }
             if (b0.psvSkl & AURA_JU)
             {
@@ -3040,7 +3040,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 int dmg = b0.hpM - b0.hp;
                 ma[s] += dmg;
-                hr[s] += dmg;
+                hr[s] += dmg / 2;
                 break;
             }
             case ROLE_MIN:
@@ -3090,7 +3090,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WEI)
         {
-            pa[s] += (b1.hpM + b1.sldM) * 7 / 50;
+            pa[s] += int((b1.hpM + b1.sldM) * 0.21);
             if (b0.sklC) pa[s] = int(pa[s] * 1.4);
         }
         if (isMC)
@@ -3110,7 +3110,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
-        int mRfl = (pa[s] + ma[s] * 0.7 + aa[s]) * (rflPFixed / 100.0);
+        int mRfl = (pa[s] * 0.7 + ma[s] * 0.7) * (rflPFixed / 100.0);
         if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.5) + b1.sldM * 0.08) * (1 + b1.mAtkR * 0.01));
 
         if (b0.role == ROLE_MING)
