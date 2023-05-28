@@ -3103,7 +3103,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WEI)
         {
-            int pAdd = int((b1.hpM + b1.sldM) * 0.21)
+            int pAdd = int((b1.hpM + b1.sldM) * 0.21);
             if (b0.myst & MYST_WITCHER)
             {
                 pa[s] += pAdd * 0.7;
