@@ -109,6 +109,7 @@ enum
     GEAR_SCARF,    // 探险者耳环
     GEAR_TIARA,    // 占星师的耳饰
     GEAR_RIBBON,   // 萌爪耳钉
+    GEAR_WITCHER,  // 猎魔耳环
     GEAR_COUNT,
 
     AURA_SHI = 0x00000001, // 启程之誓
@@ -163,6 +164,7 @@ enum
     MYST_CAPE = 0x08000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
     MYST_TIARA = 0x10000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
     MYST_RIBBON = 0x20000, // 元气无限回复8%生命
+    MYST_WITCHER = 0x40000, // 圣银弩箭30%物理攻击转换为绝对伤害
 
     PREF_SHANG = 0, // 诅咒=伤口恶化+精神创伤
     PREF_BO,        // 法神=破魔之心+波澜不惊
@@ -325,8 +327,8 @@ const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
     "CLAYMORE", "SPEAR", "COLORFUL", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
-    "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" };
-const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3 };
+    "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "WITCHER" };
+const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
     "SHI", "XIN", "FENG", "TIAO", "YA",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
@@ -2029,8 +2031,8 @@ void preparePcBStat(const Player& pc, BStat& b)
 
     b.mode = pc.mode;
 
-    b.atkLvl = pc.kfLvl > 1100 ? 11 : pc.kfLvl / 100;
-    b.defLvl = pc.kfLvl > 1100 ? 11 : pc.kfLvl / 100;
+    b.atkLvl = pc.kfLvl > 1400 ? 14 : pc.kfLvl / 100;
+    b.defLvl = pc.kfLvl > 1400 ? 14 : pc.kfLvl / 100;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
@@ -2051,7 +2053,8 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.hpM = vitMnd * (35.0 +
         (pc.kfLvl >= 300 && vitMnd >= 200 ? 7.0 : 0.0) +
         (pc.kfLvl >= 600 && vitMnd >= 500 ? 10.0 : 0.0) +
-        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0));
+        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0)) +
+        (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 30.0 : 0.0));
     b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
     b.hpRecA = 0.0;
@@ -2062,12 +2065,15 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 50 ? 3.0 : 0.0) +
         (pc.kfLvl >= 200 && tStr >= 200 ? 4.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 6.0 : 0.0) +
-        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0));
+        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0)) +
+        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0)) +
+        (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.pAtkA = pc.wish[WISH_PATKA] * 5.0;
     b.mAtkB = tInt * (10.0 +
         (pc.kfLvl >= 200 && tInt >= 200 ? 4.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 6.0 : 0.0) +
-        (pc.kfLvl >= 700 && tInt >= 800 ? 10.0 : 0.0));
+        (pc.kfLvl >= 700 && tInt >= 800 ? 10.0 : 0.0)) +
+        (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
     b.aAtk = (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi * 10.0 : 0.0);
     b.spdB = tAgi * 3;
@@ -2099,7 +2105,8 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sldM = tSpr * (65.0 +
         (pc.kfLvl >= 300 && tSpr >= 200 ? 13.0 : 0.0) +
         (pc.kfLvl >= 600 && tSpr >= 500 ? 21.0 : 0.0) +
-        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0));
+        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0)) +
+        (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 62.0 : 0.0));
     b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
     b.sldRecA = 0.0;
@@ -2298,6 +2305,13 @@ void preparePcBStat(const Player& pc, BStat& b)
             hpAdd += b.tVit * (int(g.lvl / 30.0 * (g.percent[2] / 10.0)) / 10.0);
             hpAdd += b.tMnd * (int(g.lvl / 30.0 * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_RIBBON;
+            break;
+        case GEAR_WITCHER:
+            b.sRateB += int(g.lvl * 0.4 * (g.percent[0] / 10.0)) / 10.0;
+            hpAdd += tStr * (int(int(g.lvl * 0.08) * (g.percent[1] / 10.0)) / 10.0);
+            hpAdd += tAgi * (int(int(g.lvl * 0.08) * (g.percent[2] / 10.0)) / 10.0);
+            hpPlus += round(b.hpM * (int(int(g.lvl * 0.06) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
+            if (g.isMyst) b.myst |= MYST_WITCHER;
             break;
         }
     }
@@ -3090,7 +3104,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WEI)
         {
-            pa[s] += int((b1.hpM + b1.sldM) * 0.21);
+            int pAdd = int((b1.hpM + b1.sldM) * 0.21)
+            if (b0.myst & MYST_WITCHER)
+            {
+                pa[s] += pAdd * 0.7;
+                aa[s] += pAdd * 0.3;
+            }
+            else
+            {
+                pa[s] += pAdd;
+            }
             if (b0.sklC) pa[s] = int(pa[s] * 1.4);
         }
         if (isMC)
@@ -3110,7 +3133,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
-        int mRfl = (pa[s] * 0.7 + ma[s] * 0.7) * (rflPFixed / 100.0);
+        int mRfl = (pa[s] * 0.7 + ma[s] * 0.7 + aa[s] * 0.5) * (rflPFixed / 100.0);
         if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.5) + b1.sldM * 0.08) * (1 + b1.mAtkR * 0.01));
 
         if (b0.role == ROLE_MING)
