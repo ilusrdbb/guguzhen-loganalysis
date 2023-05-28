@@ -29,7 +29,7 @@ amulet_config:
 wish_config: '100 100 100 100 100 100 100 100 100 50 50 50 50 50'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
 default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND',
-                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK']
+                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK', 'WITCHER']
 # 默认成长值
 default_g: 80000
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
@@ -60,6 +60,7 @@ gear_config:
   LEATHER: '150 150 150 150'
   CLOTH: '150 150 150 150'
   COLORFUL: '100 120 150 150'
+  WITCHER: '120 100 150 150'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
