@@ -2053,7 +2053,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.hpM = vitMnd * (35.0 +
         (pc.kfLvl >= 300 && vitMnd >= 200 ? 7.0 : 0.0) +
         (pc.kfLvl >= 600 && vitMnd >= 500 ? 10.0 : 0.0) +
-        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0)) +
+        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0) +
         (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 30.0 : 0.0));
     b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
@@ -2072,7 +2072,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mAtkB = tInt * (10.0 +
         (pc.kfLvl >= 200 && tInt >= 200 ? 4.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 6.0 : 0.0) +
-        (pc.kfLvl >= 700 && tInt >= 800 ? 10.0 : 0.0)) +
+        (pc.kfLvl >= 700 && tInt >= 800 ? 10.0 : 0.0) +
         (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
     b.aAtk = (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi * 10.0 : 0.0);
@@ -2105,7 +2105,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sldM = tSpr * (65.0 +
         (pc.kfLvl >= 300 && tSpr >= 200 ? 13.0 : 0.0) +
         (pc.kfLvl >= 600 && tSpr >= 500 ? 21.0 : 0.0) +
-        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0)) +
+        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0) +
         (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 62.0 : 0.0));
     b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
