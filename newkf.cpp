@@ -2065,8 +2065,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 50 ? 3.0 : 0.0) +
         (pc.kfLvl >= 200 && tStr >= 200 ? 4.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 6.0 : 0.0) +
-        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0)) +
-        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0)) +
+        (pc.kfLvl >= 700 && tStr >= 800 ? 10.0 : 0.0) +
         (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.pAtkA = pc.wish[WISH_PATKA] * 5.0;
     b.mAtkB = tInt * (10.0 +
