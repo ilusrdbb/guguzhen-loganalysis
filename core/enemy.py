@@ -44,3 +44,12 @@ class Enemy:
             self.enemy_card = 'YA'
             self.ya_mode = 2
         self.battle_log = data['log']
+
+
+# 通过论坛发帖获取真实的系数
+def get_kf_level(enemy_data):
+    # todo
+    forum_level = ''
+    if forum_level:
+        # 3s默认svip
+        enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100

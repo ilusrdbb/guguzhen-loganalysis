@@ -20,6 +20,7 @@ def start():
     file.del_file(config.read_config('output_path'))
     # 利用dict的特性新的覆盖旧的
     result_dict = {}
+    level_dict = {}
     for data in json_data:
         # 排除野怪结果
         if data['char'] == '野怪':
@@ -42,6 +43,13 @@ def start():
             last_timestamp = int(time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
             if last_timestamp > enemy_data.battle_timestamp:
                 continue
+        # 获取争夺等级
+        if result_dict.get(enemy_data.enemy_name):
+            enemy_data.kf_level = result_dict.get(enemy_data.enemy_name)
+        else:
+            if config.read_config('is_search_level'):
+                # 通过论坛发帖获取真实的系数
+                enemy.get_kf_level(enemy_data)
         # 初始化战斗数据
         battle_data = battle.Battle(enemy_data.battle_log)
         result_list = []
@@ -63,6 +71,7 @@ def start():
         # 构造map
         result_str = '\n'.join(result_list) + '\n\n'
         result_dict[enemy_data.enemy_name] = result_str
+        level_dict[enemy_data.enemy_name] = enemy_data.kf_level
     # 输出
     file.write_data(result_dict)
 
