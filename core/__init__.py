@@ -47,7 +47,7 @@ def start():
         if result_dict.get(enemy_data.enemy_name):
             enemy_data.kf_level = result_dict.get(enemy_data.enemy_name)
         else:
-            if config.read_config('is_search_level'):
+            if config.read_config('is_search_level') and config.read_config('cookie'):
                 # 通过论坛发帖获取真实的系数
                 enemy.get_kf_level(enemy_data)
         # 初始化战斗数据
