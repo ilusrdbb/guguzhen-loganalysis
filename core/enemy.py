@@ -4,7 +4,7 @@
 # @Author : chaocai
 from lxml import html
 
-from core import config, util
+from core import config, util, sql
 
 
 class Enemy:
@@ -49,40 +49,63 @@ class Enemy:
 
 # 通过论坛发帖获取真实的系数
 def get_kf_level(enemy_data):
-    print('开始获取%s的系数...' % enemy_data.enemy_name)
-    # 搜索
     domain = config.read_config('kf_domain')
-    search_url = domain + config.read_config('url_config')['search']
-    search_param = {
-        'step': 2,
-        'method': 'AND',
-        'sch_area': 0,
-        's_type': 'forum',
-        'f_fid': 'all',
-        'orderway': 'lastpost',
-        'asc': 'DESC',
-        'keyword': '',
-        'pwuser': enemy_data.enemy_name.encode('GB2312')
-    }
-    search_text = util.http_post(search_url, search_param, '网络错误')
-    if search_text:
-        search_dom = html.fromstring(search_text)
-        if search_dom.xpath(config.read_config('xpath_config')['search']):
-            read_url = domain + '/' + search_dom.xpath(config.read_config('xpath_config')['search'])[0]
-            read_text = util.http_get(read_url, None, '网络错误')
-            if read_text:
-                read_dom = html.fromstring(read_text)
-                if read_dom.xpath(config.read_config('xpath_config')['read']):
-                    uid_url = domain + '/' + read_dom.xpath(config.read_config('xpath_config')['read'])[0]
-                    uid_text = util.http_get(uid_url, None, '网络错误')
-                    if uid_text:
-                        uid_dom = html.fromstring(uid_text)
-                        if uid_dom.xpath(config.read_config('xpath_config')['info']):
-                            forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[5]
-                            forum_level = forum_text.replace('神秘系数：', '')
-                            if forum_level:
-                                # 3s默认svip
-                                print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
-                                enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
+    cache_data = sql.query(enemy_data.enemy_name)
+    if cache_data:
+        uid_url = domain + '/' + cache_data[0][1]
+        if config.read_config('use_cache'):
+            enemy_data.kf_level = int(cache_data[0][2]) + config.read_config('shadow_level') + 100
         else:
-            print('%s未找到发帖记录' % enemy_data.enemy_name)
+            print('开始获取%s的系数...' % enemy_data.enemy_name)
+            uid_text = util.http_get(uid_url, None, '网络错误')
+            if uid_text:
+                uid_dom = html.fromstring(uid_text)
+                if uid_dom.xpath(config.read_config('xpath_config')['info']):
+                    forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[5]
+                    if '神秘系数' not in forum_text:
+                        # 协管需要多读一行
+                        forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[6]
+                    forum_level = forum_text.replace('神秘系数：', '')
+                    if forum_level:
+                        sql.update(enemy_data.enemy_name, str(int(forum_level)))
+                        print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
+                        enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
+    else:
+        print('开始获取%s的系数...' % enemy_data.enemy_name)
+        search_url = domain + config.read_config('url_config')['search']
+        search_param = {
+            'step': 2,
+            'method': 'AND',
+            'sch_area': 0,
+            's_type': 'forum',
+            'f_fid': 'all',
+            'orderway': 'lastpost',
+            'asc': 'DESC',
+            'keyword': '',
+            'pwuser': enemy_data.enemy_name.encode('gbk')
+        }
+        search_text = util.http_post(search_url, search_param, '网络错误')
+        if search_text:
+            search_dom = html.fromstring(search_text)
+            if search_dom.xpath(config.read_config('xpath_config')['search']):
+                read_url = domain + '/' + search_dom.xpath(config.read_config('xpath_config')['search'])[0]
+                read_text = util.http_get(read_url, None, '网络错误')
+                if read_text:
+                    read_dom = html.fromstring(read_text)
+                    if read_dom.xpath(config.read_config('xpath_config')['read']):
+                        uid_url = domain + '/' + read_dom.xpath(config.read_config('xpath_config')['read'])[0]
+                        uid_text = util.http_get(uid_url, None, '网络错误')
+                        if uid_text:
+                            uid_dom = html.fromstring(uid_text)
+                            if uid_dom.xpath(config.read_config('xpath_config')['info']):
+                                forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[5]
+                                if '神秘系数' not in forum_text:
+                                    # 协管需要多读一行
+                                    forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[6]
+                                forum_level = forum_text.replace('神秘系数：', '')
+                                if forum_level:
+                                    sql.insert(enemy_data.enemy_name, read_dom.xpath(config.read_config('xpath_config')['read'])[0], str(int(forum_level)))
+                                    print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
+                                    enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
+            else:
+                print('%s未找到发帖记录' % enemy_data.enemy_name)
