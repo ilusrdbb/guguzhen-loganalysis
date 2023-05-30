@@ -5,6 +5,7 @@
 
 import json
 import os
+import requests
 
 from core import config
 
@@ -43,3 +44,37 @@ def write_data(result_map):
             f.write(result_map[key])
     with open(config.read_config('output_path'), 'a', encoding='utf-8') as f:
         f.write('ENDPC')
+
+
+# 通用post请求
+def http_post(url, param, fail_info):
+    proxy = config.read_config('proxy_url') if config.read_config('proxy_url') else None
+    proxies = {'http': proxy}
+    headers = config.read_config('headers')
+    headers['Cookie'] = config.read_config('cookie')
+    text = None
+    try:
+        response = requests.post(url=url, data=param, headers=headers, proxies=proxies, timeout=10)
+        if not response.status_code == 200:
+            print(fail_info)
+        text = response.text
+    except Exception as e:
+        print(e)
+    return text
+
+
+# 通用get请求
+def http_get(url, param, fail_info):
+    proxy = config.read_config('proxy_url') if config.read_config('proxy_url') else None
+    proxies = {'http': proxy}
+    headers = config.read_config('headers')
+    headers['Cookie'] = config.read_config('cookie')
+    text = None
+    try:
+        response = requests.get(url=url, params=param, headers=headers, proxies=proxies, timeout=10)
+        if not response.status_code == 200:
+            print(fail_info)
+        text = response.text
+    except Exception as e:
+        print(e)
+    return text

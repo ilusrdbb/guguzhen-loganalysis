@@ -3,19 +3,12 @@ white_list: []
 # 黑名单，不记录这个人，优先级第二高 例['用户名1', '用户名2', ...]
 black_list: []
 # 最低卡片等级，小于这个等级的跳过不记录，如果为空则全量抓取
-min_card_level: 700
+min_card_level: 800
 # 最高争夺等级，当对手为850满级卡时的争夺等级，目前最高争夺加成等级为1100
-max_kf_level: 1200
-# 是否通过用户的论坛发帖记录获取真实系数，关闭此项则默认按照max_kf_level的值处理
-# 注意开启此项虽然使等级相关计算更加精准但是会极大的拖慢程序，考虑到咕咕镇服务器的抗压能力强烈建议开启时一天只跑一次
-is_search_level: false
-# 当上一项开启时，需要登录才可以搜索，请确保自身账号的系数和等级分足够
-cookie: ''
-# 当上一项开启时，对方的幻影等级
-shadow_level: 200
+max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
-last_date: '2023-05-20'
+last_date: '2023-05-28'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: ''
@@ -72,6 +65,21 @@ gear_config:
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
 ya_mode: 1
+
+# 以下是从论坛获取系数的配置，谨慎开启
+# 是否通过用户的论坛发帖记录获取真实系数，关闭此项则默认按照max_kf_level的值处理
+# 注意开启此项虽然使等级相关计算更加精准但是会极大的拖慢程序，考虑到咕咕镇服务器的抗压能力强烈建议开启时一天只跑一次
+is_search_level: false
+# 当is_search_level开启时，需要登录才可以搜索，由于搜索次数的限制（系数*5+20）请确保自身账号的系数和等级分足够
+cookie: ''
+# 论坛域名，cookie需配置为此域名的cookie
+kf_domain: 'https://kf.miaola.work'
+# 当is_search_level开启时，对方的幻影等级
+shadow_level: 200
+# 当is_search_level开启时，网络请求时的代理地址，由于咕咕镇机房部署在国外，建议使用代理提升访问速度
+# 注意仅支持http代理，例'http://127.0.0.1:1081'，填空不做代理
+proxy_url: ''
+
 # 装备映射
 # 如果是自定义主题的装备，需要在这里补充映射
 gear_map:
@@ -197,6 +205,9 @@ xpath_config:
     gear: '//button[contains(@class,''fyg_colpzbg'')]/@data-original-title'
     level: '//button[contains(@class,''fyg_colpzbg'')]//text()'
     color: '//button[contains(@class,''fyg_colpzbg'')]/@style'
+    search: '//table[contains(@class,''thread1'')]//tr[3]/td[1]/a/@href'
+    read: '//div[contains(@class,''readtext'')]//td[1]//a[1]/@href'
+    info: '//table[contains(@class,''log1'')]//tr[2]/td[2]//text()'
 # 正则设置
 match_config:
     str: "(?<=).*?(?=力)"
@@ -211,6 +222,16 @@ match_config:
 input_path: './source/'
 # 输出文件路径
 output_path: './source/pc.txt'
+# 通用请求头
+headers:
+  Content-Type: 'application/x-www-form-urlencoded; charset=UTF-8'
+  Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
+  Accept-Encoding: 'gzip, deflate, br'
+  Accept-Language: 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
+  User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
+# 论坛地址配置
+url_config:
+  search: '/search.php'
 
 
 

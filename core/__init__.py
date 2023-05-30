@@ -6,18 +6,18 @@ import datetime
 import time
 from collections import Counter
 
-from core import config, file, enemy, battle
+from core import config, util, enemy, battle
 
 
 def start():
     # 加载配置文件
     config._init()
     # 解析json
-    json_data = file.file_load()
+    json_data = util.file_load()
     # 权重统计
-    w_map = get_w_map(json_data);
+    w_map = get_w_map(json_data)
     # 删除输出文件
-    file.del_file(config.read_config('output_path'))
+    util.del_file(config.read_config('output_path'))
     # 利用dict的特性新的覆盖旧的
     result_dict = {}
     level_dict = {}
@@ -47,7 +47,7 @@ def start():
         if result_dict.get(enemy_data.enemy_name):
             enemy_data.kf_level = result_dict.get(enemy_data.enemy_name)
         else:
-            if config.read_config('is_search_level') and config.read_config('cookie'):
+            if config.read_config('is_search_level') and config.read_config('cookie') and enemy_data.card_level == 850:
                 # 通过论坛发帖获取真实的系数
                 enemy.get_kf_level(enemy_data)
         # 初始化战斗数据
@@ -73,7 +73,7 @@ def start():
         result_dict[enemy_data.enemy_name] = result_str
         level_dict[enemy_data.enemy_name] = enemy_data.kf_level
     # 输出
-    file.write_data(result_dict)
+    util.write_data(result_dict)
 
 
 # 构造第8行
