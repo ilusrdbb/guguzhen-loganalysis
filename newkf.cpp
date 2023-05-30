@@ -109,7 +109,7 @@ enum
     GEAR_SCARF,    // 探险者耳环
     GEAR_TIARA,    // 占星师的耳饰
     GEAR_RIBBON,   // 萌爪耳钉
-    GEAR_WITCHER,  // 猎魔耳环
+    GEAR_HUNT,  // 猎魔耳环
     GEAR_COUNT,
 
     AURA_SHI = 0x00000001, // 启程之誓
@@ -164,7 +164,7 @@ enum
     MYST_CAPE = 0x08000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
     MYST_TIARA = 0x10000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
     MYST_RIBBON = 0x20000, // 元气无限回复8%生命
-    MYST_WITCHER = 0x40000, // 圣银弩箭30%物理攻击转换为绝对伤害
+    MYST_HUNT = 0x40000, // 圣银弩箭30%物理攻击转换为绝对伤害
 
     PREF_SHANG = 0, // 诅咒=伤口恶化+精神创伤
     PREF_BO,        // 法神=破魔之心+波澜不惊
@@ -327,7 +327,7 @@ const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
     "CLAYMORE", "SPEAR", "COLORFUL", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
-    "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "WITCHER" };
+    "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
     "SHI", "XIN", "FENG", "TIAO", "YA",
@@ -2305,12 +2305,12 @@ void preparePcBStat(const Player& pc, BStat& b)
             hpAdd += b.tMnd * (int(g.lvl / 30.0 * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_RIBBON;
             break;
-        case GEAR_WITCHER:
+        case GEAR_HUNT:
             b.sRateB += int(g.lvl * 0.4 * (g.percent[0] / 10.0)) / 10.0;
             hpAdd += tStr * (int(int(g.lvl * 0.08) * (g.percent[1] / 10.0)) / 10.0);
             hpAdd += tAgi * (int(int(g.lvl * 0.08) * (g.percent[2] / 10.0)) / 10.0);
             hpPlus += round(b.hpM * (int(int(g.lvl * 0.06) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
-            if (g.isMyst) b.myst |= MYST_WITCHER;
+            if (g.isMyst) b.myst |= MYST_HUNT;
             break;
         }
     }
@@ -3104,7 +3104,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b0.role == ROLE_WEI)
         {
             int pAdd = int((b1.hpM + b1.sldM) * 0.21);
-            if (b0.myst & MYST_WITCHER)
+            if (b0.myst & MYST_HUNT)
             {
                 pa[s] += pAdd * 0.7;
                 aa[s] += pAdd * 0.3;
