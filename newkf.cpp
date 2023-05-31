@@ -2050,10 +2050,10 @@ void preparePcBStat(const Player& pc, BStat& b)
     int vitMnd = tVit + tMnd;
     b.role = pc.role;
     b.lvl = pc.lvl;
-    b.hpM = vitMnd * (35.0 +
+    b.hpM = (vitMnd * (35.0 +
         (pc.kfLvl >= 300 && vitMnd >= 200 ? 7.0 : 0.0) +
         (pc.kfLvl >= 600 && vitMnd >= 500 ? 10.0 : 0.0) +
-        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0) +
+        (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0))) + (tStr *
         (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 30.0 : 0.0));
     b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
@@ -2101,10 +2101,10 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mDefA = pc.wish[WISH_MDEFA] * 1.0;
     b.pRdc = 0.0;
     b.mRdc = 0.0;
-    b.sldM = tSpr * (65.0 +
+    b.sldM = (tSpr * (65.0 +
         (pc.kfLvl >= 300 && tSpr >= 200 ? 13.0 : 0.0) +
         (pc.kfLvl >= 600 && tSpr >= 500 ? 21.0 : 0.0) +
-        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0) +
+        (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0))) + (tInt *
         (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 62.0 : 0.0));
     b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
@@ -3210,14 +3210,15 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
             int ma2 = ma[s];
-            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -2)) ma2 = 0;
-            if (b1.role == ROLE_WEI && b1.sklC) ma2 /= 10;
-            if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
             if (b1.defLvl > b0.defLvl)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 ma2 *= 1 - 0.03 * lvlDiff;
             }
+            ma[s] = ma2;
+            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -2)) ma2 = 0;
+            if (b1.role == ROLE_WEI && b1.sklC) ma2 /= 10;
+            if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
             if (sldActive)
             {
                 int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
@@ -3256,14 +3257,15 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
             int pa2 = pa[s];
-            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -1)) pa2 = 0;
-            if (b1.role == ROLE_WEI && b1.sklC) pa2 /= 10;
-            if (b1.psvSkl & AURA_JUE) pa2 *= 0.8;
             if (b1.defLvl > b0.defLvl)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 pa2 *= 1 - 0.03 * lvlDiff;
             }
+            pa[s] = pa2;
+            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -1)) pa2 = 0;
+            if (b1.role == ROLE_WEI && b1.sklC) pa2 /= 10;
+            if (b1.psvSkl & AURA_JUE) pa2 *= 0.8;
             if (sldActive)
             {
                 int sdMax = int(pa2 * (b1.psvSkl & AURA_DUN ? 1.25 : 1.5) * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.pRdc;
@@ -3297,14 +3299,15 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (aa[s] > 0)
         {
             int aa2 = aa[s];
-            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -3)) aa2 = 0;
-            if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
-            if (b1.psvSkl & AURA_JUE) aa2 *= 1;
             if (b1.defLvl > b0.defLvl)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 aa2 *= 1 - 0.03 * lvlDiff;
             }
+            aa[s] = aa2;
+            if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -3)) aa2 = 0;
+            if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
+            if (b1.psvSkl & AURA_JUE) aa2 *= 1;
             if (sldActive)
             {
                 if (aa2 <= sldRemain)
