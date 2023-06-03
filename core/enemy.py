@@ -52,10 +52,10 @@ def get_kf_level(enemy_data):
     domain = config.read_config('kf_domain')
     cache_data = sql.query(enemy_data.enemy_name)
     if cache_data:
-        uid_url = domain + '/' + cache_data[0][1]
         if config.read_config('use_cache'):
             enemy_data.kf_level = int(cache_data[0][2]) + config.read_config('shadow_level') + 100
         else:
+            uid_url = domain + '/' + cache_data[0][1]
             print('开始获取%s的系数...' % enemy_data.enemy_name)
             uid_text = util.http_get(uid_url, None, '网络错误')
             if uid_text:
