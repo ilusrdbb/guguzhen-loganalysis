@@ -11,7 +11,7 @@ from core import config
 
 
 class Battle:
-    # 卡片六围点数
+    # 卡片六围 旧记录为数值新纪录为比例图标
     attr_list = []
     # 天赋
     talent_list = []
@@ -21,6 +21,10 @@ class Battle:
     gear_level_list = []
     # 装备是否神秘 0否1是
     gear_mystery_list = []
+    # 生命
+    hp: 0
+    # 护盾
+    sld: 0
 
     # 初始化战斗数据
     def __init__(self, battle_log):
@@ -31,6 +35,8 @@ class Battle:
         self.gear_list = self.get_gear_list(battle_log_dom)
         self.gear_level_list = self.get_gear_level_list(battle_log_dom)
         self.gear_mystery_list = self.get_gear_mystery_list(battle_log_dom, self.gear_list)
+        self.hp = int(battle_log_dom.xpath(config.read_config('xpath_config')['hp'])[0].replace('生命', ''))
+        self.sld = int(battle_log_dom.xpath(config.read_config('xpath_config')['sld'])[0].replace('护盾', ''))
 
     # 获取装备神秘
     def get_gear_mystery_list(self, battle_log_dom, gear_list):
@@ -74,12 +80,16 @@ class Battle:
     # 获取六围list
     def get_attr_list(self, battle_log_dom):
         attr_str = battle_log_dom.xpath(config.read_config('xpath_config')['attr'])[2]
-        return [str(int(re.findall(config.read_config('match_config')['str'], attr_str)[0])),
-                str(int(re.findall(config.read_config('match_config')['agi'], attr_str)[0])),
-                str(int(re.findall(config.read_config('match_config')['int'], attr_str)[0])),
-                str(int(re.findall(config.read_config('match_config')['vit'], attr_str)[0])),
-                str(int(re.findall(config.read_config('match_config')['spr'], attr_str)[0])),
-                str(int(re.findall(config.read_config('match_config')['mnd'], attr_str)[0]))]
+        if len(attr_str) < 3:
+            # 新图标
+            return [str(item) for item in battle_log_dom.xpath(config.read_config('xpath_config')['attr2'])]
+        # 旧点数
+        return [re.findall(config.read_config('match_config')['str'], attr_str)[0],
+                re.findall(config.read_config('match_config')['agi'], attr_str)[0],
+                re.findall(config.read_config('match_config')['int'], attr_str)[0],
+                re.findall(config.read_config('match_config')['vit'], attr_str)[0],
+                re.findall(config.read_config('match_config')['spr'], attr_str)[0],
+                re.findall(config.read_config('match_config')['mnd'], attr_str)[0]]
 
     # 获取天赋list
     def get_talent_list(self, battle_log_dom):

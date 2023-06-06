@@ -6,7 +6,7 @@ import datetime
 import time
 from collections import Counter
 
-from core import config, util, enemy, battle, sql
+from core import config, util, enemy, battle, sql, attribute
 
 
 def start():
@@ -54,15 +54,20 @@ def start():
                 enemy.get_kf_level(enemy_data)
         # 初始化战斗数据
         battle_data = battle.Battle(enemy_data.battle_log)
+        # 初始化点数
+        attr_data = attribute.Attribute(enemy_data)
+        # 点数推断
+        aumlet_str = build_aumlet_str(enemy_data.enemy_card, battle_data.gear_list[0])
+        attribute.cal_attr(enemy_data, battle_data, attr_data, aumlet_str)
         result_list = []
         # 构造角色
         result_list.append(build_first_line(enemy_data, w_map))
         # 构造许愿池
         result_list.append(build_second_line())
         # 构造护符
-        result_list.append(build_third_line(enemy_data.enemy_card, battle_data.gear_list[0]))
+        result_list.append(build_third_line(aumlet_str))
         # 构造六围
-        result_list.append(build_four_line(battle_data.attr_list))
+        result_list.append(build_four_line(attr_data))
         # 构造装备
         result_list.append(build_five_line(battle_data))
         result_list.append(build_six_line(battle_data))
@@ -111,8 +116,10 @@ def build_five_line(battle_data):
 
 
 # 构造第4行
-def build_four_line(attr_list):
-    return ' '.join(attr_list)
+def build_four_line(attr_data):
+    return str(attr_data.t_str) + ' ' + str(attr_data.t_agi) + ' ' + \
+           str(attr_data.t_int) + ' ' + str(attr_data.t_vit) + ' ' + \
+           str(attr_data.t_spr) + ' ' + str(attr_data.t_mnd)
 
 
 # 构造第9行
@@ -151,15 +158,21 @@ def build_second_line():
     return 'WISH ' + config.read_config('wish_config')
 
 
-# 构造第三行
-def build_third_line(enemy_card, weapon):
+# 获取护符字符串
+def build_aumlet_str(enemy_card, weapon):
     if config.read_config('amulet_config').get(enemy_card + '_' + weapon):
         aumlet = config.read_config('amulet_config').get(enemy_card + '_' + weapon)
     elif config.read_config('amulet_config').get(enemy_card):
         aumlet = config.read_config('amulet_config').get(enemy_card)
     else:
         aumlet = config.read_config('amulet_config')['default']
+    return aumlet
+
+
+# 构造第三行
+def build_third_line(aumlet):
     return 'AMULET ' + aumlet + ' ENDAMULET'
+
 
 # 统计
 def get_w_map(json_data):

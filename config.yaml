@@ -8,7 +8,8 @@ min_card_level: 800
 max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
-last_date: '2023-05-28'
+# 6月6号之后的记录会根据血量、护盾、图标大致推算点数，误差极大需要注意
+last_date: '2023-06-01'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: ''
@@ -45,22 +46,22 @@ gear_config:
   GLOVES: '150 150 150 150'
   BRACELET: '150 150 100 130'
   VULTURE: '125 125 125 150'
-  CLOAK: '100 120 150 150'
-  THORN: '150 110 110 150'
-  WOOD: '150 120 120 120'
-  CAPE: '150 150 110 110'
+  CLOAK: '100 120 140 150'
+  THORN: '140 110 110 150'
+  WOOD: '140 120 120 120'
+  CAPE: '140 150 110 110'
   SCARF: '150 150 150 150'
   TIARA: '150 150 110 110'
   RIBBON: '130 130 130 130'
   RING: '110 110 150 150'
-  DEVOUR: '100 150 130 150'
+  DEVOUR: '100 150 130 140'
   SWORD: '150 150 150 150'
   BOW: '150 150 150 150'
   PLATE: '150 150 150 150'
   LEATHER: '150 150 150 150'
   CLOTH: '150 150 150 150'
   COLORFUL: '100 120 150 150'
-  HUNT: '120 100 150 150'
+  HUNT: '150 110 120 140'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
@@ -203,6 +204,7 @@ talent_map:
 # xpath设置
 xpath_config:
     attr: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-outline'')]//text()'
+    attr2: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-outline'')]//i/@class'
     talent: '//div[contains(@class,''alert-info'')]/div//div[contains(@class,''fyg_tr'')]//text()'
     gear: '//button[contains(@class,''fyg_colpzbg'')]/@data-original-title'
     level: '//button[contains(@class,''fyg_colpzbg'')]//text()'
@@ -210,6 +212,8 @@ xpath_config:
     search: '//table[contains(@class,''thread1'')]//tr[3]/td[1]/a/@href'
     read: '//div[contains(@class,''readtext'')]//td[1]//a[1]/@href'
     info: '//table[contains(@class,''log1'')]//tr[2]/td[2]//text()'
+    hp: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-danger label-outline'')]//text()'
+    sld: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-info label-outline'')]//text()'
 # 正则设置
 match_config:
     str: "(?<=).*?(?=力)"
