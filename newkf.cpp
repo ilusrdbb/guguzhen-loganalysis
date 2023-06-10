@@ -2031,8 +2031,8 @@ void preparePcBStat(const Player& pc, BStat& b)
 
     b.mode = pc.mode;
 
-    b.atkLvl = pc.kfLvl > 1400 ? 14 : pc.kfLvl / 100;
-    b.defLvl = pc.kfLvl > 1400 ? 14 : pc.kfLvl / 100;
+    b.atkLvl = pc.kfLvl > 1500 ? 15 : pc.kfLvl / 100;
+    b.defLvl = pc.kfLvl > 1500 ? 15 : pc.kfLvl / 100;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
@@ -2048,6 +2048,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_AAA];
     int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_AAA];
     int vitMnd = tVit + tMnd;
+    bool allAttrBool = pc.kfLvl >= 1500 && tStr >= 450 && tAgi >= 450 && tInt >= 450 && tVit >= 450 && tSpr >= 450 && tMnd >= 450
     b.role = pc.role;
     b.lvl = pc.lvl;
     b.hpM = (vitMnd * (35.0 +
@@ -2076,11 +2077,14 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
     b.aAtk = (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi * 10.0 : 0.0);
     b.spdB = tAgi * 3;
-    b.spdA = (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi / 2.0 : 0.0) + pc.wish[WISH_SPDA];
+    b.spdA = tAgi * ((pc.kfLvl >= 1000 && tAgi >= 1000 ? 0.5 : 0.0) +
+        (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_SPDA];
     b.pBrcP = (pc.kfLvl >= 900 && tStr >= 1500 ? 20.0 : 0.0);
-    b.pBrcA = (pc.kfLvl >= 100 ? tStr : 0.0) + pc.wish[WISH_PBRCA];
+    b.pBrcA = tStr * ((pc.kfLvl >= 100 ? 1.0 : 0.0) +
+        (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_PBRCA];
     b.mBrcP = (pc.kfLvl >= 900 && tInt >= 1500 ? 20.0 : 0.0);
-    b.mBrcA = (pc.kfLvl >= 100 ? tInt : 0.0) + pc.wish[WISH_MBRCA];
+    b.mBrcA = tInt * ((pc.kfLvl >= 100 ? 1.0 : 0.0) +
+        (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_MBRCA];
     b.sRateB = tInt + (pc.kfLvl >= 50 ? tStr / 2.0 : 0.0);
     b.cRateB = tAgi + (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi / 10.0 : 0.0);
     b.cBrcP = 0.0;
@@ -2088,16 +2092,20 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.pDefB = tVit * (1.0 +
         (pc.kfLvl >= 400 ? 1.0 : 0.0) +
         (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0)) +
+        (allAttrBool ? 2.0 : 0.0)) +
         tSpr / 2 * (1 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-            (pc.kfLvl >= 1100 ? 1.0 : 0.0));
+            (pc.kfLvl >= 1100 ? 1.0 : 0.0) +
+            (allAttrBool ? 2.0 : 0.0));
     b.pDefA = pc.wish[WISH_PDEFA] * 1.0;
     b.mDefB = tMnd * (1.0 +
         (pc.kfLvl >= 400 ? 1.0 : 0.0) +
         (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0)) +
+        (allAttrBool ? 2.0 : 0.0)) +
         tSpr / 2.0 * (1.0 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-            (pc.kfLvl >= 1100 ? 1.0 : 0.0));
+            (pc.kfLvl >= 1100 ? 1.0 : 0.0) +
+            (allAttrBool ? 2.0 : 0.0));
     b.mDefA = pc.wish[WISH_MDEFA] * 1.0;
     b.pRdc = 0.0;
     b.mRdc = 0.0;
