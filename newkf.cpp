@@ -2048,7 +2048,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_AAA];
     int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_AAA];
     int vitMnd = tVit + tMnd;
-    bool allAttrBool = pc.kfLvl >= 1500 && tStr >= 450 && tAgi >= 450 && tInt >= 450 && tVit >= 450 && tSpr >= 450 && tMnd >= 450
+    bool allAttrBool = pc.kfLvl >= 1500 && tStr >= 450 && tAgi >= 450 && tInt >= 450 && tVit >= 450 && tSpr >= 450 && tMnd >= 450;
     b.role = pc.role;
     b.lvl = pc.lvl;
     b.hpM = (vitMnd * (35.0 +
@@ -2091,7 +2091,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.lchP = 0.0;
     b.pDefB = tVit * (1.0 +
         (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-        (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0)) +
+        (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0) +
         (allAttrBool ? 2.0 : 0.0)) +
         tSpr / 2 * (1 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
@@ -2100,7 +2100,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.pDefA = pc.wish[WISH_PDEFA] * 1.0;
     b.mDefB = tMnd * (1.0 +
         (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-        (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0)) +
+        (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0) +
         (allAttrBool ? 2.0 : 0.0)) +
         tSpr / 2.0 * (1.0 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
