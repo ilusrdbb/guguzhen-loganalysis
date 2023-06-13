@@ -2325,7 +2325,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.hpM += hpPlus + hpAdd;
     if (pc.role == ROLE_XI)
     {
-        b.hpM += pc.growth > 106800 ? 106800 : pc.growth;
+        b.hpM += pc.growth > 100000 ? 100000 : pc.growth;
     }
     b.pAtkB += pAtkPlus;
     b.mAtkB += mAtkPlus;
@@ -2335,7 +2335,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sldM += sldPlus + sldAdd;
     if (pc.role == ROLE_XIA)
     {
-        b.sldM += pc.growth > 106800 ? 106800 : pc.growth;
+        b.sldM += pc.growth > 100000 ? 100000 : pc.growth;
     }
     b.hp = b.hpM;
     b.spdRR = 0.0;
