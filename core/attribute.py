@@ -27,7 +27,7 @@ class Attribute:
 
     # 初始化
     def __init__(self, enemy):
-        self.all_point = int(enemy.card_level * 3 * (100 + enemy.card_quality) / 100)
+        self.all_point = int((6 + enemy.card_level * 3) * (100 + enemy.card_quality) / 100)
         self.final_point = self.all_point
 
 
