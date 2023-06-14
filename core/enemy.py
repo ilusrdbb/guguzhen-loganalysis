@@ -47,6 +47,28 @@ class Enemy:
         self.battle_log = data['log']
 
 
+# 初始化排行榜
+def init_top_players():
+    print('开始初始化排行榜玩家的系数...')
+    domain = config.read_config('kf_domain')
+    url = domain + '/kf_no1.php'
+    text = util.http_get(url, '', '网络错误')
+    if text:
+        dom = html.fromstring(text)
+        top_list = dom.xpath(config.read_config('xpath_config')['top'])
+        for top in top_list:
+            name = top.xpath('td//text()')[1]
+            level = top.xpath('td//text()')[2].replace('级', '')
+            cache_data = sql.query(name)
+            if cache_data:
+                sql.update(name, level)
+            else:
+                sql.insert(name, None, level)
+        print('初始化排行榜数据成功！')
+    else:
+        print('获取排行榜数据失败')
+
+
 # 通过论坛发帖获取真实的系数
 def get_kf_level(enemy_data):
     domain = config.read_config('kf_domain')

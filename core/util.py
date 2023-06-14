@@ -54,7 +54,7 @@ def http_post(url, param, fail_info):
     headers['Cookie'] = config.read_config('cookie')
     text = None
     try:
-        response = requests.post(url=url, data=param, headers=headers, proxies=proxies, timeout=15)
+        response = requests.post(url=url, data=param, headers=headers, proxies=proxies, timeout=10)
         if not response.status_code == 200:
             print(fail_info)
         text = response.text
@@ -71,7 +71,7 @@ def http_get(url, param, fail_info):
     headers['Cookie'] = config.read_config('cookie')
     text = None
     try:
-        response = requests.get(url=url, params=param, headers=headers, proxies=proxies, timeout=15)
+        response = requests.get(url=url, params=param, headers=headers, proxies=proxies, timeout=10)
         if not response.status_code == 200:
             print(fail_info)
         text = response.text
