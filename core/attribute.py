@@ -9,21 +9,21 @@ from core import config
 
 class Attribute:
     # 总点数
-    final_point = 6
+    final_point = 0
     # 全部剩余点数
-    all_point = 6
+    all_point = 0
     # 力量
-    t_str = 1
+    t_str = 0
     # 敏捷
-    t_agi = 1
+    t_agi = 0
     # 智力
-    t_int = 1
+    t_int = 0
     # 体魄
-    t_vit = 1
+    t_vit = 0
     # 精神
-    t_spr = 1
+    t_spr = 0
     # 意志
-    t_mnd = 1
+    t_mnd = 0
 
     # 初始化
     def __init__(self, enemy):
@@ -69,7 +69,7 @@ def cal_other_attr(battle_data, attr_data):
             return
     else:
         t_agi = int(attr_data.final_point * max_ratio_icon(icon_list[1]))
-    if t_agi > attr_data.all_point - 2:
+    if t_agi >= attr_data.all_point - 2:
         attr_data.t_agi = attr_data.all_point - 2
         attr_data.t_str = 1
         attr_data.t_int = 1
@@ -78,7 +78,7 @@ def cal_other_attr(battle_data, attr_data):
     attr_data.all_point -= t_agi
     # 智力
     t_int = int(attr_data.final_point * min_ratio_icon(icon_list[2]))
-    if t_int > attr_data.all_point - 1:
+    if t_int >= attr_data.all_point - 1:
         attr_data.t_int = attr_data.all_point - 1
         attr_data.t_str = 1
         return
@@ -102,7 +102,7 @@ def cal_other_attr(battle_data, attr_data):
             attr_data.t_agi = 1
 
 
-    # 根据血量和护盾计算
+# 根据血量和护盾计算
 def cal_hp_sld(enemy_data, battle_data, attr_data, aumlet_str):
     cal_sld(enemy_data, battle_data, attr_data, aumlet_str)
     cal_hp(enemy_data, battle_data, attr_data, aumlet_str)
@@ -169,7 +169,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         final_ratio += 0.3
     # 反推
     base_sld = (sld / final_ratio - g_add - gear_add - wish_add - xin_add) / gear_mul
-    if base_sld < 0:
+    if base_sld <= 0:
         attr_data.t_spr = 1
         attr_data.all_point -= 1
         return
@@ -186,7 +186,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
                 attr_data.all_point -= 1
                 return
     attr_data.t_spr = int(base_sld / t_spr_mul)
-    if attr_data.t_spr < aumlet_from_str(aumlet_str, 'SPR'):
+    if attr_data.t_spr <= aumlet_from_str(aumlet_str, 'SPR'):
         attr_data.t_spr = 1
         attr_data.all_point -= 1
         return
@@ -198,7 +198,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     elif enemy_data.kf_level >= 300 and 'double-angle-down' not in icon_list[4] and attr_data.t_spr < 200:
         attr_data.t_spr = 200
     attr_data.t_spr -= aumlet_from_str(aumlet_str, 'SPR')
-    if attr_data.all_point < attr_data.t_spr + 5:
+    if attr_data.all_point <= attr_data.t_spr + 5:
         attr_data.t_spr = attr_data.all_point - 5
         attr_data.t_str = 1
         attr_data.t_int = 1
@@ -221,9 +221,9 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     # 加点，每点体意或力量有多少生命
     t_vm_mul = 35
     t_str_mul = 0
-    if enemy_data.kf_level >= 300 and 'double-angle-down' not in icon_list[3] and 'double-angle-down' not in icon_list[5]:
+    if enemy_data.kf_level >= 300 and ('double-angle-down' not in icon_list[3] or 'double-angle-down' not in icon_list[5]):
         t_vm_mul += 7
-    if enemy_data.kf_level >= 600 and 'double-angle-down' not in icon_list[3] and 'double-angle-down' not in icon_list[5]:
+    if enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] or 'double-angle-down' not in icon_list[5]):
         t_vm_mul += 10
     if enemy_data.kf_level >= 800 and ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5]):
         t_vm_mul += 17
@@ -238,21 +238,22 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     gear_add = 0
     if gear_list[1] == 'GLOVES':
         gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[3]) / 100
-    if gear_list[1] == 'DEVOUR':
+    # 暂时去除不稳定的装备附加
+    # if gear_list[1] == 'DEVOUR':
         # 噬魔戒指 携带后假定力量为500
-        gear_add += 500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+        # gear_add += 500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100
     if gear_list[3] == 'SCARF':
         gear_add += int(gear_level_list[3]) * 10 * int(config.read_config('gear_config')['SCARF'].split(' ')[0]) / 100
     if gear_list[3] == 'TIARA':
         gear_add += int(gear_level_list[3]) * 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[0]) / 100
-    if gear_list[3] == 'RIBBON':
+    # if gear_list[3] == 'RIBBON':
         # 缎带 携带后假定意志为500
-        gear_add += 500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
-    if gear_list[3] == 'HUNT':
+        # gear_add += 500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+    # if gear_list[3] == 'HUNT':
         # 猎魔 携带后假定力量为500
-        gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+        # gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
     # 装备 百分比生命
     gear_mul = 1
     if gear_list[1] == 'DEVOUR':
@@ -282,7 +283,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         final_ratio += 0.3
     # 反推
     base_hp = (hp / final_ratio - g_add - gear_add - wish_add - xin_add) / gear_mul
-    if base_hp < 0:
+    if base_hp <= 0:
         attr_data.t_vit = 1
         attr_data.t_mnd = 1
         attr_data.all_point -= 2
@@ -308,7 +309,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         else:
             # 1300系数 力量双上 体意全不是双下 默认力量1500 体意平分
             base_hp -= t_str_mul * 1500
-            if base_hp < 0:
+            if base_hp <= 0:
                 attr_data.t_vit = 1
                 attr_data.t_mnd = 1
                 attr_data.all_point -= 2
@@ -319,7 +320,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.all_point -= t_vit_mnd
             return
     t_vit_mnd = int(base_hp / t_vm_mul)
-    if t_vit_mnd < aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND'):
+    if t_vit_mnd <= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND') + 4):
         attr_data.t_vit = 1
         attr_data.t_mnd = 1
         attr_data.all_point -= 2
@@ -329,14 +330,14 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             and ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5]) \
             and t_vit_mnd < 1000:
         t_vit_mnd = 1000
-    elif enemy_data.kf_level >= 600 and 'double-angle-down' not in icon_list[3] \
-            and 'double-angle-down' not in icon_list[5] and t_vit_mnd < 500:
+    elif enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] \
+            or 'double-angle-down' not in icon_list[5]) and t_vit_mnd < 500:
         t_vit_mnd = 500
-    elif enemy_data.kf_level >= 300 and 'double-angle-down' not in icon_list[3] \
-            and 'double-angle-down' not in icon_list[5] and t_vit_mnd < 200:
+    elif enemy_data.kf_level >= 300 and ('double-angle-down' not in icon_list[3] \
+            or 'double-angle-down' not in icon_list[5]) and t_vit_mnd < 200:
         t_vit_mnd = 200
     t_vit_mnd -= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND'))
-    if attr_data.all_point < t_vit_mnd + 3:
+    if attr_data.all_point <= t_vit_mnd + 3:
         t_vit_mnd = attr_data.all_point - 3
         attr_data.t_str = 1
         attr_data.t_int = 1
