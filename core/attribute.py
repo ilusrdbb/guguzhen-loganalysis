@@ -68,7 +68,7 @@ def cal_other_attr(battle_data, attr_data):
             attr_data.t_int = 1
             return
     else:
-        t_agi = int(attr_data.final_point * max_ratio_icon(icon_list[1]))
+        t_agi = int(attr_data.final_point * agi_ratio(icon_list[1]))
     if t_agi >= attr_data.all_point - 2:
         attr_data.t_agi = attr_data.all_point - 2
         attr_data.t_str = 1
@@ -77,7 +77,7 @@ def cal_other_attr(battle_data, attr_data):
     attr_data.t_agi = t_agi
     attr_data.all_point -= t_agi
     # 智力
-    t_int = int(attr_data.final_point * min_ratio_icon(icon_list[2]))
+    t_int = int(attr_data.final_point * int_ratio(icon_list[2]))
     if t_int >= attr_data.all_point - 1:
         attr_data.t_int = attr_data.all_point - 1
         attr_data.t_str = 1
@@ -396,20 +396,18 @@ def split_vit_mnd(t_vit_mnd, attr_data, icon_list):
         return
 
 
-# 从icon中获取相对较高的比例
-def max_ratio_icon(icon):
+# 从icon中推断敏捷的比例
+def agi_ratio(icon):
     if 'double-angle-down' in icon:
         return 0.05
     if 'angle-down' in icon:
         return 0.2
     if 'angle-up' in icon:
         return 0.3
-    if 'double-angle-up' in icon:
-        return 1
 
 
-# 从icon中获取最低比例
-def min_ratio_icon(icon):
+# 从icon中推断智力的比例
+def int_ratio(icon):
     if 'double-angle-down' in icon:
         return 0.001
     if 'angle-down' in icon:
