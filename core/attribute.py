@@ -84,7 +84,7 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     if t_int >= attr_data.all_point - 1:
         if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
             # 先从精神拿 然后是敏捷
-            diff = 1600 - attr_data.all_point
+            diff = 1600 - attr_data.all_point + 1
             if diff < attr_data.t_spr:
                 attr_data.t_spr -= diff
                 attr_data.t_int = 1600
@@ -211,7 +211,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
             return
         else:
             # 1400系数 智力双上 精神不是双下 默认智力1600
-            base_sld -= t_int_mul * 1600
+            base_sld -= (t_int_mul * 1600)
             if base_sld < 0:
                 attr_data.t_spr = 1
                 attr_data.all_point -= 1
@@ -344,7 +344,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.t_vit = 1
             attr_data.all_point -= 1
             attr_data.t_mnd = int(base_hp / t_vm_mul)
-            if base_hp <= 0:
+            if attr_data.t_mnd <= 0:
                 attr_data.t_mnd = 1
             attr_data.all_point -= attr_data.t_mnd
             return
@@ -352,7 +352,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.t_mnd = 1
             attr_data.all_point -= 1
             attr_data.t_vit = int(base_hp / t_vm_mul)
-            if base_hp <= 0:
+            if attr_data.t_vit <= 0:
                 attr_data.t_vit = 1
             attr_data.all_point -= attr_data.t_vit
             return
@@ -363,6 +363,8 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
                 attr_data.all_point -= 2
                 return
             t_vit_mnd = int(base_hp / t_vm_mul)
+            if t_vit_mnd <= 2:
+                t_vit_mnd = 2
             attr_data.t_vit = int(t_vit_mnd / 2)
             attr_data.t_mnd = t_vit_mnd - attr_data.t_vit
             attr_data.all_point -= t_vit_mnd
