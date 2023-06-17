@@ -46,11 +46,11 @@ def cal_attr(enemy_data, battle_data, attr_data, aumlet_str):
     # 根据血量和护盾 推测意志、精神、体魄
     cal_hp_sld(enemy_data, battle_data, attr_data, aumlet_str)
     # 根据剩余点数和图标大致推断力量、智力、敏捷
-    cal_other_attr(battle_data, attr_data)
+    cal_other_attr(battle_data, attr_data, enemy_data)
 
 
 # 根据剩余点数和图标大致推断力量、智力、敏捷
-def cal_other_attr(battle_data, attr_data):
+def cal_other_attr(battle_data, attr_data, enemy_data):
     if attr_data.all_point == 0:
         return
     icon_list = battle_data.attr_list
@@ -78,14 +78,45 @@ def cal_other_attr(battle_data, attr_data):
     attr_data.all_point -= t_agi
     # 智力
     t_int = int(attr_data.final_point * int_ratio(icon_list[2]))
+    if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
+        if t_int <= 1600:
+            t_int = 1600
     if t_int >= attr_data.all_point - 1:
-        attr_data.t_int = attr_data.all_point - 1
-        attr_data.t_str = 1
-        return
+        if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
+            # 先从精神拿 然后是敏捷
+            diff = 1600 - attr_data.all_point
+            if diff < attr_data.t_spr:
+                attr_data.t_spr -= diff
+                attr_data.t_int = 1600
+                attr_data.t_str = 1
+                return
+            else:
+                diff -= (attr_data.t_spr - 1)
+                attr_data.t_spr = 1
+                attr_data.t_agi -= diff
+                attr_data.t_str = 1
+                attr_data.t_int = 1600
+                return
+        else:
+            attr_data.t_int = attr_data.all_point - 1
+            attr_data.t_str = 1
+            return
     attr_data.t_int = t_int
     attr_data.all_point -= t_int
     # 力量
     attr_data.t_str = attr_data.all_point
+    if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
+        if attr_data.t_str <= 1500:
+            attr_data.t_str = 1500
+            diff = 1500 - attr_data.all_point
+            if attr_data.all_point < 1500:
+                # 先从意志拿 然后是敏捷
+                if diff < attr_data.t_mnd:
+                    attr_data.t_mnd -= diff
+                else:
+                    diff -= (attr_data.t_mnd - 1)
+                    attr_data.t_mnd = 1
+                    attr_data.t_agi -= diff
     # 补偿
     if 'double-angle-down' in icon_list[0]:
         if 'angle-down' not in icon_list[5]:
@@ -179,8 +210,8 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.all_point -= 1
             return
         else:
-            # 1400系数 智力双上 精神不是双下 默认智力1500
-            base_sld -= t_int_mul * 1500
+            # 1400系数 智力双上 精神不是双下 默认智力1600
+            base_sld -= t_int_mul * 1600
             if base_sld < 0:
                 attr_data.t_spr = 1
                 attr_data.all_point -= 1
@@ -238,22 +269,35 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     gear_add = 0
     if gear_list[1] == 'GLOVES':
         gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[3]) / 100
-    # 暂时去除不稳定的装备附加
-    # if gear_list[1] == 'DEVOUR':
-        # 噬魔戒指 携带后假定力量为500
-        # gear_add += 500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+    if gear_list[1] == 'DEVOUR':
+        if 'double-angle-up' in icon_list[0]:
+            gear_add += 1500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+        elif 'angle-up' in icon_list[0]:
+            gear_add += 800 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100
     if gear_list[3] == 'SCARF':
         gear_add += int(gear_level_list[3]) * 10 * int(config.read_config('gear_config')['SCARF'].split(' ')[0]) / 100
     if gear_list[3] == 'TIARA':
         gear_add += int(gear_level_list[3]) * 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[0]) / 100
-    # if gear_list[3] == 'RIBBON':
-        # 缎带 携带后假定意志为500
-        # gear_add += 500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
-    # if gear_list[3] == 'HUNT':
-        # 猎魔 携带后假定力量为500
-        # gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+    if gear_list[3] == 'RIBBON':
+        if 'double-angle-up' in icon_list[3]:
+            gear_add += 1500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+        elif 'angle-up' in icon_list[3]:
+            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+        if 'double-angle-up' in icon_list[5]:
+            gear_add += 1500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+        elif 'angle-up' in icon_list[5]:
+            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+    if gear_list[3] == 'HUNT':
+        if 'double-angle-up' in icon_list[0]:
+            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+        elif 'angle-up' in icon_list[0]:
+            gear_add += 800 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+        if 'double-angle-up' in icon_list[1]:
+            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+        elif 'angle-up' in icon_list[1]:
+            gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
     # 装备 百分比生命
     gear_mul = 1
     if gear_list[1] == 'DEVOUR':
@@ -289,6 +333,8 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         attr_data.all_point -= 2
         return
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
+        # 1300系数 默认力量1500
+        base_hp -= t_str_mul * 1500
         if 'double-angle-down' in icon_list[3] and 'double-angle-down' in icon_list[5]:
             attr_data.t_vit = 1
             attr_data.t_mnd = 1
@@ -298,17 +344,19 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.t_vit = 1
             attr_data.all_point -= 1
             attr_data.t_mnd = int(base_hp / t_vm_mul)
+            if base_hp <= 0:
+                attr_data.t_mnd = 1
             attr_data.all_point -= attr_data.t_mnd
             return
         elif 'double-angle-down' in icon_list[5]:
             attr_data.t_mnd = 1
             attr_data.all_point -= 1
             attr_data.t_vit = int(base_hp / t_vm_mul)
+            if base_hp <= 0:
+                attr_data.t_vit = 1
             attr_data.all_point -= attr_data.t_vit
             return
         else:
-            # 1300系数 力量双上 体意全不是双下 默认力量1500 体意平分
-            base_hp -= t_str_mul * 1500
             if base_hp <= 0:
                 attr_data.t_vit = 1
                 attr_data.t_mnd = 1
@@ -403,7 +451,7 @@ def agi_ratio(icon):
     if 'angle-down' in icon:
         return 0.2
     if 'angle-up' in icon:
-        return 0.3
+        return 0.4
 
 
 # 从icon中推断智力的比例
