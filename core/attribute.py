@@ -127,10 +127,10 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
             attr_data.t_str = 1
         elif 'angle-down' not in icon_list[4]:
             attr_data.t_spr += (attr_data.all_point - 1)
-            attr_data.t_spr = 1
+            attr_data.t_str = 1
         else:
             attr_data.t_agi += (attr_data.all_point - 1)
-            attr_data.t_agi = 1
+            attr_data.t_str = 1
 
 
 # 根据血量和护盾计算
