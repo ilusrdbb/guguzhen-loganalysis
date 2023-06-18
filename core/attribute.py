@@ -122,6 +122,9 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
         if 'angle-down' not in icon_list[5]:
             attr_data.t_mnd += (attr_data.all_point - 1)
             attr_data.t_str = 1
+        elif 'angle-down' not in icon_list[3]:
+            attr_data.t_vit += (attr_data.all_point - 1)
+            attr_data.t_str = 1
         elif 'angle-down' not in icon_list[2]:
             attr_data.t_int += (attr_data.all_point - 1)
             attr_data.t_str = 1
