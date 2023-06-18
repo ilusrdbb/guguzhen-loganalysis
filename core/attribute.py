@@ -255,7 +255,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     # 加点，每点体意或力量有多少生命
     t_vm_mul = 35
     t_str_mul = 0
-    if enemy_data.kf_level >= 300 and ('double-angle-down' not in icon_list[3] or 'double-angle-down' not in icon_list[5]):
+    if enemy_data.kf_level >= 300:
         t_vm_mul += 7
     if enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] or 'double-angle-down' not in icon_list[5]):
         t_vm_mul += 10
@@ -386,8 +386,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     elif enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] \
             or 'double-angle-down' not in icon_list[5]) and t_vit_mnd < 500:
         t_vit_mnd = 500
-    elif enemy_data.kf_level >= 300 and ('double-angle-down' not in icon_list[3] \
-            or 'double-angle-down' not in icon_list[5]) and t_vit_mnd < 200:
+    elif enemy_data.kf_level >= 300 and t_vit_mnd > 200:
         t_vit_mnd = 200
     t_vit_mnd -= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND'))
     if attr_data.all_point <= t_vit_mnd + 3:
