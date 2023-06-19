@@ -161,7 +161,9 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
         t_int_mul += 62
     # 启程心 附加护盾
-    xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
+    xin_ratio = 0
+    if 'XIN' in battle_data.talent_list:
+        xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
     xin_add = xin_ratio * enemy_data.card_level * 10
     # 许愿池 附加护盾
     wish_add = int(config.read_config('wish_config').split(' ')[8]) * 20
@@ -264,7 +266,9 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
         t_str_mul += 30
     # 启程心 附加生命
-    xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
+    xin_ratio = 0
+    if 'XIN' in battle_data.talent_list:
+        xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
     xin_add = xin_ratio * enemy_data.card_level * 10
     # 许愿池 附加生命
     wish_add = int(config.read_config('wish_config').split(' ')[7]) * 12
