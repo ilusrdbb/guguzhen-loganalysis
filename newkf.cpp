@@ -265,7 +265,7 @@ struct BStat
     int myst;    // 神秘属性组合 
     int sklC;    // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
     int houC;    // 后发制人计数
-    uint8_t wish[WISH_COUNT]; // 许愿池点数
+    uint16_t wish[WISH_COUNT]; // 许愿池点数
     uint8_t amul[AMUL_COUNT]; // 护身符点数
     bool hpPot;  // 生命药水是否已使用
     bool sldPot; // 护盾药水是否已使用
@@ -314,7 +314,7 @@ struct Player
     int attr[ATTR_COUNT];
     int auraSkl;
     Gear gear[4];
-    uint8_t wish[WISH_COUNT];
+    uint16_t wish[WISH_COUNT];
     uint8_t amul[AMUL_COUNT];
     int type;
     double weight;
