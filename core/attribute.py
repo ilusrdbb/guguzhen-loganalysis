@@ -56,10 +56,10 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     icon_list = battle_data.attr_list
     # 先看速度
     if 'double-angle-up' in icon_list[1]:
-        if 'icon-angle-up' in icon_list[0] or 'icon-angle-up' in icon_list[2]:
+        if 'double-angle-up' in icon_list[0] or 'double-angle-up' in icon_list[2]:
             # 取3/5的剩余点数
             t_agi = int(attr_data.all_point * 3 / 5)
-        elif 'icon-angle-up' in icon_list[0] or 'icon-angle-up' in icon_list[2]:
+        elif 'angle-up' in icon_list[0] or 'angle-up' in icon_list[2]:
             # 取3/4的剩余点数
             t_agi = int(attr_data.all_point * 3 / 4)
         else:
