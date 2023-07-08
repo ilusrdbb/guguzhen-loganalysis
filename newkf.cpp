@@ -978,7 +978,7 @@ bool readPlayer(FILE* fp, Player& pc)
     if (buf[0] == 'M' && buf[1] == '=')
     {
         if (!isNumber(buf + 2) || sscanf(buf + 2, "%d", &pc.mode) != 1 ||
-            pc.mode < 0 || pc.mode > 2)
+            pc.mode < 0 || pc.mode > 1)
         {
             printf("Error: Invalid \"M=\" parameter: %s\n", buf + 2);
             fseek(fp, pos, SEEK_SET);
@@ -2702,26 +2702,15 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             if (b[i].mode == 0)
             {
-                b[i].lchP += 50;
                 b[i].pDefB *= 1.2;
                 b[i].mDefB *= 1.2;
             }
             if (b[i].mode == 1)
             {
-                b[i].lchP += 50;
                 b[1 - i].mAtkB *= 0.7;
                 b[1 - i].mAtkA *= 0.7;
-                b[i - i].spdB *= 0.7;
-                b[i - i].spdA *= 0.7;
-            }
-            if (b[i].mode == 2)
-            {
-                b[i].pDefB *= 1.2;
-                b[i].mDefB *= 1.2;
-                b[1 - i].mAtkB *= 0.7;
-                b[1 - i].mAtkA *= 0.7;
-                b[i - i].spdB *= 0.7;
-                b[i - i].spdA *= 0.7;
+                b[1 - i].spdB *= 0.7;
+                b[1 - i].spdA *= 0.7;
             }
         }
         b[i].hpM *= 1 + hpMAdd / 100.0;
@@ -2761,7 +2750,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     {
         renCounter = 4;
     }
-    bool isYS = false;
     for (int round = 1;; ++round)
     {
         int s = b[0].spdC >= b[1].spdC ? 0 : 1;
@@ -2926,11 +2914,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 0.25);
         }
-        if (b0.role == ROLE_YA && b0.mode == 2)
+        if (b0.role == ROLE_YA)
         {
-            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.1 * round);
-            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.1 * round);
-            aa[s] += (int)((b0.aAtk) * 0.1 * round);
+            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.07 * round);
+            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.07 * round);
+//            aa[s] += (int)((b0.aAtk) * 0.07 * round);
         }
         if (b0.psvSkl & AURA_FEI)
         {
@@ -2948,11 +2936,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += (b0.pAtkB + b0.pAtkA) * 30;
             ma[s] += (b0.mAtkB + b0.mAtkA) * 30;
-        }
-        if (isYS)
-        {
-            isC = false;
-            isS = false;
         }
         if (isC)
         {
@@ -3095,16 +3078,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_YA:
             {
-                if (b0.mode != 2)
-                {
-                    pa[s] += (b1.hpM + b1.sldM) * 0.15;
-                    b1.hpM *= 0.95;
-                    b1.sldM *= 0.95;
-                }
-                else
-                {
-                    isYS = true;
-                }
+                pa[s] += (b1.hpM + b1.sldM) * 0.15;
+                b1.hpM *= 0.95;
+                b1.sldM *= 0.95;
                 break;
             }
             }
@@ -3532,8 +3508,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         for (int i = 0; i < 2; ++i)
         {
-            hr[i] = isYS ? 0 : hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
-            sr[i] = isYS ? 0 : sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
+            hr[i] = hr[i] * (1 - (b[i].hpRecRR > 100 ? 100 : b[i].hpRecRR) / 100.0);
+            sr[i] = sr[i] * (1 - (b[i].sldRecRR > 100 ? 100 : b[i].sldRecRR) / 100.0);
             if (i == 1 - s && b[i].role == ROLE_LIN && b[i].sklC == 0 && hd[i] >= b[i].hp + hr[i])
             {
                 hd[i] = 0;

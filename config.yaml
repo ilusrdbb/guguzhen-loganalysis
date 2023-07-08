@@ -170,7 +170,6 @@ card_map:
   舞: 'WU'
   霞: 'XIA'
   雅: 'YA'
-  雅(凶神): 'YA2'
 # 天赋映射
 talent_map:
   启程之誓: 'SHI'
