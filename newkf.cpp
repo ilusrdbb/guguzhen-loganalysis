@@ -2873,7 +2873,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b0.role == ROLE_MENG)
         {
             b0.sklC += 2;
-            ma[s] += int(b0.sldM * 0.03 * b0.sklC);
+            ma[s] += int(b0.sldM * 0.03 * b0.sklC + (b0.mAtkA + b0.mAtkB) * 0.03 * b0.sklC);
             ++b1.spdRR;
         }
         if (b0.role == ROLE_YI)
@@ -3026,7 +3026,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 break;
             case ROLE_MENG:
                 b0.sklC += 7;
-                ma[s] += (b0.mAtkB + b0.mAtkA) * b0.sklC / 5;
+                ma[s] += (b0.mAtkB + b0.mAtkA) * b0.sklC / 4;
                 b1.spdRR += b0.sklC / 2;
                 if (b1.spdRR > 100) b1.spdRR = 100;
                 break;
