@@ -138,7 +138,7 @@ def build_first_line(enemy_data, w_map):
     if config.read_config('is_add_w'):
         w_str = 'W=' + str(w_map[enemy_name]) + ' '
     if enemy_card == 'YA':
-        return enemy_card + '_' + enemy_data.enemy_name + ' M=' + str(enemy_data.ya_mode) \
+        return w_str + enemy_card + '_' + enemy_data.enemy_name + ' M=' + str(enemy_data.ya_mode) \
                + ' ' + str(enemy_data.card_level) \
                + ' ' + str(enemy_data.kf_level) \
                + ' ' + str(enemy_data.skill_num) \
