@@ -2700,15 +2700,20 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b[i].role == ROLE_YA)
         {
+            b[i].lchP += 50;
             if (b[i].mode == 0)
             {
                 b[i].pDefB *= 1.2;
+                b[i].pDefA *= 1.2;
                 b[i].mDefB *= 1.2;
+                b[i].mDefA *= 1.2;
             }
             if (b[i].mode == 1)
             {
                 b[1 - i].mAtkB *= 0.7;
                 b[1 - i].mAtkA *= 0.7;
+                b[1 - i].pAtkB *= 0.7;
+                b[1 - i].pAtkA *= 0.7;
                 b[1 - i].spdB *= 0.7;
                 b[1 - i].spdA *= 0.7;
             }
@@ -2914,12 +2919,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 0.25);
         }
-        if (b0.role == ROLE_YA)
-        {
-            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.07 * round);
-            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.07 * round);
-//            aa[s] += (int)((b0.aAtk) * 0.07 * round);
-        }
         if (b0.psvSkl & AURA_FEI)
         {
             pa[s] += int(b0.hpM * 0.18);
@@ -2936,6 +2935,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += (b0.pAtkB + b0.pAtkA) * 30;
             ma[s] += (b0.mAtkB + b0.mAtkA) * 30;
+        }
+        if (b0.role == ROLE_YA)
+        {
+            ma[s] += (int)(ma[s] * 0.07 * round);
+            pa[s] += (int)(pa[s] * 0.07 * round);
+            aa[s] += (int)(aa[s] * 0.07 * round);
         }
         if (isC)
         {
@@ -3205,7 +3210,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
             if (sldActive)
             {
-                int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
+                int qixiao  = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
                 if (sdMax < 0) sdMax = 0;
                 if (debug && sdMax > 0)
                 {
