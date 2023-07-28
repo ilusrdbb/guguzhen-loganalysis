@@ -3210,7 +3210,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
             if (sldActive)
             {
-                int qixiao  = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
+                int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
                 if (sdMax < 0) sdMax = 0;
                 if (debug && sdMax > 0)
                 {
