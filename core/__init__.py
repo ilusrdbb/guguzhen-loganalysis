@@ -30,6 +30,9 @@ def start():
         # 排除野怪结果
         if data['char'] == '野怪':
             continue
+        # TODO 防守记录处理
+        if data.get('type') == 'defense':
+            continue
         # 初始化对手数据
         enemy_data = enemy.Enemy(data)
         # 白名单
@@ -183,6 +186,9 @@ def get_w_map(json_data):
     for data in json_data:
         # 排除野怪结果
         if data['char'] == '野怪':
+            continue
+        # TODO 防守记录处理
+        if data.get('type') == 'defense':
             continue
         # 白名单
         if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
