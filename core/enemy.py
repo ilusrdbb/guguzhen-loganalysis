@@ -130,4 +130,7 @@ def get_kf_level(enemy_data):
                                     print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
                                     enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
             else:
+                # 无发帖记录的扔进数据库中
+                forum_level = config.read_config('max_kf_level') - config.read_config('shadow_level') - 100
+                sql.insert(enemy_data.enemy_name, '', str(forum_level))
                 print('%s未找到发帖记录' % enemy_data.enemy_name)

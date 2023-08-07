@@ -15,7 +15,7 @@ def start():
     # 加载系数缓存数据库文件
     sql.init_db()
     # 解析排行榜
-    if config.read_config('use_cache'):
+    if config.read_config('is_search_level'):
         enemy.init_top_players()
     # 解析json
     json_data = util.file_load()
