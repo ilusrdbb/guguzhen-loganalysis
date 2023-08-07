@@ -63,7 +63,7 @@ def init_top_players():
             if cache_data:
                 sql.update(name, level)
             else:
-                sql.insert(name, None, level)
+                sql.insert(name, '', level)
         print('初始化排行榜数据成功！')
     else:
         print('获取排行榜数据失败')
