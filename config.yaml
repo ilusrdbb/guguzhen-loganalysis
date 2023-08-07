@@ -32,11 +32,11 @@ wish_config: '100 100 100 100 100 100 100 100 100 50 50 50 50 50'
 default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND',
                        'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK', 'HUNT']
 # 默认成长值
-default_g: 80000
+default_g: 50000
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
 gear_config:
   STAFF: '150 150 150 150'
-  BLADE: '90 150 140 140'
+  BLADE: '90 140 140 140'
   ASSBOW: '100 150 150 120'
   DAGGER: '100 120 150 150'
   WAND: '120 120 120 150'
@@ -44,12 +44,12 @@ gear_config:
   CLAYMORE: '110 110 150 150'
   SPEAR: '120 150 150 100'
   GLOVES: '150 150 150 150'
-  BRACELET: '150 150 100 120'
+  BRACELET: '150 150 100 150'
   VULTURE: '120 120 120 150'
   CLOAK: '100 120 150 150'
-  THORN: '150 110 110 150'
+  THORN: '150 110 120 140'
   WOOD: '150 120 120 120'
-  CAPE: '150 150 110 110'
+  CAPE: '150 150 120 100'
   SCARF: '150 150 150 150'
   TIARA: '110 150 150 110'
   RIBBON: '130 130 130 130'
@@ -61,7 +61,7 @@ gear_config:
   LEATHER: '150 150 150 150'
   CLOTH: '150 150 150 150'
   COLORFUL: '120 100 150 150'
-  HUNT: '150 100 120 150'
+  HUNT: '120 100 150 150'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
