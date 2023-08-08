@@ -41,9 +41,6 @@ class Enemy:
         self.battle_timestamp = data['time']
         self.enemy_card = config.read_config('card_map').get(data['char'])
         self.ya_mode = config.read_config('ya_mode')
-        if self.enemy_card == 'YA2':
-            self.enemy_card = 'YA'
-            self.ya_mode = 2
         self.battle_log = data['log']
 
 
@@ -70,15 +67,15 @@ def init_top_players():
 
 
 # 通过论坛发帖获取真实的系数
-def get_kf_level(enemy_data):
+def get_kf_level(enemy_name):
     domain = config.read_config('kf_domain')
-    cache_data = sql.query(enemy_data.enemy_name)
+    cache_data = sql.query(enemy_name)
     if cache_data:
         if config.read_config('use_cache'):
-            enemy_data.kf_level = int(cache_data[0][2]) + config.read_config('shadow_level') + 100
+            return int(cache_data[0][2]) + config.read_config('shadow_level') + 100
         else:
             uid_url = domain + '/' + cache_data[0][1]
-            print('开始获取%s的系数...' % enemy_data.enemy_name)
+            print('开始获取%s的系数...' % enemy_name)
             uid_text = util.http_get(uid_url, None, '网络错误')
             if uid_text:
                 uid_dom = html.fromstring(uid_text)
@@ -89,11 +86,11 @@ def get_kf_level(enemy_data):
                         forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[6]
                     forum_level = forum_text.replace('神秘系数：', '')
                     if forum_level:
-                        sql.update(enemy_data.enemy_name, str(int(forum_level)))
-                        print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
-                        enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
+                        sql.update(enemy_name, str(int(forum_level)))
+                        print('%s的系数获取成功，系数为%s' % (enemy_name, str(int(forum_level))))
+                        return int(forum_level) + config.read_config('shadow_level') + 100
     else:
-        print('开始获取%s的系数...' % enemy_data.enemy_name)
+        print('开始获取%s的系数...' % enemy_name)
         search_url = domain + config.read_config('url_config')['search']
         search_param = {
             'step': 2,
@@ -104,7 +101,7 @@ def get_kf_level(enemy_data):
             'orderway': 'lastpost',
             'asc': 'DESC',
             'keyword': '',
-            'pwuser': enemy_data.enemy_name.encode('gbk')
+            'pwuser': enemy_name.encode('gbk')
         }
         search_text = util.http_post(search_url, search_param, '网络错误')
         if search_text:
@@ -126,11 +123,12 @@ def get_kf_level(enemy_data):
                                     forum_text = uid_dom.xpath(config.read_config('xpath_config')['info'])[6]
                                 forum_level = forum_text.replace('神秘系数：', '')
                                 if forum_level:
-                                    sql.insert(enemy_data.enemy_name, read_dom.xpath(config.read_config('xpath_config')['read'])[0], str(int(forum_level)))
-                                    print('%s的系数获取成功，系数为%s' % (enemy_data.enemy_name, str(int(forum_level))))
-                                    enemy_data.kf_level = int(forum_level) + config.read_config('shadow_level') + 100
+                                    sql.insert(enemy_name, read_dom.xpath(config.read_config('xpath_config')['read'])[0], str(int(forum_level)))
+                                    print('%s的系数获取成功，系数为%s' % (enemy_name, str(int(forum_level))))
+                                    return int(forum_level) + config.read_config('shadow_level') + 100
             else:
                 # 无发帖记录的扔进数据库中
                 forum_level = config.read_config('max_kf_level') - config.read_config('shadow_level') - 100
-                sql.insert(enemy_data.enemy_name, '', str(forum_level))
-                print('%s未找到发帖记录' % enemy_data.enemy_name)
+                sql.insert(enemy_name, '', str(forum_level))
+                print('%s未找到发帖记录' % enemy_name)
+    return None
