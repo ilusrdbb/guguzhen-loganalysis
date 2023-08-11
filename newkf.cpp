@@ -2113,7 +2113,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 300 && tSpr >= 200 ? 13.0 : 0.0) +
         (pc.kfLvl >= 600 && tSpr >= 500 ? 21.0 : 0.0) +
         (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0))) + (tInt *
-        (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 62.0 : 0.0));
+        (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 45.0 : 0.0));
     b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
     b.sldRecA = 0.0;
@@ -3193,7 +3193,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
 
             int dr = calcDefRate(b1.mDefB + b1.mDefA, b1.amul[AMUL_MDEF],
-                b0.mBrcP + (b0.psvSkl & AURA_BO && b0.hp == b0.hpM ? 32 : 0),
+                b0.mBrcP + (b0.psvSkl & AURA_BO && (b0.hp > b0.hpM * 0.7 && b0.sld > b0.sldM * 0.7) ? 30 : 0),
                 isC ? b0.cBrcP : 0, b0.mBrcA,
                 (b1.psvSkl & AURA_SHENG) ? 80 : 75,
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
@@ -3326,7 +3326,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (mRfl > 0)
         {
             int dr = calcDefRate(b0.mDefB + b0.mDefA, b0.amul[AMUL_MDEF],
-                b1.mBrcP + (b1.psvSkl & AURA_BO && b1.hp == b1.hpM ? 32 : 0),
+                b1.mBrcP + (b1.psvSkl & AURA_BO && (b1.hp > b1.hpM * 0.7 && b1.sld > b1.sldM * 0.7) ? 30 : 0),
                 0, b1.mBrcA, (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
             int ma2 = mRfl;
