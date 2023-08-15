@@ -46,11 +46,11 @@ def cal_attr(enemy_data, battle_data, attr_data, aumlet_str):
     # 根据血量和护盾 推测意志、精神、体魄
     cal_hp_sld(enemy_data, battle_data, attr_data, aumlet_str)
     # 根据剩余点数和图标大致推断力量、智力、敏捷
-    cal_other_attr(battle_data, attr_data, enemy_data)
+    cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str)
 
 
 # 根据剩余点数和图标大致推断力量、智力、敏捷
-def cal_other_attr(battle_data, attr_data, enemy_data):
+def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     if attr_data.all_point == 0:
         return
     icon_list = battle_data.attr_list
@@ -76,6 +76,8 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     attr_data.all_point -= t_agi
     # 智力
     t_int = int(attr_data.final_point * int_ratio(icon_list[2]))
+    if t_int == 2:
+        t_int = 1
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
         if t_int <= config.read_config('1400_int'):
             t_int = config.read_config('1400_int')
@@ -111,13 +113,23 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
             attr_data.t_str = config.read_config('1300_str')
             diff = config.read_config('1300_str') - attr_data.all_point
             if attr_data.all_point < config.read_config('1300_str'):
-                # 先从意志拿 然后是敏捷
-                if diff < attr_data.t_mnd:
-                    attr_data.t_mnd -= diff
+                # 先从敏捷拿 拿到1000点 然后从意志拿
+                if attr_data.t_agi > 1000 - aumlet_from_str(aumlet_str, 'AGI'):
+                    diff2 = attr_data.t_agi + aumlet_from_str(aumlet_str, 'AGI') - 1000
+                    if diff2 > diff:
+                        attr_data.t_agi -= diff
+                    else:
+                        attr_data.t_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI')
+                        diff3 = diff - diff2
+                        attr_data.t_mnd -= diff3
                 else:
-                    diff -= (attr_data.t_mnd - 1)
-                    attr_data.t_mnd = 1
-                    attr_data.t_agi -= diff
+                    # 敏捷不够1000就先从意志拿
+                    if diff < attr_data.t_mnd:
+                        attr_data.t_mnd -= diff
+                    else:
+                        diff -= (attr_data.t_mnd - 1)
+                        attr_data.t_mnd = 1
+                        attr_data.t_agi -= diff
         # 1300争夺多余的力量全匀到意志
         if attr_data.t_str > config.read_config('1300_str'):
             diff = attr_data.t_str - config.read_config('1300_str')
@@ -326,7 +338,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         elif 'icon-angle-down' in icon_list[0]:
             gear_add += 400 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         if 'double-angle-up' in icon_list[1]:
-            gear_add += 2000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[1]:
             gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'icon-angle-down' in icon_list[1]:
