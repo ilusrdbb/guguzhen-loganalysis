@@ -57,11 +57,9 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     # 先看速度
     if 'double-angle-up' in icon_list[1]:
         if 'double-angle-up' in icon_list[0] or 'double-angle-up' in icon_list[2]:
-            # 取3/5的剩余点数
-            t_agi = int(attr_data.all_point * 3 / 5)
+            t_agi = int(attr_data.all_point * config.read_config('agi_prop_dudu'))
         elif 'angle-up' in icon_list[0] or 'angle-up' in icon_list[2]:
-            # 取3/4的剩余点数
-            t_agi = int(attr_data.all_point * 3 / 4)
+            t_agi = int(attr_data.all_point * config.read_config('agi_prop_duu'))
         else:
             attr_data.t_agi = attr_data.all_point - 2
             attr_data.t_str = 1
@@ -79,15 +77,16 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     # 智力
     t_int = int(attr_data.final_point * int_ratio(icon_list[2]))
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        if t_int <= 1600:
-            t_int = 1600
+        if t_int <= config.read_config('1400_int'):
+            t_int = config.read_config('1400_int')
     if t_int >= attr_data.all_point - 1:
         if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
+            # 1400争夺的智力补偿
             # 先从精神拿 然后是敏捷
-            diff = 1600 - attr_data.all_point + 1
+            diff = config.read_config('1400_int') - attr_data.all_point + 1
             if diff < attr_data.t_spr:
                 attr_data.t_spr -= diff
-                attr_data.t_int = 1600
+                attr_data.t_int = config.read_config('1400_int')
                 attr_data.t_str = 1
                 return
             else:
@@ -95,9 +94,10 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
                 attr_data.t_spr = 1
                 attr_data.t_agi -= diff
                 attr_data.t_str = 1
-                attr_data.t_int = 1600
+                attr_data.t_int = config.read_config('1400_int')
                 return
         else:
+            # 非1400不补偿，直接榨干剩余点数
             attr_data.t_int = attr_data.all_point - 1
             attr_data.t_str = 1
             return
@@ -106,10 +106,11 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
     # 力量
     attr_data.t_str = attr_data.all_point
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        if attr_data.t_str <= 1500:
-            attr_data.t_str = 1500
-            diff = 1500 - attr_data.all_point
-            if attr_data.all_point < 1500:
+        # 1300争夺的力量补偿
+        if attr_data.t_str <= config.read_config('1300_str'):
+            attr_data.t_str = config.read_config('1300_str')
+            diff = config.read_config('1300_str') - attr_data.all_point
+            if attr_data.all_point < config.read_config('1300_str'):
                 # 先从意志拿 然后是敏捷
                 if diff < attr_data.t_mnd:
                     attr_data.t_mnd -= diff
@@ -117,10 +118,18 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
                     diff -= (attr_data.t_mnd - 1)
                     attr_data.t_mnd = 1
                     attr_data.t_agi -= diff
-    # 补偿
+        # 1300争夺多余的力量全匀到意志
+        if attr_data.t_str > config.read_config('1300_str'):
+            diff = attr_data.t_str - config.read_config('1300_str')
+            attr_data.t_str = config.read_config('1300_str')
+            attr_data.t_mnd += diff
+    # 最终点数补偿
     if 'double-angle-down' in icon_list[0]:
         if 'angle-down' not in icon_list[5]:
             attr_data.t_mnd += (attr_data.all_point - 1)
+            attr_data.t_str = 1
+        elif 'angle-down' not in icon_list[1]:
+            attr_data.t_agi += (attr_data.all_point - 1)
             attr_data.t_str = 1
         elif 'angle-down' not in icon_list[3]:
             attr_data.t_vit += (attr_data.all_point - 1)
@@ -128,11 +137,8 @@ def cal_other_attr(battle_data, attr_data, enemy_data):
         elif 'angle-down' not in icon_list[2]:
             attr_data.t_int += (attr_data.all_point - 1)
             attr_data.t_str = 1
-        elif 'angle-down' not in icon_list[4]:
-            attr_data.t_spr += (attr_data.all_point - 1)
-            attr_data.t_str = 1
         else:
-            attr_data.t_agi += (attr_data.all_point - 1)
+            attr_data.t_spr += (attr_data.all_point - 1)
             attr_data.t_str = 1
 
 
@@ -149,17 +155,24 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     gear_level_list = battle_data.gear_level_list
     gear_mystery_list = battle_data.gear_mystery_list
     sld = battle_data.sld
+    # 精神双下直接返回1点
+    if 'double-angle-down' in icon_list[4]:
+        attr_data.t_spr = 1
+        attr_data.all_point -= 1
+        return
     # 加点，每点精神或智力有多少护盾
     t_spr_mul = 65
     t_int_mul = 0
-    if enemy_data.kf_level >= 300 and 'double-angle-down' not in icon_list[4]:
+    if enemy_data.kf_level >= 300:
         t_spr_mul += 13
-    if enemy_data.kf_level >= 600 and 'double-angle-down' not in icon_list[4]:
+    if enemy_data.kf_level >= 600 and 'angle-down' not in icon_list[2]:
+        # 单上/双上
         t_spr_mul += 21
-    if enemy_data.kf_level >= 800 and 'angle-up' in icon_list[4]:
+    if enemy_data.kf_level >= 800 and 'double-angle-up' in icon_list[4]:
+        # 双上
         t_spr_mul += 21
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        t_int_mul += 62
+        t_int_mul += 45
     # 启程心 附加护盾
     xin_ratio = 0
     if 'XIN' in battle_data.talent_list:
@@ -210,28 +223,25 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         attr_data.all_point -= 1
         return
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        if 'double-angle-down' in icon_list[4]:
+        # 1400系数 智力双上 精神不是双下
+        base_sld -= (t_int_mul * config.read_config('1400_int'))
+        if base_sld < 0:
             attr_data.t_spr = 1
             attr_data.all_point -= 1
             return
-        else:
-            # 1400系数 智力双上 精神不是双下 默认智力1600
-            base_sld -= (t_int_mul * 1600)
-            if base_sld < 0:
-                attr_data.t_spr = 1
-                attr_data.all_point -= 1
-                return
     attr_data.t_spr = int(base_sld / t_spr_mul)
     if attr_data.t_spr <= aumlet_from_str(aumlet_str, 'SPR'):
         attr_data.t_spr = 1
         attr_data.all_point -= 1
         return
     # 系数校验
-    if enemy_data.kf_level >= 800 and 'angle-up' in icon_list[4] and attr_data.t_spr < 1000:
+    if enemy_data.kf_level >= 800 and 'double-angle-up' in icon_list[4] and attr_data.t_spr < 1000:
+        # 双上
         attr_data.t_spr = 1000
-    elif enemy_data.kf_level >= 600 and 'double-angle-down' not in icon_list[4] and attr_data.t_spr < 500:
+    elif enemy_data.kf_level >= 600 and 'angle-down' not in icon_list[4] and attr_data.t_spr < 500:
+        # 单上
         attr_data.t_spr = 500
-    elif enemy_data.kf_level >= 300 and 'double-angle-down' not in icon_list[4] and attr_data.t_spr < 200:
+    elif enemy_data.kf_level >= 300 and attr_data.t_spr < 200:
         attr_data.t_spr = 200
     attr_data.t_spr -= aumlet_from_str(aumlet_str, 'SPR')
     if attr_data.all_point <= attr_data.t_spr + 5:
@@ -259,9 +269,15 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     t_str_mul = 0
     if enemy_data.kf_level >= 300:
         t_vm_mul += 7
-    if enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] or 'double-angle-down' not in icon_list[5]):
+    if enemy_data.kf_level >= 600 \
+            and (('icon-angle-down' in icon_list[3] and 'icon-angle-down' in icon_list[5])
+                 or ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5])):
+        # 单下+单下 或 其中一个单上/双上
         t_vm_mul += 10
-    if enemy_data.kf_level >= 800 and ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5]):
+    if enemy_data.kf_level >= 800 \
+            and (('icon-angle-up' in icon_list[3] and 'icon-angle-up' in icon_list[5])
+                 or ('double-angle-up' in icon_list[3] or 'double-angle-up' in icon_list[5])):
+        # 单上+单上 或 其中一个双上
         t_vm_mul += 17
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
         t_str_mul += 30
@@ -280,7 +296,9 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         if 'double-angle-up' in icon_list[0]:
             gear_add += 1500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[0]:
-            gear_add += 800 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+            gear_add += 850 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+        elif 'icon-angle-down' in icon_list[0]:
+            gear_add += 400 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100
     if gear_list[3] == 'SCARF':
@@ -289,22 +307,30 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         gear_add += int(gear_level_list[3]) * 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[0]) / 100
     if gear_list[3] == 'RIBBON':
         if 'double-angle-up' in icon_list[3]:
-            gear_add += 1500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[3]:
-            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+            gear_add += 850 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+        elif 'icon-angle-down' in icon_list[3]:
+            gear_add += 400 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
         if 'double-angle-up' in icon_list[5]:
-            gear_add += 1500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
         elif 'angle-up' in icon_list[5]:
-            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+            gear_add += 850 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+        elif 'icon-angle-down' in icon_list[5]:
+            gear_add += 400 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
     if gear_list[3] == 'HUNT':
         if 'double-angle-up' in icon_list[0]:
             gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         elif 'angle-up' in icon_list[0]:
-            gear_add += 800 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+            gear_add += 850 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+        elif 'icon-angle-down' in icon_list[0]:
+            gear_add += 400 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         if 'double-angle-up' in icon_list[1]:
-            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+            gear_add += 2000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[1]:
             gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+        elif 'icon-angle-down' in icon_list[1]:
+            gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
     # 装备 百分比生命
     gear_mul = 1
     if gear_list[1] == 'DEVOUR':
@@ -341,29 +367,38 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         return
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
         # 1300系数 默认力量1500
-        base_hp -= t_str_mul * 1500
+        base_hp -= t_str_mul * config.read_config('1300_str')
         if 'double-angle-down' in icon_list[3] and 'double-angle-down' in icon_list[5]:
-            attr_data.t_vit = 1
-            attr_data.t_mnd = 1
-            attr_data.all_point -= 2
-            return
-        elif 'double-angle-down' in icon_list[3]:
+            # 全双下 默认给意志一点点
             attr_data.t_vit = 1
             attr_data.all_point -= 1
-            attr_data.t_mnd = int(base_hp / t_vm_mul)
+            attr_data.t_mnd = 1
+            if attr_data.all_point > config.read_config('1300_low_mnd'):
+                attr_data.t_mnd = config.read_config('1300_low_mnd')
+            attr_data.all_point -= attr_data.t_mnd
+            return
+        elif 'double-angle-down' in icon_list[3]:
+            # 一边双下 全匀给另一边
+            attr_data.t_vit = 1
+            attr_data.all_point -= 1
+            attr_data.t_mnd = int(base_hp / t_vm_mul) - aumlet_from_str(aumlet_str, 'VIT') \
+                              - aumlet_from_str(aumlet_str, 'MND')
             if attr_data.t_mnd <= 0:
                 attr_data.t_mnd = 1
             attr_data.all_point -= attr_data.t_mnd
             return
         elif 'double-angle-down' in icon_list[5]:
+            # 一边双下 全匀给另一边
             attr_data.t_mnd = 1
             attr_data.all_point -= 1
-            attr_data.t_vit = int(base_hp / t_vm_mul)
+            attr_data.t_vit = int(base_hp / t_vm_mul) - aumlet_from_str(aumlet_str, 'VIT') \
+                              - aumlet_from_str(aumlet_str, 'MND')
             if attr_data.t_vit <= 0:
                 attr_data.t_vit = 1
             attr_data.all_point -= attr_data.t_vit
             return
         else:
+            # 暴力均分 反正剩余点数也不多
             if base_hp <= 0:
                 attr_data.t_vit = 1
                 attr_data.t_mnd = 1
@@ -384,11 +419,16 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         return
     # 系数校验
     if enemy_data.kf_level >= 800 \
-            and ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5]) \
+            and (('icon-angle-up' in icon_list[3] and 'icon-angle-up' in icon_list[5])
+                 or ('double-angle-up' in icon_list[3] or 'double-angle-up' in icon_list[5])) \
             and t_vit_mnd < 1000:
+        # 单上+单上 或 其中一个双上
         t_vit_mnd = 1000
-    elif enemy_data.kf_level >= 600 and ('double-angle-down' not in icon_list[3] \
-            or 'double-angle-down' not in icon_list[5]) and t_vit_mnd < 500:
+    elif enemy_data.kf_level >= 600 \
+            and (('icon-angle-down' in icon_list[3] and 'icon-angle-down' in icon_list[5])
+                 or ('angle-up' in icon_list[3] or 'angle-up' in icon_list[5])) \
+            and t_vit_mnd < 500:
+        # 单下+单下 或 其中一个单上/双上
         t_vit_mnd = 500
     t_vit_mnd -= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND'))
     if attr_data.all_point <= t_vit_mnd + 3:
@@ -422,54 +462,58 @@ def split_vit_mnd(t_vit_mnd, attr_data, icon_list):
         attr_data.t_mnd = 1
         attr_data.t_vit = t_vit_mnd - 1
         return
-    if ('icon-angle-up' in icon_list[3] and 'double-angle-up' in icon_list[5]) \
-        or ('icon-angle-up' in icon_list[5] and 'double-angle-up' in icon_list[3]):
-        # 单上 双上 差距不大也平分
-        attr_data.t_vit = int(t_vit_mnd / 2)
+    if 'icon-angle-up' in icon_list[3] and 'double-angle-up' in icon_list[5]:
+        # 单上 双上
+        attr_data.t_mnd = int(t_vit_mnd * config.read_config('vm_prop_udu'))
+        attr_data.t_vit = t_vit_mnd - attr_data.t_mnd
+        return
+    if 'icon-angle-up' in icon_list[5] and 'double-angle-up' in icon_list[3]:
+        # 单上 双上
+        attr_data.t_vit = int(t_vit_mnd * config.read_config('vm_prop_udu'))
         attr_data.t_mnd = t_vit_mnd - attr_data.t_vit
         return
     if 'icon-angle-down' in icon_list[3] and 'double-angle-up' in icon_list[5]:
-        # 单下 双上 1:3分
-        attr_data.t_vit = int(t_vit_mnd / 4)
-        attr_data.t_mnd = t_vit_mnd - attr_data.t_vit
+        # 单下 双上
+        attr_data.t_mnd = int(t_vit_mnd * config.read_config('vm_prop_ddu'))
+        attr_data.t_vit = t_vit_mnd - attr_data.t_mnd
         return
     if 'icon-angle-down' in icon_list[5] and 'double-angle-up' in icon_list[3]:
-        # 单下 双上 1:3分
-        attr_data.t_mnd = int(t_vit_mnd / 4)
-        attr_data.t_vit = t_vit_mnd - attr_data.t_mnd
-        return
-    if 'icon-angle-down' in icon_list[3] and 'icon-angle-up' in icon_list[5]:
-        # 单下 单上 1:2分
-        attr_data.t_vit = int(t_vit_mnd / 3)
+        # 单下 双上
+        attr_data.t_vit = int(t_vit_mnd * config.read_config('vm_prop_ddu'))
         attr_data.t_mnd = t_vit_mnd - attr_data.t_vit
         return
-    if 'icon-angle-down' in icon_list[5] and 'icon-angle-up' in icon_list[3]:
-        # 单下 单上 1:2分
-        attr_data.t_mnd = int(t_vit_mnd / 3)
+    if 'icon-angle-down' in icon_list[3] and 'icon-angle-up' in icon_list[5]:
+        # 单下 单上
+        attr_data.t_mnd = int(t_vit_mnd * config.read_config('vm_prop_du'))
         attr_data.t_vit = t_vit_mnd - attr_data.t_mnd
+        return
+    if 'icon-angle-down' in icon_list[5] and 'icon-angle-up' in icon_list[3]:
+        # 单下 单上
+        attr_data.t_vit = int(t_vit_mnd * config.read_config('vm_prop_du'))
+        attr_data.t_mnd = t_vit_mnd - attr_data.t_vit
         return
 
 
 # 从icon中推断敏捷的比例
 def agi_ratio(icon):
     if 'double-angle-down' in icon:
-        return 0.05
+        return config.read_config('agi_prop_dd')
     if 'angle-down' in icon:
-        return 0.2
+        return config.read_config('agi_prop_d')
     if 'angle-up' in icon:
-        return 0.4
+        return config.read_config('agi_prop_u')
 
 
 # 从icon中推断智力的比例
 def int_ratio(icon):
     if 'double-angle-down' in icon:
-        return 0.001
+        return config.read_config('int_prop_dd')
     if 'angle-down' in icon:
-        return 0.1
+        return config.read_config('int_prop_d')
     if 'angle-up' in icon:
-        return 0.3
+        return config.read_config('int_prop_u')
     if 'double-angle-up' in icon:
-        return 0.999
+        return config.read_config('int_prop_du')
 
 
 # 从字符串中获取护符对应的属性值
