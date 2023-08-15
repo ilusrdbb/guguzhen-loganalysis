@@ -2683,6 +2683,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             sldMAdd += b[i].amul[AMUL_SLD];
             b[i].lchP += b[i].amul[AMUL_LCH];
             b[i].rflP += b[i].amul[AMUL_RFL];
+            b[i].rflP = b[i].rflP > 100.0 ? 100.0 : b[i].rflP;
         }
         if (b[i].role == ROLE_XIA)
         {
@@ -2952,6 +2953,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 pa[s] += pa[s] * 0.65;
                 ma[s] += ma[s] * 0.65;
                 aa[s] += aa[s] * 0.65;
+            }
+            if (b0.role == ROLE_LIN && b0.sklC == 0)
+            {
+                pa[s] += b0.hpM * 0.5;
+                b0.sklC = 1;
             }
             if (b0.psvSkl & AURA_JU)
             {
