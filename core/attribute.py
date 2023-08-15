@@ -369,13 +369,16 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         # 1300系数 默认力量1500
         base_hp -= t_str_mul * config.read_config('1300_str')
         if 'double-angle-down' in icon_list[3] and 'double-angle-down' in icon_list[5]:
-            # 全双下 默认给意志一点点
+            # 全双下 默认给意志体魄一点点
             attr_data.t_vit = 1
             attr_data.all_point -= 1
             attr_data.t_mnd = 1
-            if attr_data.all_point > config.read_config('1300_low_mnd'):
-                attr_data.t_mnd = config.read_config('1300_low_mnd')
+            if attr_data.all_point > config.read_config('1300_low_wm'):
+                attr_data.t_mnd = config.read_config('1300_low_wm')
             attr_data.all_point -= attr_data.t_mnd
+            if attr_data.all_point > config.read_config('1300_low_wm'):
+                attr_data.t_vit = config.read_config('1300_low_wm')
+            attr_data.all_point -= attr_data.t_vit
             return
         elif 'double-angle-down' in icon_list[3]:
             # 一边双下 全匀给另一边

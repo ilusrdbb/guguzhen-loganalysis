@@ -10,22 +10,22 @@ max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
 # 2023年6月6号之后的记录会根据血量、护盾、图标大致推算点数，误差极大需要注意
-last_date: '2023-08-01'
+last_date: '2023-08-11'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: ''
   MO: 'AGI 80 INT 80 SPR 80 MATK 10 SLD 10 RFL 10 PDEF 10 MDEF 10 AAA 8'
-  LIN: 'STR 60 VIT 60 AGI 80 MND 80 HP 10 SPD 10 RFL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
+  LIN: 'STR 60 VIT 60 AGI 60 MND 60 HP 10 SPD 10 RFL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
   AI: 'AGI 80 VIT 80 MND 80 HP 10 SPD 10 REC 10 RFL 10 SKL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
-  WEI: 'AGI 80 INT 80 SPR 80 VIT 60 MND 60 HP 10 SPD 10 SLD 10 CRT 10 SKL 10 AAA 8'
-  MING: 'STR 60 AGI 80 INT 60 VIT 60 MND 60 HP 10 REC 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 MDEF 10 AAA 8'
-  MIN: 'STR 60 AGI 80 INT 60 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 SKL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
+  WEI: 'AGI 60 INT 60 SPR 80 VIT 60 MND 60 HP 10 SPD 10 SLD 10 CRT 10 SKL 10 AAA 8'
+  MING: 'STR 60 AGI 60 INT 60 VIT 60 MND 60 HP 10 REC 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 MDEF 10 AAA 8'
+  MIN: 'STR 60 AGI 60 INT 60 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 SKL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
   MENG: 'AGI 80 INT 80 SPR 80 SLD 10 SPD 10 CRT 10 SKL 10 AAA 8'
-  XI: 'STR 60 AGI 80 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
-  YI: 'STR 60 AGI 80 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
+  XI: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
+  YI: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 PATK 10 SPD 10 RFL 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
   XIA: 'AGI 80 INT 80 SPR 80 SLD 10 SPD 10 MATK 10 CRT 10 SKL 10 RFL 10 AAA 8'
-  WU: 'STR 60 AGI 80 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
-  YA: 'STR 60 AGI 80 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
+  WU: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
+  YA: 'STR 60 AGI 60 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
 # 默认许愿池
 wish_config: '100 100 100 100 100 200 200 200 200 50 50 50 50 50'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
@@ -47,7 +47,7 @@ gear_config:
   BRACELET: '150 150 100 150'
   VULTURE: '120 120 130 150'
   CLOAK: '100 120 150 150'
-  THORN: '150 110 120 140'
+  THORN: '150 120 120 140'
   WOOD: '150 120 120 120'
   CAPE: '150 150 120 100'
   SCARF: '150 150 150 150'
@@ -92,13 +92,13 @@ use_cache: true
 
 # 点数推测步骤：护盾推测精神->生命推测体魄意志->力敏智根据箭头比例推测->多余点数补偿
 # 以下是点数推测的配置，瞎改会导致推测的点数非常离谱，请根据自身对环境的理解谨慎修改
-# 推测精神时，当对方争夺为1400且智力双上且精神不是双下箭头时，假定对方的智力点数，此值必须设置为1419以上
-1400_int: 1500
-# 推测体魄意志时，当对方争夺为1300且力量双上时，假定对方的力量点数，此值必须设置为1419以上
-1300_str: 1500
-# 推测体魄意志时，当对方争夺为1300且力量双上且体魄和意志都是双下时，假定对方的意志点数
+# 推测精神时，当对方争夺为1400且智力双上且精神不是双下箭头时，假定对方的智力点数，此值必须设置为(1419+苹果/2)以上
+1400_int: 1570
+# 推测体魄意志时，当对方争夺为1300且力量双上时，假定对方的力量点数，此值必须设置为(1419+苹果/2)以上
+1300_str: 1570
+# 推测体魄意志时，当对方争夺为1300且力量双上且体魄和意志都是双下时，假定对方的意志和体魄点数
 # 此值必须设置为1以上283以下，注意此值的计算在点数补偿之前，小于等于最终的推测点数
-1300_low_mnd: 200
+1300_low_wm: 200
 # 推测出体魄+意志之后根据箭头占比分配体魄和意志点数
 # 单上+双上箭头 双上箭头的占比 此值必须大于0.5小于0.8
 vm_prop_udu: 0.7
@@ -113,7 +113,7 @@ agi_prop_dudu: 0.6
 # 敏捷双上 力量或智力上箭头时 敏捷在剩余点数中的占比 此值必须大于0.5小于0.8
 agi_prop_duu: 0.75
 # 敏捷单上 敏捷在全部点数中的占比，此值必须大于0.2小于0.4
-agi_prop_u: 0.4
+agi_prop_u: 0.35
 # 敏捷单下 敏捷在全部点数中的占比，此值必须大于0.1小于0.2
 agi_prop_d: 0.2
 # 敏捷双下 敏捷在全部点数中的占比，此值必须大于0小于0.1
