@@ -157,21 +157,6 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     # 最终点数补偿 找箭头最高的补偿
     if 'double-angle-down' in icon_list[0]:
         finally_add_point(attr_data, icon_list)
-        if 'angle-down' not in icon_list[5]:
-            attr_data.t_mnd += (attr_data.all_point - 1)
-            attr_data.t_str = 1
-        elif 'angle-down' not in icon_list[1]:
-            attr_data.t_agi += (attr_data.all_point - 1)
-            attr_data.t_str = 1
-        elif 'angle-down' not in icon_list[3]:
-            attr_data.t_vit += (attr_data.all_point - 1)
-            attr_data.t_str = 1
-        elif 'angle-down' not in icon_list[2]:
-            attr_data.t_int += (attr_data.all_point - 1)
-            attr_data.t_str = 1
-        else:
-            attr_data.t_spr += (attr_data.all_point - 1)
-            attr_data.t_str = 1
 
 
 # 最终补偿
@@ -187,16 +172,16 @@ def finally_add_point(attr_data, icon_list):
         attr_data.t_int += add_point
         attr_data.t_str = 1
         return
-    if 'double-angle-up' in icon_list[3]:
-        attr_data.t_vit += add_point
-        attr_data.t_str = 1
-        return
     if 'double-angle-up' in icon_list[4]:
         attr_data.t_spr += add_point
         attr_data.t_str = 1
         return
     if 'double-angle-up' in icon_list[5]:
         attr_data.t_mnd += add_point
+        attr_data.t_str = 1
+        return
+    if 'double-angle-up' in icon_list[3]:
+        attr_data.t_vit += add_point
         attr_data.t_str = 1
         return
     # 找单上
@@ -317,8 +302,8 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 箭头校验
     attr_data.t_spr = icon_check(attr_data.t_spr, attr_data.final_apple_point, icon_list[4])
     attr_data.t_spr -= (aumlet_from_str(aumlet_str, 'SPR') + aumlet_from_str(aumlet_str, 'AAA'))
-    if attr_data.all_point <= attr_data.t_spr + 5:
-        attr_data.t_spr = attr_data.all_point - 5
+    if attr_data.final_point <= attr_data.t_spr + 5:
+        attr_data.t_spr = attr_data.final_point - 5
         attr_data.t_str = 1
         attr_data.t_int = 1
         attr_data.t_agi = 1
@@ -371,9 +356,9 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         t_vm_mul += 10
     if enemy_data.kf_level >= 800 \
             and not ('double-angle-down' in icon_list[3] and 'double-angle-down' in icon_list[5]) \
-            and not ('double-angle-down' in icon_list[5] and 'icon--angle-down' in icon_list[3]) \
+            and not ('double-angle-down' in icon_list[5] and 'icon-angle-down' in icon_list[3]) \
             and not ('double-angle-down' in icon_list[3] and 'icon-angle-down' in icon_list[5]):
-        # 不是双下+双下和双下+单下
+        # 不是双下+双下和双下+单下和单下+单下
         t_vm_mul += 17
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
         t_str_mul += 30
@@ -478,23 +463,41 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             return
         elif 'double-angle-down' in icon_list[3]:
             # 一边双下 全匀给另一边
-            attr_data.t_vit = 1
-            attr_data.all_point -= 1
             attr_data.t_mnd = int(base_hp / t_vm_mul) - aumlet_from_str(aumlet_str, 'VIT') \
                               - aumlet_from_str(aumlet_str, 'MND') - aumlet_from_str(aumlet_str, 'AAA') * 2
-            if attr_data.t_mnd <= 0:
+            if attr_data.t_mnd < int(attr_data.final_apple_point / 10):
+                attr_data.t_mnd = int(attr_data.final_apple_point / 10)
+            if attr_data.t_mnd < 1:
                 attr_data.t_mnd = 1
             attr_data.all_point -= attr_data.t_mnd
+            # 追求500点体意的效果
+            add_point = 500 - aumlet_from_str(aumlet_str, 'VIT')- aumlet_from_str(aumlet_str, 'MND') \
+                        - aumlet_from_str(aumlet_str, 'AAA') * 2 - attr_data.t_mnd
+            if add_point < 1:
+                attr_data.t_vit = 1
+                attr_data.all_point -= 1
+            else:
+                attr_data.t_vit = add_point
+                attr_data.all_point -= add_point
             return
         elif 'double-angle-down' in icon_list[5]:
             # 一边双下 全匀给另一边
-            attr_data.t_mnd = 1
-            attr_data.all_point -= 1
             attr_data.t_vit = int(base_hp / t_vm_mul) - aumlet_from_str(aumlet_str, 'VIT') \
                               - aumlet_from_str(aumlet_str, 'MND') - aumlet_from_str(aumlet_str, 'AAA') * 2
-            if attr_data.t_vit <= 0:
+            if attr_data.t_vit < int(attr_data.final_apple_point / 10):
+                attr_data.t_vit = int(attr_data.final_apple_point / 10)
+            if attr_data.t_vit < 1:
                 attr_data.t_vit = 1
             attr_data.all_point -= attr_data.t_vit
+            # 追求500点体意的效果
+            add_point = 500 - aumlet_from_str(aumlet_str, 'VIT') - aumlet_from_str(aumlet_str, 'MND') \
+                        - aumlet_from_str(aumlet_str, 'AAA') * 2 - attr_data.t_vit
+            if add_point < 1:
+                attr_data.t_mnd = 1
+                attr_data.all_point -= 1
+            else:
+                attr_data.t_mnd = add_point
+                attr_data.all_point -= add_point
             return
         else:
             # 暴力均分 反正剩余点数也不多
@@ -526,13 +529,23 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         # 分体意
         split_vit_mnd(t_vit_mnd, attr_data, icon_list)
         return
+    # 800争夺 1000点校验
+    if 1000 > t_vit_mnd > 800 and enemy_data.kf_level >= 800 \
+            and not ('double-angle-down' in icon_list[3] and 'double-angle-down' in icon_list[5]) \
+            and not ('double-angle-down' in icon_list[5] and 'icon-angle-down' in icon_list[3]) \
+            and not ('double-angle-down' in icon_list[3] and 'icon-angle-down' in icon_list[5]):
+        t_vit_mnd = 1000
     # 分体意
     split_vit_mnd(t_vit_mnd, attr_data, icon_list)
     # 箭头校验
     attr_data.t_vit = icon_check(attr_data.t_vit, attr_data.final_apple_point, icon_list[3])
     attr_data.t_vit -= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'AAA'))
+    if attr_data.t_vit < 1:
+        attr_data.t_vit = 1
     attr_data.t_mnd = icon_check(attr_data.t_mnd, attr_data.final_apple_point, icon_list[5])
     attr_data.t_mnd -= (aumlet_from_str(aumlet_str, 'MND') + aumlet_from_str(aumlet_str, 'AAA'))
+    if attr_data.t_mnd < 1:
+        attr_data.t_mnd = 1
     attr_data.all_point -= (attr_data.t_vit + attr_data.t_mnd)
 
 
