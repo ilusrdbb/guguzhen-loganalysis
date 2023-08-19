@@ -94,6 +94,7 @@ enum
     GEAR_CLAYMORE, // 陨铁重剑
     GEAR_SPEAR,    // 饮血魔剑
     GEAR_COLORFUL, // 彩金长剑
+    GEAR_CLEAR,    // 清澄长杖
     GEAR_GLOVES,   // 探险者手环
     GEAR_BRACELET, // 命师的传承手环
     GEAR_VULTURE,  // 秃鹫手环
@@ -149,22 +150,23 @@ enum
     MYST_BLADE = 0x00001, // 暴击时附带(物理攻击力*50%)的绝对伤害
     MYST_ASSBOW = 0x00002, // 攻击附带(对方当前护盾值*30%)的物理伤害
     MYST_DAGGER = 0x00004, // 星火宝石的效果翻倍 血精宝石的伤害提升(星火*15%)
-    MYST_WAND = 0x00008, // 魔力压制增加60%技能伤害，第一击必释放技能
+    MYST_WAND = 0x00008, // 魔力压制增加40%技能伤害，第一击必释放技能
     MYST_SHIELD = 0x00010, // 削弱对方40%的回血和回盾效果
     MYST_CLAYMORE = 0x00020, // 暴击率100%
     MYST_SPEAR = 0x00040, // 攻击附带(对方当前生命值*30%)的魔法伤害
     MYST_COLORFUL = 0x00080, // 彩金对剑无视对方情况同时附带物理和魔法伤害
-    MYST_BRACELET = 0x00100, // 20%几率特殊暴击，魔法伤害增加100%
-    MYST_VULTURE = 0x00200, // 额外增加20%对护盾的实际吸血给生命值
-    MYST_RING = 0x00400, // 舞增加(锦上添花伤害的20%)的普通伤害
-    MYST_DEVOUR = 0x00800, // 命运链接获得的护盾回复的50%添加到生命回复
-    MYST_CLOAK = 0x01000, // 护盾最大值+35%
-    MYST_THORN = 0x02000, // 增加30%固定伤害反弹
-    MYST_WOOD = 0x04000, // 被攻击时回复(10%自身最大生命值)
-    MYST_CAPE = 0x08000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
-    MYST_TIARA = 0x10000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
-    MYST_RIBBON = 0x20000, // 元气无限回复8%生命
-    MYST_HUNT = 0x40000, // 圣银弩箭30%物理攻击转换为绝对伤害
+    MYST_CLEAR = 0x00100, // 澄空之心额外获得(15%对方魔法防御)的魔法附加穿透。
+    MYST_BRACELET = 0x00200, // 20%几率特殊暴击，魔法伤害增加100%
+    MYST_VULTURE = 0x00400, // 额外增加20%对护盾的实际吸血给生命值
+    MYST_RING = 0x00800, // 舞增加(锦上添花伤害的20%)的普通伤害
+    MYST_DEVOUR = 0x01000, // 命运链接获得的护盾回复的50%添加到生命回复
+    MYST_CLOAK = 0x02000, // 护盾最大值+35%
+    MYST_THORN = 0x04000, // 增加25%固定伤害反弹
+    MYST_WOOD = 0x08000, // 被攻击时回复(5%自身最大生命值)
+    MYST_CAPE = 0x10000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
+    MYST_TIARA = 0x20000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
+    MYST_RIBBON = 0x40000, // 锁定元气无限为低于30%血量判定。
+    MYST_HUNT = 0x80000, // 圣银弩箭30%物理攻击转换为绝对伤害
 
     PREF_SHANG = 0, // 诅咒=伤口恶化+精神创伤
     PREF_BO,        // 法神=破魔之心+波澜不惊
@@ -326,7 +328,7 @@ const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZH
 const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "MING", "MIN", "WU", "XI", "XIA", "YA" };
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
-    "CLAYMORE", "SPEAR", "COLORFUL", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
+    "CLAYMORE", "SPEAR", "COLORFUL", "CLEAR", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
     "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
@@ -1161,6 +1163,7 @@ bool readPlayer(FILE* fp, Player& pc)
             else if (strcmp(buf, "CLAYMORE") == 0) b.myst |= MYST_CLAYMORE;
             else if (strcmp(buf, "SPEAR") == 0) b.myst |= MYST_SPEAR;
             else if (strcmp(buf, "COLORFUL") == 0) b.myst |= MYST_COLORFUL;
+            else if (strcmp(buf, "CLEAR") == 0) b.myst |= MYST_CLEAR;
             else if (strcmp(buf, "BRACELET") == 0) b.myst |= MYST_BRACELET;
             else if (strcmp(buf, "RING") == 0) b.myst |= MYST_RING;
             else if (strcmp(buf, "DEVOUR") == 0) b.myst |= MYST_DEVOUR;
@@ -2075,7 +2078,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 700 && tInt >= 800 ? 10.0 : 0.0) +
         (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
-    b.aAtk = (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi * 10.0 : 0.0);
+    b.aAtk = 0.0;
     b.spdB = tAgi * 3;
     b.spdA = tAgi * ((pc.kfLvl >= 1000 && tAgi >= 1000 ? 0.5 : 0.0) +
         (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_SPDA];
@@ -2212,11 +2215,18 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_SPEAR;
             break;
         case GEAR_COLORFUL:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
             spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.aAtk += tAgi * int(g.lvl * 0.05 * (g.percent[3] / 10.0)) / 10.0;
+            b.aAtk += tAgi * int(g.lvl * 0.04 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_COLORFUL;
+            break;
+        case GEAR_CLEAR:
+            mAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.mBrcP += int((g.lvl / 20.0 + 5) * (g.percent[1] / 10.0)) / 10.0;
+            spdPlus += round(b.spdB * (int((g.lvl / 5.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.spdA += tInt * (int(int(g.lvl / 375) * (g.percent[2] / 10.0)) / 10.0);
+            if (g.isMyst) b.myst |= MYST_CLEAR;
             break;
         case GEAR_GLOVES:
             b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
@@ -2569,6 +2579,10 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b[i].role == ROLE_XIA)
         {
             b[i].mBrcA += int((b[1 - i].pDefB + b[1 - i].pDefA) * 0.35);
+            if (b[i].myst & MYST_CLEAR)
+            {
+                b[i].mBrcA += int((b[1 - i].mDefB + b[1 - i].mDefA) * 0.15);
+            }
         }
         if (b[i].role == ROLE_MO)
         {
@@ -2683,7 +2697,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             sldMAdd += b[i].amul[AMUL_SLD];
             b[i].lchP += b[i].amul[AMUL_LCH];
             b[i].rflP += b[i].amul[AMUL_RFL];
-            b[i].rflP = b[i].rflP > 100.0 ? 100.0 : b[i].rflP;
+            b[i].rflP = b[i].rflP > 150.0 ? 150.0 : b[i].rflP;
         }
         if (b[i].role == ROLE_XIA)
         {
@@ -2701,7 +2715,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b[i].role == ROLE_YA)
         {
-            b[i].lchP += 50;
             if (b[i].mode == 0)
             {
                 b[i].pDefB *= 1.2;
@@ -2939,9 +2952,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_YA)
         {
-            ma[s] += (int)(ma[s] * 0.07 * round);
-            pa[s] += (int)(pa[s] * 0.07 * round);
-            aa[s] += (int)(aa[s] * 0.07 * round);
+            ma[s] += (int)(ma[s] * 0.2 * round);
+            pa[s] += (int)(pa[s] * 0.2 * round);
+            aa[s] += (int)(aa[s] * 0.2 * round);
         }
         if (isC)
         {
@@ -3128,7 +3141,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
         int pRfl = 0;
         int mRfl = (pa[s] * 0.7 + ma[s] * 0.7 + aa[s] * 0.5) * (rflPFixed / 100.0);
-        if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.5) + b1.sldM * 0.08) * (1 + b1.mAtkR * 0.01));
+        if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01));
 
         if (b0.role == ROLE_MING)
         {

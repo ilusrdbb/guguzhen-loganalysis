@@ -29,7 +29,7 @@ amulet_config:
 # 默认许愿池
 wish_config: '100 100 100 100 100 200 200 200 200 50 50 50 50 50'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
-default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND',
+default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND', 'CLEAR',
                        'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK', 'HUNT']
 # 默认成长值
 default_g: 100000
@@ -62,6 +62,7 @@ gear_config:
   CLOTH: '150 150 150 150'
   COLORFUL: '120 100 150 150'
   HUNT: '120 100 150 150'
+  CLEAR: '150 150 150 150'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
@@ -201,6 +202,7 @@ gear_map:
   旅者长袍: 'CLOTH'
   辉光剑雅德玛斯: 'COLORFUL'
   猎魔耳环: 'HUNT'
+  清澄长杖: 'CLEAR'
 # 卡片映射
 card_map:
   默: 'MO'
