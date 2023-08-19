@@ -157,15 +157,15 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     # 最终点数补偿 找箭头最高的补偿
     if 'double-angle-down' in icon_list[0]:
         finally_add_point(attr_data, icon_list)
-    if 'icon-angle-down' in icon_list[0] and attr_data.t_str > attr_data.final_apple_point * 0.2:
+    if 'icon-angle-down' in icon_list[0] and attr_data.t_str > int(attr_data.final_apple_point * 0.2):
         finally_diff_point(attr_data, icon_list)
 
 
 # 最终补偿 力量单下
 def finally_diff_point(attr_data, icon_list):
     # 多余的点数
-    diff = attr_data.t_str - attr_data.final_apple_point * 0.2
-    final_str = attr_data.final_apple_point * 0.2
+    diff = attr_data.t_str - int(attr_data.final_apple_point * 0.2)
+    final_str = int(attr_data.final_apple_point * 0.2)
     # 找双上箭头
     if 'double-angle-up' in icon_list[1]:
         attr_data.t_agi += diff
