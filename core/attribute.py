@@ -157,9 +157,60 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     # 最终点数补偿 找箭头最高的补偿
     if 'double-angle-down' in icon_list[0]:
         finally_add_point(attr_data, icon_list)
+    if 'icon-angle-down' in icon_list[0] and attr_data.t_str > attr_data.final_apple_point * 0.2:
+        finally_diff_point(attr_data, icon_list)
 
 
-# 最终补偿
+# 最终补偿 力量单下
+def finally_diff_point(attr_data, icon_list):
+    # 多余的点数
+    diff = attr_data.t_str - attr_data.final_apple_point * 0.2
+    final_str = attr_data.final_apple_point * 0.2
+    # 找双上箭头
+    if 'double-angle-up' in icon_list[1]:
+        attr_data.t_agi += diff
+        attr_data.t_str = final_str
+        return
+    if 'double-angle-up' in icon_list[2]:
+        attr_data.t_int += diff
+        attr_data.t_str = final_str
+        return
+    if 'double-angle-up' in icon_list[4]:
+        attr_data.t_spr += diff
+        attr_data.t_str = final_str
+        return
+    if 'double-angle-up' in icon_list[5]:
+        attr_data.t_mnd += diff
+        attr_data.t_str = final_str
+        return
+    if 'double-angle-up' in icon_list[3]:
+        attr_data.t_vit += diff
+        attr_data.t_str = final_str
+        return
+    # 找单上
+    if 'icon-angle-up' in icon_list[1]:
+        attr_data.t_agi += diff
+        attr_data.t_str = final_str
+        return
+    if 'icon-angle-up' in icon_list[4]:
+        attr_data.t_spr += diff
+        attr_data.t_str = final_str
+        return
+    if 'icon-angle-up' in icon_list[5]:
+        attr_data.t_mnd += diff
+        attr_data.t_str = final_str
+        return
+    if 'icon-angle-up' in icon_list[3]:
+        attr_data.t_vit += diff
+        attr_data.t_str = final_str
+        return
+    if 'icon-angle-up' in icon_list[2]:
+        attr_data.t_int += diff
+        attr_data.t_str = final_str
+        return
+
+
+# 最终补偿 力量双下
 def finally_add_point(attr_data, icon_list):
     # 多余的点数
     add_point = attr_data.all_point - 1
@@ -270,12 +321,12 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'SLD') / 100
-    if gear_list[2] == 'CLOAK' and gear_mystery_list[2] == 1:
+    if gear_list[2] == 'CLOAK' and gear_mystery_list[2] == '1':
         final_ratio += 0.5
     if enemy_data.enemy_card == 'MO':
         final_ratio += 0.4
     if enemy_data.enemy_card == 'MENG':
-        if gear_list[3] == 'TIARA' and gear_mystery_list[3] == 1:
+        if gear_list[3] == 'TIARA' and gear_mystery_list[3] == '1':
             final_ratio += 0.45
         else:
             final_ratio += 0.3
@@ -300,6 +351,8 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         attr_data.all_point -= 1
         return
     # 箭头校验
+    if attr_data.t_spr < 1000 and 'icon-angle-up' in icon_list[4]:
+        attr_data.t_spr = 1000
     attr_data.t_spr = icon_check(attr_data.t_spr, attr_data.final_apple_point, icon_list[4])
     attr_data.t_spr -= (aumlet_from_str(aumlet_str, 'SPR') + aumlet_from_str(aumlet_str, 'AAA'))
     if attr_data.final_point <= attr_data.t_spr + 5:
