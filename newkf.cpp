@@ -330,7 +330,7 @@ const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
     "CLAYMORE", "SPEAR", "COLORFUL", "CLEAR", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
     "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
-const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
     "SHI", "XIN", "FENG", "TIAO", "YA",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
@@ -2215,7 +2215,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_SPEAR;
             break;
         case GEAR_COLORFUL:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
             spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.aAtk += tAgi * int(g.lvl * 0.04 * (g.percent[3] / 10.0)) / 10.0;
