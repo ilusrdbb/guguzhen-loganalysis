@@ -83,34 +83,34 @@ enum
     ATTR_COUNT,
 
     GEAR_NONE = 0,
-    GEAR_SWORD,    // 探险者之剑
-    GEAR_BOW,      // 探险者短弓
-    GEAR_STAFF,    // 探险者短杖
-    GEAR_BLADE,    // 狂信者的荣誉之刃
-    GEAR_ASSBOW,   // 反叛者的刺杀弓
-    GEAR_DAGGER,   // 幽梦匕首
-    GEAR_WAND,     // 光辉法杖
-    GEAR_SHIELD,   // 荆棘盾剑
-    GEAR_CLAYMORE, // 陨铁重剑
-    GEAR_SPEAR,    // 饮血魔剑
-    GEAR_COLORFUL, // 彩金长剑
-    GEAR_CLEAR,    // 清澄长杖
-    GEAR_GLOVES,   // 探险者手环
-    GEAR_BRACELET, // 命师的传承手环
-    GEAR_VULTURE,  // 秃鹫手环
-    GEAR_RING,     // 海星戒指
-    GEAR_DEVOUR,   // 噬魔戒指
-    GEAR_PLATE,    // 探险者铁甲
-    GEAR_LEATHER,  // 探险者皮甲
-    GEAR_CLOTH,    // 探险者布甲
-    GEAR_CLOAK,    // 旅法师的灵光袍
-    GEAR_THORN,    // 战线支撑者的荆棘重甲
-    GEAR_WOOD,     // 复苏战衣
-    GEAR_CAPE,     // 挑战斗篷
-    GEAR_SCARF,    // 探险者耳环
-    GEAR_TIARA,    // 占星师的耳饰
-    GEAR_RIBBON,   // 萌爪耳钉
-    GEAR_HUNT,  // 猎魔耳环
+    GEAR_SWORD,     // 探险者之剑
+    GEAR_BOW,       // 探险者短弓
+    GEAR_STAFF,     // 探险者短杖
+    GEAR_BLADE,     // 狂信者的荣誉之刃
+    GEAR_ASSBOW,    // 反叛者的刺杀弓
+    GEAR_DAGGER,    // 幽梦匕首
+    GEAR_WAND,      // 光辉法杖
+    GEAR_SHIELD,    // 荆棘盾剑
+    GEAR_CLAYMORE,  // 陨铁重剑
+    GEAR_SPEAR,     // 饮血魔剑
+    GEAR_COLORFUL,  // 彩金长剑
+    GEAR_LIMPIDWAND,// 清澄长杖
+    GEAR_GLOVES,    // 探险者手环
+    GEAR_BRACELET,  // 命师的传承手环
+    GEAR_VULTURE,   // 秃鹫手环
+    GEAR_RING,      // 海星戒指
+    GEAR_DEVOUR,    // 噬魔戒指
+    GEAR_PLATE,     // 探险者铁甲
+    GEAR_LEATHER,   // 探险者皮甲
+    GEAR_CLOTH,     // 探险者布甲
+    GEAR_CLOAK,     // 旅法师的灵光袍
+    GEAR_THORN,     // 战线支撑者的荆棘重甲
+    GEAR_WOOD,      // 复苏战衣
+    GEAR_CAPE,      // 挑战斗篷
+    GEAR_SCARF,     // 探险者耳环
+    GEAR_TIARA,     // 占星师的耳饰
+    GEAR_RIBBON,    // 萌爪耳钉
+    GEAR_HUNT,      // 猎魔耳环
     GEAR_COUNT,
 
     AURA_SHI = 0x00000001, // 启程之誓
@@ -155,7 +155,7 @@ enum
     MYST_CLAYMORE = 0x00020, // 暴击率100%
     MYST_SPEAR = 0x00040, // 攻击附带(对方当前生命值*30%)的魔法伤害
     MYST_COLORFUL = 0x00080, // 彩金对剑无视对方情况同时附带物理和魔法伤害
-    MYST_CLEAR = 0x00100, // 澄空之心额外获得(15%对方魔法防御)的魔法附加穿透。
+    MYST_LIMPIDWAND = 0x00100, // 澄空之心额外获得(15%对方魔法防御)的魔法附加穿透。
     MYST_BRACELET = 0x00200, // 20%几率特殊暴击，魔法伤害增加100%
     MYST_VULTURE = 0x00400, // 额外增加20%对护盾的实际吸血给生命值
     MYST_RING = 0x00800, // 舞增加(锦上添花伤害的20%)的普通伤害
@@ -328,7 +328,7 @@ const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZH
 const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "MING", "MIN", "WU", "XI", "XIA", "YA" };
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
-    "CLAYMORE", "SPEAR", "COLORFUL", "CLEAR", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
+    "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
     "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
@@ -1163,7 +1163,7 @@ bool readPlayer(FILE* fp, Player& pc)
             else if (strcmp(buf, "CLAYMORE") == 0) b.myst |= MYST_CLAYMORE;
             else if (strcmp(buf, "SPEAR") == 0) b.myst |= MYST_SPEAR;
             else if (strcmp(buf, "COLORFUL") == 0) b.myst |= MYST_COLORFUL;
-            else if (strcmp(buf, "CLEAR") == 0) b.myst |= MYST_CLEAR;
+            else if (strcmp(buf, "LIMPIDWAND") == 0) b.myst |= MYST_LIMPIDWAND;
             else if (strcmp(buf, "BRACELET") == 0) b.myst |= MYST_BRACELET;
             else if (strcmp(buf, "RING") == 0) b.myst |= MYST_RING;
             else if (strcmp(buf, "DEVOUR") == 0) b.myst |= MYST_DEVOUR;
@@ -2221,12 +2221,12 @@ void preparePcBStat(const Player& pc, BStat& b)
             b.aAtk += tAgi * int(g.lvl * 0.04 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_COLORFUL;
             break;
-        case GEAR_CLEAR:
+        case GEAR_LIMPIDWAND:
             mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.mBrcP += int((g.lvl / 20.0 + 5) * (g.percent[1] / 10.0)) / 10.0;
             spdPlus += round(b.spdB * (int((g.lvl / 5.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.spdA += tInt * (int(int(g.lvl / 375) * (g.percent[2] / 10.0)) / 10.0);
-            if (g.isMyst) b.myst |= MYST_CLEAR;
+            if (g.isMyst) b.myst |= MYST_LIMPIDWAND;
             break;
         case GEAR_GLOVES:
             b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
@@ -2579,7 +2579,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b[i].role == ROLE_XIA)
         {
             b[i].mBrcA += int((b[1 - i].pDefB + b[1 - i].pDefA) * 0.35);
-            if (b[i].myst & MYST_CLEAR)
+            if (b[i].myst & MYST_LIMPIDWAND)
             {
                 b[i].mBrcA += int((b[1 - i].mDefB + b[1 - i].mDefA) * 0.15);
             }

@@ -10,7 +10,7 @@
 
 关于压缩包内计算器的说明:
 
-装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 CLEAR
+装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND
 
 天赋 不动如山 SHAN
 
