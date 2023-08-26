@@ -2952,9 +2952,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_YA)
         {
-            ma[s] += (int)(ma[s] * 0.2 * round);
-            pa[s] += (int)(pa[s] * 0.2 * round);
-            aa[s] += (int)(aa[s] * 0.2 * round);
+            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.2 * round);
+            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.2 * round);
         }
         if (isC)
         {
