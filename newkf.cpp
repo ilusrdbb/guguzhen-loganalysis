@@ -2225,7 +2225,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.mBrcP += int((g.lvl / 20.0 + 5) * (g.percent[1] / 10.0)) / 10.0;
             spdPlus += round(b.spdB * (int((g.lvl / 5.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.spdA += tInt * (int(int(g.lvl / 375) * (g.percent[3] / 10.0)) / 10.0);
+            b.spdA += tInt * (int(int(g.lvl / 375.0) * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_LIMPIDWAND;
             break;
         case GEAR_GLOVES:
