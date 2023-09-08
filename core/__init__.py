@@ -3,6 +3,7 @@
 # @Time : 2022/12/16 14:16
 # @Author : chaocai
 import datetime
+import random
 import time
 
 from core import config, util, enemy, battle, sql, attribute
@@ -215,27 +216,52 @@ def get_w_dict(json_data):
         for data in json_data:
             if data.get('type') == 'defense':
                 defense_name = data['enemyname']
-                defense_card =  config.read_config('card_map').get(data['char'])
+                defense_card = config.read_config('card_map').get(data['char'])
+                defense_level = config.read_config('max_kf_level')
+                if config.read_config('is_search_level') and config.read_config('cookie') and int(data['charlevel']) == 850:
+                    defense_level = enemy.get_kf_level(defense_name)
                 # 获取匹配数据
-                match_name = match_defense_name(defense_name, defense_card, result_map)
+                match_name = match_defense_name(defense_name, defense_card, defense_level, result_map)
                 if match_name:
                     result_map[match_name]['weight'] += 1
     return result_map
 
 
 # 防守数据匹配进攻数据
-def match_defense_name(defense_name, defense_card, result_map):
+def match_defense_name(defense_name, defense_card, defense_level, result_map):
     # 名称与卡片匹配
     if result_map.get(defense_name) and result_map.get(defense_name).get('enemy_card'):
         return defense_name
-    # 不匹配匹配进攻记录最高系数的同卡片记录
+    # 不匹配卡片时匹配进攻记录最接近系数的同卡片记录
     match_list = []
     for enemy_name in result_map:
         if result_map[enemy_name].get('kf_level') and result_map[enemy_name]['enemy_card'] == defense_card:
             match_list.append(result_map[enemy_name])
     if match_list:
-        # 系数从大到小排序
-        return sorted(match_list, key=lambda x: x['kf_level'], reverse=True)[0]['enemy_name']
+        # 找最接近系数的
+        return random.choice(find_closest_dicts(defense_level, match_list))['enemy_name']
     return None
+
+
+# 找最接近系数的list
+def find_closest_dicts(target_num, dict_list):
+    if not target_num:
+        target_num = config.read_config('max_kf_level')
+    closest_dicts = []
+    # 初始化最小差值
+    min_difference = 2000
+    for dictionary in dict_list:
+        num = dictionary.get("kf_level")
+        # 计算差值的绝对值
+        difference = abs(target_num - num)
+        if difference < min_difference:
+            # 重置最接近的字典列表
+            closest_dicts = [dictionary]
+            # 更新最小差值
+            min_difference = difference
+        elif difference == min_difference:
+            # 如果有多个字典与最小差值相等，则添加到列表中
+            closest_dicts.append(dictionary)
+    return closest_dicts
 
 
