@@ -214,6 +214,26 @@ def get_w_dict(json_data):
     # 防守记录分析
     if config.read_config('is_analyse_defense'):
         for data in json_data:
+            # 排除野怪结果
+            if data['char'] == '野怪':
+                continue
+            # 白名单
+            if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
+                continue
+            # 黑名单跳过
+            if config.read_config('black_list') and data['enemyname'] in config.read_config('black_list'):
+                continue
+            # 等级跳过
+            if config.read_config('min_card_level') and int(data['charlevel']) < config.read_config('min_card_level'):
+                continue
+            # 日期跳过
+            if config.read_config('last_date'):
+                last_datetime = datetime.datetime.strptime(config.read_config('last_date') + ' 00:00:00.000',
+                                                           "%Y-%m-%d %H:%M:%S.%f")
+                last_timestamp = int(
+                    time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
+                if last_timestamp > data['time']:
+                    continue
             if data.get('type') == 'defense':
                 defense_name = data['enemyname']
                 defense_card = config.read_config('card_map').get(data['char'])
