@@ -55,9 +55,10 @@ enum
     ROLE_YU2,    // 六眼飞鱼(新版)
     ROLE_HAO2,   // 晶刺豪猪(新版)
     ROLE_LIU,    // 六边形战士
+    ROLE_SHI,    // 史莱姆
     NPC_COUNT_OLD = 4,
     NPC_COUNT_OLD2 = 10,
-    NPC_COUNT = 11,
+    NPC_COUNT = 12,
 
     ROLE_PC = 20,
     ROLE_MO = 20,  // 默
@@ -324,7 +325,7 @@ struct Player
     BStat* pBStat;
 };
 
-const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZHU2", "DENG2", "SHOU2", "YU2", "HAO2", "LIU" };
+const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZHU2", "DENG2", "SHOU2", "YU2", "HAO2", "LIU", "SHI" };
 const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "MING", "MIN", "WU", "XI", "XIA", "YA" };
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
@@ -359,12 +360,14 @@ const char* const amulName[AMUL_COUNT] = {
     "LCH", "RFL", "CRT", "SKL", "PDEF", "MDEF", "AAA", "CRTR", "SKLR" };
 const int profitRate[4] = { 2, 3, 4, 6 }; // *50%
 
-int sklRate[NPC_COUNT][2] = { {1, 1}, {3, 1}, {8, 1}, {1, 1},
-                             {2, 1}, {5, 2}, {8, 1}, {1, 1}, {1, 1}, {1, 1},
-                             {1, 1} };
-int crtRate[NPC_COUNT][2] = { {1, 1}, {1, 1}, {0, 1}, {3, 1},
-                             {2, 1}, {2, 1}, {0, 1}, {3, 1}, {4, 1}, {0, 1},
-                             {1, 1} };
+double sklRate[NPC_COUNT][2] = { {1.0, 1.0}, {3.0, 1.0}, {8.0, 1.0}, {1.0, 1.0},
+                             {2.0, 1.0}, {5.0, 2.0}, {8.0, 1.0}, {1.0, 1.0}, {1.0, 1.0}, {1.0, 1.0},
+                             {1.0, 1.0},
+                             {4.0, 1.0}};
+double crtRate[NPC_COUNT][2] = { {1.0, 1.0}, {1.0, 1.0}, {0.0, 1.0}, {3.0, 1.0},
+                             {2.0, 1.0}, {2.0, 1.0}, {0.0, 1.0}, {3.0, 1.0}, {4.0, 1.0}, {0.0, 1.0},
+                             {1.0, 1.0},
+                             {4.0, 1.0}};
 
 int auraMax;
 Player myself;
@@ -1620,245 +1623,311 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
     switch (npc.role)
     {
     case ROLE_MU:
-        b.pAtkB = npc.lvl * 12;
-        b.mAtkB = npc.lvl * 2;
-        b.spdB = npc.lvl * 5 / 2;
-        b.pBrcP = 30;
-        b.pBrcA = npc.lvl;
-        b.mBrcP = 0;
-        b.mBrcA = 0;
-        b.cBrcP = 10;
-        b.pDefB = npc.lvl * 5 / 2;
-        b.mDefB = npc.lvl * 3;
-        b.hpM = npc.lvl * 200;
-        b.hpRecP = 5;
-        b.sldM = npc.lvl * 30;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = npc.lvl * 12.0;
+        b.mAtkB = npc.lvl * 2.0;
+        b.spdB = npc.lvl * 2.5;
+        b.pBrcP = 30.0;
+        b.pBrcA = npc.lvl * 1.0;
+        b.mBrcP = 0.0;
+        b.mBrcA = 0.0;
+        b.cBrcP = 10.0;
+        b.pDefB = npc.lvl * 2.5;
+        b.mDefB = npc.lvl * 3.0;
+        b.hpM = npc.lvl * 200.0;
+        b.hpRecP = 5.0;
+        b.sldM = npc.lvl * 30.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
         break;
     case ROLE_ZHU:
-        b.pAtkB = npc.lvl * 2;
-        b.mAtkB = npc.lvl * 8;
-        b.spdB = npc.lvl * 8;
-        b.pBrcP = 0;
-        b.pBrcA = 0;
-        b.mBrcP = 50;
-        b.mBrcA = npc.lvl;
-        b.cBrcP = 10;
-        b.pDefB = npc.lvl * 1;
-        b.mDefB = npc.lvl * 1;
-        b.hpM = npc.lvl * 50;
-        b.hpRecP = 0;
-        b.sldM = 0;
-        b.sldRecP = 0;
-        b.lchP = 50;
-        b.rflP = 0;
+        b.pAtkB = npc.lvl * 2.0;
+        b.mAtkB = npc.lvl * 8.0;
+        b.spdB = npc.lvl * 8.0;
+        b.pBrcP = 0.0;
+        b.pBrcA = 0.0;
+        b.mBrcP = 50.0;
+        b.mBrcA = npc.lvl * 1.0;
+        b.cBrcP = 10.0;
+        b.pDefB = npc.lvl * 1.0;
+        b.mDefB = npc.lvl * 1.0;
+        b.hpM = npc.lvl * 50.0;
+        b.hpRecP = 0.0;
+        b.sldM = 0.0;
+        b.sldRecP = 0.0;
+        b.lchP = 50.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
         break;
     case ROLE_DENG:
-        b.pAtkB = 1;
-        b.mAtkB = 1;
-        b.spdB = npc.lvl * 27 / 10;
-        b.pBrcP = 0;
-        b.pBrcA = 0;
-        b.mBrcP = 30;
-        b.mBrcA = npc.lvl * 1;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 1;
-        b.mDefB = npc.lvl * 1;
-        b.hpM = 1;
-        b.hpRecP = 0;
-        b.sldM = npc.lvl * 500;
-        b.sldRecP = 5;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = 1.0;
+        b.mAtkB = 1.0;
+        b.spdB = npc.lvl * 2.7;
+        b.pBrcP = 0.0;
+        b.pBrcA = 0.0;
+        b.mBrcP = 30.0;
+        b.mBrcA = npc.lvl * 1.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 1.0;
+        b.mDefB = npc.lvl * 1.0;
+        b.hpM = 1.0;
+        b.hpRecP = 0.0;
+        b.sldM = npc.lvl * 500.0;
+        b.sldRecP = 5.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
         break;
     case ROLE_SHOU:
-        b.pAtkB = npc.lvl * 33;
-        b.mAtkB = 1;
-        b.spdB = npc.lvl * 1;
-        b.pBrcP = 20;
-        b.pBrcA = npc.lvl * 3;
-        b.mBrcP = 0;
-        b.mBrcA = 0;
-        b.cBrcP = 20;
-        b.pDefB = npc.lvl * 5;
-        b.mDefB = npc.lvl * 3;
-        b.hpM = npc.lvl * 300;
-        b.hpRecP = 5;
-        b.sldM = 0;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 40;
+        b.pAtkB = npc.lvl * 33.0;
+        b.mAtkB = 1.0;
+        b.spdB = npc.lvl * 1.0;
+        b.pBrcP = 20.0;
+        b.pBrcA = npc.lvl * 3.0;
+        b.mBrcP = 0.0;
+        b.mBrcA = 0.0;
+        b.cBrcP = 20.0;
+        b.pDefB = npc.lvl * 5.0;
+        b.mDefB = npc.lvl * 3.0;
+        b.hpM = npc.lvl * 300.0;
+        b.hpRecP = 5.0;
+        b.sldM = 0.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 40.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
         break;
     case ROLE_MU2:
-        b.pAtkB = npc.lvl * 30;
-        b.mAtkB = npc.lvl * 30;
-        b.spdB = npc.lvl * 3;
-        b.pBrcP = 50;
-        b.pBrcA = npc.lvl * 2;
-        b.mBrcP = 50;
-        b.mBrcA = npc.lvl * 2;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 5;
-        b.mDefB = npc.lvl * 5;
-        b.hpM = npc.lvl * 600;
-        b.hpRecP = 0;
-        b.sldM = npc.lvl * 600;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = npc.lvl * 30.0;
+        b.mAtkB = npc.lvl * 30.0;
+        b.spdB = npc.lvl * 3.0;
+        b.pBrcP = 50.0;
+        b.pBrcA = npc.lvl * 2.0;
+        b.mBrcP = 50.0;
+        b.mBrcA = npc.lvl * 2.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 5.0;
+        b.mDefB = npc.lvl * 5.0;
+        b.hpM = npc.lvl * 600.0;
+        b.hpRecP = 0.0;
+        b.sldM = npc.lvl * 600.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_REN | AURA_WU | AURA_DI);
         break;
     case ROLE_ZHU2:
-        b.pAtkB = 0;
-        b.mAtkB = npc.lvl * 40;
-        b.spdB = npc.lvl * 9;
-        b.pBrcP = 0;
-        b.pBrcA = 0;
-        b.mBrcP = 50;
-        b.mBrcA = npc.lvl * 3;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 4;
-        b.mDefB = npc.lvl * 4;
-        b.hpM = npc.lvl * 10;
-        b.hpRecP = 0;
-        b.sldM = npc.lvl * 400;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = 0.0;
+        b.mAtkB = npc.lvl * 40.0;
+        b.spdB = npc.lvl * 9.0;
+        b.pBrcP = 0.0;
+        b.pBrcA = 0.0;
+        b.mBrcP = 50.0;
+        b.mBrcA = npc.lvl * 3.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 4.0;
+        b.mDefB = npc.lvl * 4.0;
+        b.hpM = npc.lvl * 10.0;
+        b.hpRecP = 0.0;
+        b.sldM = npc.lvl * 400.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
         break;
     case ROLE_DENG2:
-        b.pAtkB = 1;
-        b.mAtkB = 1;
-        b.spdB = npc.lvl * 3;
-        b.pBrcP = 0;
-        b.pBrcA = 0;
-        b.mBrcP = 50;
-        b.mBrcA = npc.lvl * 3;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 5;
-        b.mDefB = npc.lvl * 5;
-        b.hpM = 1;
-        b.hpRecP = 0;
-        b.sldM = npc.lvl * 900;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = 1.0;
+        b.mAtkB = 1.0;
+        b.spdB = npc.lvl * 3.0;
+        b.pBrcP = 0.0;
+        b.pBrcA = 0.0;
+        b.mBrcP = 50.0;
+        b.mBrcA = npc.lvl * 3.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 5.0;
+        b.mDefB = npc.lvl * 5.0;
+        b.hpM = 1.0;
+        b.hpRecP = 0.0;
+        b.sldM = npc.lvl * 900.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_DUN | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_DI);
         break;
     case ROLE_SHOU2:
-        b.pAtkB = npc.lvl * 80;
-        b.mAtkB = 1;
-        b.spdB = npc.lvl * 1;
-        b.pBrcP = 50;
-        b.pBrcA = npc.lvl * 3;
-        b.mBrcP = 0;
-        b.mBrcA = 0;
-        b.cBrcP = 30;
-        b.pDefB = npc.lvl * 8;
-        b.mDefB = npc.lvl * 8;
-        b.hpM = npc.lvl * 600;
-        b.hpRecP = 0;
-        b.sldM = 0;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 30;
+        b.pAtkB = npc.lvl * 80.0;
+        b.mAtkB = 1.0;
+        b.spdB = npc.lvl * 1.0;
+        b.pBrcP = 50.0;
+        b.pBrcA = npc.lvl * 3.0;
+        b.mBrcP = 0.0;
+        b.mBrcA = 0.0;
+        b.cBrcP = 30.0;
+        b.pDefB = npc.lvl * 8.0;
+        b.mDefB = npc.lvl * 8.0;
+        b.hpM = npc.lvl * 600.0;
+        b.hpRecP = 0.0;
+        b.sldM = 0.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 30.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_CI | AURA_REN | AURA_DI);
         break;
     case ROLE_YU2:
-        b.pAtkB = npc.lvl * 30;
-        b.mAtkB = 0;
-        b.spdB = npc.lvl * 8;
-        b.pBrcP = 80;
-        b.pBrcA = npc.lvl * 2;
-        b.mBrcP = 0;
-        b.mBrcA = 0;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 4;
-        b.mDefB = npc.lvl * 4;
-        b.hpM = npc.lvl * 400;
-        b.hpRecP = 0;
-        b.sldM = 0;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 0;
+        b.pAtkB = npc.lvl * 30.0;
+        b.mAtkB = 0.0;
+        b.spdB = npc.lvl * 8.0;
+        b.pBrcP = 80.0;
+        b.pBrcA = npc.lvl * 2.0;
+        b.mBrcP = 0.0;
+        b.mBrcA = 0.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 4.0;
+        b.mDefB = npc.lvl * 4.0;
+        b.hpM = npc.lvl * 400.0;
+        b.hpRecP = 0.0;
+        b.sldM = 0.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 0.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
         break;
     case ROLE_HAO2:
-        b.pAtkB = npc.lvl * 30;
-        b.mAtkB = 1;
-        b.spdB = npc.lvl * 1;
-        b.pBrcP = 50;
-        b.pBrcA = npc.lvl * 2;
-        b.mBrcP = 50;
-        b.mBrcA = npc.lvl * 2;
-        b.cBrcP = 0;
-        b.pDefB = npc.lvl * 6;
-        b.mDefB = npc.lvl * 6;
-        b.hpM = npc.lvl * 900;
-        b.hpRecP = 0;
-        b.sldM = 0;
-        b.sldRecP = 0;
-        b.lchP = 0;
-        b.rflP = 80;
+        b.pAtkB = npc.lvl * 30.0;
+        b.mAtkB = 1.0;
+        b.spdB = npc.lvl * 1.0;
+        b.pBrcP = 50.0;
+        b.pBrcA = npc.lvl * 2.0;
+        b.mBrcP = 50.0;
+        b.mBrcA = npc.lvl * 2.0;
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 6.0;
+        b.mDefB = npc.lvl * 6.0;
+        b.hpM = npc.lvl * 900.0;
+        b.hpRecP = 0.0;
+        b.sldM = 0.0;
+        b.sldRecP = 0.0;
+        b.lchP = 0.0;
+        b.rflP = 80.0;
+        b.pRdc = 0.0;
+        b.mRdc = 0.0;
         b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
         b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_CI | AURA_DI);
         break;
     case ROLE_LIU:
         // Init base status later
-        b.pAtkB = b.mAtkB = b.spdB = 0;
-        b.pBrcP = b.pBrcA = b.mBrcP = b.mBrcA = b.cBrcP = 0;
-        b.pDefB = b.mDefB = b.hpM = b.hpRecP = b.sldM = b.sldRecP = 0;
-        b.lchP = b.rflP = b.sRateB = b.cRateB = 0;
+        b.pAtkB = b.mAtkB = b.spdB = 0.0;
+        b.pBrcP = b.pBrcA = b.mBrcP = b.mBrcA = b.cBrcP = 0.0;
+        b.pDefB = b.mDefB = b.hpM = b.hpRecP = b.sldM = b.sldRecP = 0.0;
+        b.lchP = b.rflP = b.sRateB = b.cRateB = 0.0;
+        b.pRdc = b.mRdc = 0.0;
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix;
+        break;
+    case ROLE_SHI:
+        b.pAtkB = npc.lvl * 60.0;
+        b.mAtkB = npc.lvl * 60.0;
+        b.aAtk = npc.lvl * 10.0;
+        b.spdB = npc.lvl * 5.0;
+        b.pBrcP = 0.0; // not sure
+        b.pBrcA = npc.lvl * 3.0; // not sure
+        b.mBrcP = 0.0; // not sure
+        b.mBrcA = npc.lvl * 3.0; // not sure
+        b.cBrcP = 0.0;
+        b.pDefB = npc.lvl * 3.0;
+        b.mDefB = npc.lvl * 3.0;
+        b.hpM = npc.lvl * 300.0;
+        b.hpRecP = 4.0;
+        b.sldM = npc.lvl * 400.0;
+        b.sldRecP = 6.0;
+        b.lchP = 10.0;
+        b.rflP = 10.0;
+        b.pRdc = npc.lvl * 10.0;
+        b.mRdc = npc.lvl * 10.0;
+        b.sRateB = npc.lvl * sklRate[npc.role][0] / sklRate[npc.role][1];
+        b.cRateB = npc.lvl * crtRate[npc.role][0] / crtRate[npc.role][1];
+        b.defLvl = b.atkLvl = 0;
+        b.tAgi = npc.lvl * 1.0;
+        b.psvSkl = (AURA_DUN | AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_RE | AURA_WU | AURA_DI);
         break;
     }
 
     b.role = npc.role;
     b.lvl = npc.lvl;
     b.hp = b.hpM;
-    b.hpRecA = 0;
-    b.hpRecRR = 0;
-    b.pAtkA = 0;
-    b.mAtkA = 0;
-    b.aAtk = 0;
-    b.spdA = 0;
-    b.spdRR = 0;
-    b.spdC = b.spdB * (1 - b.spdRR / 100.0);
+    b.hpRecA = 0.0;
+    b.hpRecRR = 0.0;
+    b.pAtkA = 0.0;
+    b.mAtkA = 0.0;
+    b.spdA = 0.0;
+    b.spdRR = 0.0;
+    b.spdC = b.spdB * (1 - b.spdRR / 100);
     b.sRateP = b.sRateB * 100 / (b.sRateB + 99);
     b.cRateP = b.cRateB * 100 / (b.cRateB + 99);
-    b.pDefA = 0;
-    b.mDefA = 0;
-    b.pRdc = 0;
-    b.mRdc = 0;
+    b.pDefA = 0.0;
+    b.mDefA = 0.0;
     b.sld = b.sldM;
-    b.sldRecA = 0;
-    b.sldRecRR = 0;
+    b.sldRecA = 0.0;
+    b.sldRecRR = 0.0;
     b.myst = 0;
     b.sklC = 0;
     b.houC = 0;
@@ -1888,18 +1957,18 @@ void prepareLiuStat(BStat& b, int* rseed)
     switch (v)
     {
     case 0:
-        b.pAtkB = b.lvl * pAtkCoef * 3;
+        b.pAtkB = b.lvl * pAtkCoef * 3.0;
         b.mAtkB = (b.lvl * mAtkCoef + 9) / 10;
         b.psvSkl |= AURA_FEI;
         break;
     case 1:
         b.pAtkB = (b.lvl * pAtkCoef + 9) / 10;
-        b.mAtkB = b.lvl * mAtkCoef * 3;
+        b.mAtkB = b.lvl * mAtkCoef * 3.0;
         b.psvSkl |= AURA_BO;
         break;
     case 2:
         b.pAtkB = (b.lvl * pAtkCoef + 9) / 10;
-        b.mAtkB = b.lvl * mAtkCoef * 3;
+        b.mAtkB = b.lvl * mAtkCoef * 3.0;
         b.psvSkl |= AURA_FEI | AURA_BO;
         break;
     }
@@ -1910,25 +1979,25 @@ void prepareLiuStat(BStat& b, int* rseed)
     switch (v)
     {
     case 0:
-        b.pBrcP = b.mBrcP = 20; // Unknown <40
-        b.pBrcA = b.mBrcA = b.lvl * 2;
-        b.sRateB = b.lvl * 4;
-        b.cRateB = b.lvl;
+        b.pBrcP = b.mBrcP = 20.0; // Unknown <40
+        b.pBrcA = b.mBrcA = b.lvl * 2.0;
+        b.sRateB = b.lvl * 4.0;
+        b.cRateB = b.lvl * 1.0;
         b.psvSkl |= AURA_HONG;
         break;
     case 1:
-        b.pBrcP = b.mBrcP = 20; // Unknown <40
-        b.pBrcA = b.mBrcA = b.lvl * 2;
-        b.sRateB = b.lvl;
-        b.cRateB = b.lvl * 4;
+        b.pBrcP = b.mBrcP = 20.0; // Unknown <40
+        b.pBrcA = b.mBrcA = b.lvl * 2.0;
+        b.sRateB = b.lvl * 1.0;
+        b.cRateB = b.lvl * 4.0;
         b.psvSkl |= AURA_HONG;
         break;
     case 2:
-        b.pBrcP = b.mBrcP = 70; // Not sure
-        b.pBrcA = b.mBrcA = b.lvl * 2;
-        b.cBrcP = 30;
-        b.sRateB = b.lvl;
-        b.cRateB = b.lvl;
+        b.pBrcP = b.mBrcP = 70.0; // Not sure
+        b.pBrcA = b.mBrcA = b.lvl * 2.0;
+        b.cBrcP = 30.0;
+        b.sRateB = b.lvl * 1.0;
+        b.cRateB = b.lvl * 1.0;
         b.psvSkl |= AURA_BI | AURA_MO;
         break;
     }
@@ -1939,18 +2008,18 @@ void prepareLiuStat(BStat& b, int* rseed)
     switch (v)
     {
     case 0:
-        b.spdB = b.lvl * 6;
-        b.lchP = 10;
+        b.spdB = b.lvl * 6.0;
+        b.lchP = 10.0;
         b.psvSkl |= AURA_XIAO | AURA_RE | AURA_JU;
         break;
     case 1:
-        b.spdB = b.lvl;
-        b.lchP = 60;
+        b.spdB = b.lvl * 1.0;
+        b.lchP = 60.0;
         b.psvSkl |= AURA_HOU;
         break;
     case 2:
-        b.spdB = b.lvl;
-        b.lchP = 10;
+        b.spdB = b.lvl * 1.0;
+        b.lchP = 10.0;
         b.aAtk = (b.pAtkB + 4) / 5 + (b.mAtkB + 4) / 5;
         break;
     }
@@ -1965,21 +2034,21 @@ void prepareLiuStat(BStat& b, int* rseed)
     switch (v)
     {
     case 0:
-        b.hp = b.hpM = b.lvl * hpCoef;
-        b.sld = b.sldM = b.lvl * sldCoef;
-        b.hpRecP = b.sldRecP = 10;
+        b.hp = b.hpM = b.lvl * hpCoef * 1.0;
+        b.sld = b.sldM = b.lvl * sldCoef * 1.0;
+        b.hpRecP = b.sldRecP = 10.0;
         b.psvSkl |= AURA_DIAN;
         break;
     case 1:
-        b.hp = b.hpM = b.lvl * hpCoef * 3;
+        b.hp = b.hpM = b.lvl * hpCoef * 3.0;
         b.sld = b.sldM = (b.lvl * sldCoef + 9) / 10;
-        b.hpRecP = b.sldRecP = 0;
+        b.hpRecP = b.sldRecP = 0.0;
         b.psvSkl |= AURA_SHENG | AURA_REN;
         break;
     case 2:
         b.hp = b.hpM = (b.lvl * hpCoef + 9) / 10;
-        b.sld = b.sldM = b.lvl * sldCoef * 6;
-        b.hpRecP = b.sldRecP = 0;
+        b.sld = b.sldM = b.lvl * sldCoef * 6.0;
+        b.hpRecP = b.sldRecP = 0.0;
         b.psvSkl |= AURA_DUN | AURA_ZHI;
         break;
     }
@@ -1990,19 +2059,19 @@ void prepareLiuStat(BStat& b, int* rseed)
     switch (v)
     {
     case 0:
-        b.pDefB = b.lvl * 6;
-        b.mDefB = b.lvl * 2;
-        b.rflP = 10;
+        b.pDefB = b.lvl * 6.0;
+        b.mDefB = b.lvl * 2.0;
+        b.rflP = 10.0;
         break;
     case 1:
-        b.pDefB = b.lvl * 2;
-        b.mDefB = b.lvl * 6;
-        b.rflP = 10;
+        b.pDefB = b.lvl * 2.0;
+        b.mDefB = b.lvl * 6.0;
+        b.rflP = 10.0;
         break;
     case 2:
-        b.pDefB = b.lvl * 2;
-        b.mDefB = b.lvl * 2;
-        b.rflP = 40;
+        b.pDefB = b.lvl * 2.0;
+        b.mDefB = b.lvl * 2.0;
+        b.rflP = 40.0;
         b.psvSkl |= AURA_CI;
         break;
     }
@@ -2878,7 +2947,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 isC = true;
             }
         }
-
         pa[s] = b0.pAtkB + b0.pAtkA;
         ma[s] = b0.mAtkB + b0.mAtkA;
         aa[s] = b0.aAtk;
@@ -3019,6 +3087,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             case ROLE_LIU:
                 pa[s] += b0.hpM * 2 / 5;
                 break;
+            case ROLE_SHI:
+                pa[s] += b0.pAtkB * 3;
+                ma[s] += b0.mAtkB * 3;
+                aa[s] += b0.aAtk * 12;
+                break;
             case ROLE_MO:
             {
                 int maDif = 0;
@@ -3137,7 +3210,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         pa[s] = int(pa[s] * (1 + b0.pAtkR * 0.01));
         ma[s] = int(ma[s] * (1 + b0.mAtkR * 0.01));
 
-        int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP * 2 / 5 : b1.rflP);
+        int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP / 2 : b1.rflP);
         int pRfl = 0;
         int mRfl = (pa[s] * 0.7 + ma[s] * 0.7 + aa[s] * 0.5) * (rflPFixed / 100.0);
         if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01));
@@ -3185,7 +3258,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 aa[s] *= 0.9;
             }
         }
-        if (b0.atkLvl > b1.atkLvl)
+        if (b0.atkLvl > b1.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
         {
             int lvlDiff = b0.atkLvl - b1.atkLvl > 20 ? 20 : b0.atkLvl - b1.atkLvl;
             pa[s] *= 1 + 0.03 * lvlDiff;
@@ -3217,7 +3290,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
             int ma2 = ma[s];
-            if (b1.defLvl > b0.defLvl)
+            if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 ma2 *= 1 - 0.03 * lvlDiff;
@@ -3226,6 +3299,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -2)) ma2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) ma2 /= 10;
             if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
+            if (b1.psvSkl & AURA_DI) ma2 *= 0.1;
             if (sldActive)
             {
                 int sdMax = int(ma2 * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.mRdc;
@@ -3264,7 +3338,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
             int pa2 = pa[s];
-            if (b1.defLvl > b0.defLvl)
+            if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 pa2 *= 1 - 0.03 * lvlDiff;
@@ -3273,6 +3347,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -1)) pa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) pa2 /= 10;
             if (b1.psvSkl & AURA_JUE) pa2 *= 0.8;
+            if (b1.psvSkl & AURA_DI) pa2 *= 0.1;
             if (sldActive)
             {
                 int sdMax = int(pa2 * (b1.psvSkl & AURA_DUN ? 1.25 : 1.5) * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b1.pRdc;
@@ -3306,7 +3381,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (aa[s] > 0)
         {
             int aa2 = aa[s];
-            if (b1.defLvl > b0.defLvl)
+            if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
                 aa2 *= 1 - 0.03 * lvlDiff;
@@ -3314,7 +3389,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             aa[s] = aa2;
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -3)) aa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
-            if (b1.psvSkl & AURA_JUE) aa2 *= 1;
+            // if (b1.psvSkl & AURA_JUE) aa2 *= 1;
+            if (b1.psvSkl & AURA_DI) aa2 *= 0.12;
             if (sldActive)
             {
                 if (aa2 <= sldRemain)
@@ -3348,12 +3424,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 0, b1.mBrcA, (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
             int ma2 = mRfl;
-            if (b1.atkLvl > b0.atkLvl)
+            if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
                 ma2 *= 1 + 0.03 * lvlDiff;
             }
-            if (b1.defLvl < b0.defLvl)
+            if (b1.defLvl < b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
                 ma2 *= 1 - 0.03 * lvlDiff;
@@ -3361,6 +3437,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             ma[1 - s] = ma2;
             if (b0.role == ROLE_MIN && b0.sklC == -2) ma2 = 0;
             if (b0.psvSkl & AURA_JUE) ma2 *= 0.8;
+            if (b0.psvSkl & AURA_DI) ma2 *= 0.1;
             if (b1.role == ROLE_MIN && b1.sklC > 0) ma2 *= 1;
             if (sldActive)
             {
@@ -3395,12 +3472,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
             int pa2 = pRfl;
-            if (b1.atkLvl > b0.atkLvl)
+            if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
                 pa2 *= 1 + 0.03 * lvlDiff;
             }
-            if (b1.defLvl < b0.defLvl)
+            if (b1.defLvl < b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
                 pa2 *= 1 - 0.03 * lvlDiff;
@@ -3408,6 +3485,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             pa[1 - s] = pa2;
             if (b0.role == ROLE_MIN && b0.sklC == -1) pa2 = 0;
             if (b0.psvSkl & AURA_JUE) pa2 *= 0.8;
+            if (b0.psvSkl & AURA_DI) pa2 *= 0.1;
             if (sldActive)
             {
                 int sdMax = int(pa2 * (b0.psvSkl & AURA_DUN ? 1.25 : 1.5) * (dr >= 0 ? 1 - dr / 200.0 : 1 - dr / 100.0)) - b0.pRdc;
@@ -3489,13 +3567,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 }
                 hr[i] += (b[i].hpM * b[i].hpRecP / 100 + b[i].hpRecA) / 4;
                 sr[i] += (b[i].sldM * b[i].sldRecP / 100 + b[i].sldRecA) / 4;
-                if (b[i].psvSkl & AURA_DI)
-                {
-                    int hpDi = b[i].hpM > 3 ? b[i].hpM * 3 / 10 : 1;
-                    int sldDi = b[i].sldM > 3 ? b[i].sldM * 3 / 10 : 1;
-                    if (hd[i] > hpDi) hd[i] = hpDi;
-                    if (sd[i] > sldDi) sd[i] = sldDi;
-                }
                 if (debug)
                 {
                     printf("side=%d hp=%d hd=%d hr=%d sld=%d sd=%d sr=%d\n",
@@ -4863,7 +4934,7 @@ int main(int argc, char* argv[])
         printf("bpc : Calculate win rate for all PC in config file\n");
         printf("anpc : Calculate attributes for all NPC in config file\n");
         printf("apc : Calculate attributes for all PC in config file\n");
-        printf("al <Rank> <MU2> <ZHU2> <DENG2> <SHOU2> <YU2> <HAO2>:\n");
+        printf("al <Rank> <SHI>:\n");
         printf("    Calculate best profit for given NPC base level\n");
         printf("rank : Calculate VS rank of all PC data and myself\n");
         printf("threads <n> : Set number of threads for calculation\n");
