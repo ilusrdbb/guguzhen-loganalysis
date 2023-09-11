@@ -113,26 +113,13 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     if t_int == 2 or t_int < 1:
         t_int = 1
     if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        # 1400 争夺要求智力点数校验
+        # 1400争夺要求智力点数校验
         if t_int <= config.read_config('1400_int'):
             t_int = config.read_config('1400_int')
     if t_int >= attr_data.all_point - 1:
         if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-            # TODO 1400争夺的智力补偿
-            # 先从精神拿 然后是敏捷
-            diff = config.read_config('1400_int') - attr_data.all_point + 1
-            if diff < attr_data.t_spr:
-                attr_data.t_spr -= diff
-                attr_data.t_int = config.read_config('1400_int')
-                attr_data.t_str = 1
-                return
-            else:
-                diff -= (attr_data.t_spr - 1)
-                attr_data.t_spr = 1
-                attr_data.t_agi -= diff
-                attr_data.t_str = 1
-                attr_data.t_int = config.read_config('1400_int')
-                return
+            # 1400争夺缺少的点数最后补
+            pass
         else:
             # 非1400不补偿，直接榨干剩余点数
             attr_data.t_int = attr_data.all_point - 1
@@ -142,138 +129,162 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     attr_data.all_point -= t_int
     # 最后看力量
     attr_data.t_str = attr_data.all_point
+    if attr_data.t_str < 1:
+        attr_data.t_str = 1
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        # TODO 1300争夺的力量补偿
+        # 1300争夺要求力量点数校验
         if attr_data.t_str <= config.read_config('1300_str'):
             attr_data.t_str = config.read_config('1300_str')
-            diff = config.read_config('1300_str') - attr_data.all_point
-            if attr_data.all_point < config.read_config('1300_str'):
-                # 先从敏捷拿 拿到1000点 然后从意志拿
-                if attr_data.t_agi > 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA'):
-                    diff2 = attr_data.t_agi + aumlet_from_str(aumlet_str, 'AGI') \
-                            + aumlet_from_str(aumlet_str, 'AAA') - 1000
-                    if diff2 > diff:
-                        attr_data.t_agi -= diff
-                    else:
-                        attr_data.t_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
-                        diff3 = diff - diff2
-                        attr_data.t_mnd -= diff3
-                else:
-                    # 敏捷不够1000就先从意志拿
-                    if diff < attr_data.t_mnd:
-                        attr_data.t_mnd -= diff
-                    else:
-                        diff -= (attr_data.t_mnd - 1)
-                        attr_data.t_mnd = 1
-                        attr_data.t_agi -= diff
-        # 1300争夺多余的力量全匀到意志
-        if attr_data.t_str > config.read_config('1300_str'):
-            diff = attr_data.t_str - config.read_config('1300_str')
-            attr_data.t_str = config.read_config('1300_str')
-            attr_data.t_mnd += diff
-    # TODO 双下力量的多余点数补偿
+            attr_data.all_point -= attr_data.t_str
+    # 缺少点数补偿
+    if attr_data.all_point < 0:
+        lost_point = attr_data.t_str + attr_data.t_agi + attr_data.t_int \
+                     + attr_data.t_vit + attr_data.t_spr + attr_data.t_mnd \
+                     - attr_data.final_point
+        lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str)
+    # 双下力量的多余点数补偿
     if 'double-angle-down' in icon_list[0]:
-        finally_add_point(attr_data, icon_list)
-    # TODO 单下力量的多余点数补偿
+        left_point = attr_data.t_str - 1
+        attr_data.t_str = 1
+        left_point_compensation(left_point, icon_list, attr_data)
+    # 单下力量的多余点数补偿
     if 'icon-angle-down' in icon_list[0] and attr_data.t_str > int(attr_data.final_apple_point * 0.2):
-        finally_diff_point(attr_data, icon_list)
+        left_point = attr_data.t_str - int(attr_data.final_apple_point * 0.2)
+        attr_data.t_str = int(attr_data.final_apple_point * 0.2)
+        left_point_compensation(left_point, icon_list, attr_data)
 
 
-# 最终补偿 力量单下
-def finally_diff_point(attr_data, icon_list):
-    # 多余的点数
-    diff = attr_data.t_str - int(attr_data.final_apple_point * 0.2)
-    final_str = int(attr_data.final_apple_point * 0.2)
-    # 找双上箭头
+# 缺少点数补偿 由于只会存在于1300和1400时，写的比较死，先这样
+def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
+    _lost_point = lost_point
+    # 先从敏捷补，上箭头补到敏捷剩1000，下箭头补到箭头上限
+    if 'angle-up' in icon_list[1] and attr_data.t_agi > 1000 \
+            - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA'):
+        new_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
+        diff_point = attr_data.t_agi - new_agi
+        attr_data.t_agi = new_agi
+        if diff_point >= _lost_point:
+            return
+        _lost_point -= diff_point
+    else:
+        new_agi = attr_data.t_agi - _lost_point
+        if new_agi < 1:
+            check_value = icon_check(1, attr_data.final_apple_point, icon_list[1])
+            if check_value == 1:
+                _lost_point -= (attr_data.t_agi - 1)
+                attr_data.t_agi = 1
+            else:
+                attr_data.t_agi = check_value
+                _lost_point -= check_value
+        else:
+            check_value = icon_check(new_agi, attr_data.final_apple_point, icon_list[1])
+            if check_value <= new_agi:
+                attr_data.t_agi = new_agi
+                return
+            attr_data.t_agi = check_value
+            _lost_point -= check_value
+    # 排序精体意
+    attr_name_list = sort_attr_list(attr_data)
+    # 找精体意最高的属性补
+    most_attr_name = attr_name_list[0]
+    most_attr_value = getattr(attr_data, most_attr_name) - _lost_point
+    icon_str = get_icon_str(icon_list, most_attr_name)
+    if most_attr_value < 1:
+        check_value = icon_check(1, attr_data.final_apple_point, icon_str)
+        if check_value == 1:
+            _lost_point -= (getattr(attr_data, most_attr_name) - 1)
+            setattr(attr_data, most_attr_name, 1)
+        else:
+            setattr(attr_data, most_attr_name, check_value)
+            _lost_point -= check_value
+    else:
+        check_value = icon_check(most_attr_value, attr_data.final_apple_point, icon_str)
+        if check_value <= most_attr_value:
+            setattr(attr_data, most_attr_name, most_attr_value)
+            return
+        setattr(attr_data, most_attr_name, check_value)
+        _lost_point -= check_value
+    # 找次高的补 不校验了
+    more_attr_name = attr_name_list[1]
+    more_attr_value = getattr(attr_data, more_attr_name) - _lost_point
+    setattr(attr_data, more_attr_name, more_attr_value)
+
+
+# 排序精体意 返回属性名list
+def sort_attr_list(attr_data):
+    attr_list = ['t_vit', 't_spr', 't_mnd']
+    attr_list.sort(key=lambda attr: getattr(attr_data, attr), reverse=True)
+    return attr_list
+
+
+# 多余点数补偿
+def left_point_compensation(left_point, icon_list, attr_data):
+    _left_point = left_point
+    _check_point = 0
+    # 需要补偿的属性列表
+    compensation_attr_list = get_compensation_attr_list(icon_list)
+    if compensation_attr_list:
+        # 平分
+        avg_point = int(_left_point / len(compensation_attr_list))
+        for attr_name in compensation_attr_list:
+            attr_value = getattr(attr_data, attr_name) + avg_point
+            setattr(attr_data, attr_name, attr_value)
+            _left_point -= avg_point
+            # 校验
+            icon_str = get_icon_str(icon_list, attr_name)
+            check_value = icon_check(attr_value, attr_data.final_apple_point, icon_str)
+            if check_value < attr_value:
+                # 没通过校验的处理
+                setattr(attr_data, attr_name, check_value)
+                _check_point += attr_value - check_value
+    # 最后剩余的点数全扔力量
+    attr_data.t_str += _left_point + _check_point
+
+
+# 根据属性名获取箭头
+def get_icon_str(icon_list, attr_name):
+    if attr_name == 't_str':
+        return icon_list[0]
+    if attr_name == 't_agi':
+        return icon_list[1]
+    if attr_name == 't_int':
+        return icon_list[2]
+    if attr_name == 't_vit':
+        return icon_list[3]
+    if attr_name == 't_spr':
+        return icon_list[4]
+    if attr_name == 't_mnd':
+        return icon_list[5]
+    return None
+
+
+# 获取需要补偿的属性列表
+def get_compensation_attr_list(icon_list):
+    result_list = []
+    # 找双上箭头 优先智力和敏捷
     if 'double-angle-up' in icon_list[1]:
-        attr_data.t_agi += diff
-        attr_data.t_str = final_str
-        return
+        result_list.append('t_int')
     if 'double-angle-up' in icon_list[2]:
-        attr_data.t_int += diff
-        attr_data.t_str = final_str
-        return
-    if 'double-angle-up' in icon_list[4]:
-        attr_data.t_spr += diff
-        attr_data.t_str = final_str
-        return
-    if 'double-angle-up' in icon_list[5]:
-        attr_data.t_mnd += diff
-        attr_data.t_str = final_str
-        return
-    if 'double-angle-up' in icon_list[3]:
-        attr_data.t_vit += diff
-        attr_data.t_str = final_str
-        return
-    # 找单上
+        result_list.append('t_agi')
     if 'icon-angle-up' in icon_list[1]:
-        attr_data.t_agi += diff
-        attr_data.t_str = final_str
-        return
-    if 'icon-angle-up' in icon_list[4]:
-        attr_data.t_spr += diff
-        attr_data.t_str = final_str
-        return
-    if 'icon-angle-up' in icon_list[5]:
-        attr_data.t_mnd += diff
-        attr_data.t_str = final_str
-        return
-    if 'icon-angle-up' in icon_list[3]:
-        attr_data.t_vit += diff
-        attr_data.t_str = final_str
-        return
+        result_list.append('t_int')
     if 'icon-angle-up' in icon_list[2]:
-        attr_data.t_int += diff
-        attr_data.t_str = final_str
-        return
-
-
-# 最终补偿 力量双下
-def finally_add_point(attr_data, icon_list):
-    # 多余的点数
-    add_point = attr_data.all_point - 1
-    # 找双上箭头
-    if 'double-angle-up' in icon_list[1]:
-        attr_data.t_agi += add_point
-        attr_data.t_str = 1
-        return
-    if 'double-angle-up' in icon_list[2]:
-        attr_data.t_int += add_point
-        attr_data.t_str = 1
-        return
-    if 'double-angle-up' in icon_list[4]:
-        attr_data.t_spr += add_point
-        attr_data.t_str = 1
-        return
-    if 'double-angle-up' in icon_list[5]:
-        attr_data.t_mnd += add_point
-        attr_data.t_str = 1
-        return
-    if 'double-angle-up' in icon_list[3]:
-        attr_data.t_vit += add_point
-        attr_data.t_str = 1
-        return
-    # 找单上
-    if 'icon-angle-up' in icon_list[1]:
-        attr_data.t_agi += add_point
-        attr_data.t_str = 1
-        return
-    if 'icon-angle-up' in icon_list[4]:
-        attr_data.t_spr += add_point
-        attr_data.t_str = 1
-        return
-    if 'icon-angle-up' in icon_list[5]:
-        attr_data.t_mnd += add_point
-        attr_data.t_str = 1
-        return
-    if 'icon-angle-up' in icon_list[3]:
-        attr_data.t_vit += add_point
-        attr_data.t_str = 1
-        return
-    if 'icon-angle-up' in icon_list[2]:
-        attr_data.t_int += add_point
-        attr_data.t_str = 1
-        return
+        result_list.append('t_agi')
+    # 如果智力和敏捷没有再找其他的
+    if not result_list:
+        if 'double-angle-up' in icon_list[3]:
+            result_list.append('t_vit')
+        if 'double-angle-up' in icon_list[4]:
+            result_list.append('t_spr')
+        if 'double-angle-up' in icon_list[5]:
+            result_list.append('t_mnd')
+        if 'icon-angle-up' in icon_list[3]:
+            result_list.append('t_vit')
+        if 'icon-angle-up' in icon_list[4]:
+            result_list.append('t_spr')
+        if 'icon-angle-up' in icon_list[5]:
+            result_list.append('t_mnd')
+    return result_list
 
 
 # 根据血量和护盾计算
@@ -362,16 +373,16 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
             attr_data.all_point -= 1
             return
     attr_data.t_spr = int(base_sld / t_spr_mul)
-    # 点数正数校验
-    if attr_data.t_spr <= aumlet_from_str(aumlet_str, 'SPR') + aumlet_from_str(aumlet_str, 'AAA'):
-        attr_data.t_spr = 1
-        attr_data.all_point -= 1
-        return
     # 争夺要求点数校验
     if attr_data.t_spr < 1000 and 'angle-up' in icon_list[4]:
         attr_data.t_spr = 1000
     # 箭头校验
     attr_data.t_spr = icon_check(attr_data.t_spr, attr_data.final_apple_point, icon_list[4])
+    # 点数正数校验
+    if attr_data.t_spr <= aumlet_from_str(aumlet_str, 'SPR') + aumlet_from_str(aumlet_str, 'AAA'):
+        attr_data.t_spr = 1
+        attr_data.all_point -= 1
+        return
     attr_data.t_spr -= (aumlet_from_str(aumlet_str, 'SPR') + aumlet_from_str(aumlet_str, 'AAA'))
     # 点数溢出校验
     if attr_data.final_point <= attr_data.t_spr + 5:
