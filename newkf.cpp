@@ -3020,7 +3020,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_YA)
         {
-            ma[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.2 * round);
+            pa[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.2 * round);
             pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.2 * round);
         }
         if (isC)
@@ -3090,7 +3090,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             case ROLE_SHI:
                 pa[s] += b0.pAtkB * 3;
                 ma[s] += b0.mAtkB * 3;
-                aa[s] += b0.aAtk * 12;
+                aa[s] += pa[s] + ma[s];
                 break;
             case ROLE_MO:
             {
@@ -3174,7 +3174,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_YA:
             {
-                pa[s] += (b1.hpM + b1.sldM) * 0.15;
+                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
+                pa[s] += (b0.pAtkB + b0.pAtkA) * 3;
                 b1.hpM *= 0.95;
                 b1.sldM *= 0.95;
                 break;
