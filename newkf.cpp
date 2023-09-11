@@ -2541,10 +2541,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].cRateP = b[i].cRateB * 100 / (b[i].cRateB + 99);
         b[i].pAtkR = b[i].amul[AMUL_PATK];
         b[i].mAtkR = b[i].amul[AMUL_MATK];
-        if (b[i].myst & MYST_BLADE)
-        {
-            mystBladeDmg[i] = (b[i].pAtkB + b[i].pAtkA) / 2;
-        }
         if (b[i].myst & MYST_SHIELD)
         {
             b[1 - i].hpRecRR += 40;
@@ -3023,6 +3019,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             pa[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.2 * round);
             pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.2 * round);
         }
+        if (isS)
+        {
+            // ya is special
+            if (b0.role == ROLE_YA)
+            {
+                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
+            }
+        }
         if (isC)
         {
             pa[s] *= 2;
@@ -3049,7 +3053,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b0.myst & MYST_BLADE)
             {
-                aa[s] += mystBladeDmg[s];
+                aa[s] += (b0.pAtkB + b0.pAtkA) / 2;;
             }
         }
         if (isS)
@@ -3174,7 +3178,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_YA:
             {
-                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
                 pa[s] += (b0.pAtkB + b0.pAtkA) * 3;
                 b1.hpM *= 0.95;
                 b1.sldM *= 0.95;
