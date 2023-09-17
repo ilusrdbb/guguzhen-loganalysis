@@ -5142,6 +5142,7 @@ int main(int argc, char* argv[])
             {
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
+                if (myself.role == ROLE_YA) printf(" M=%d", myself.mode);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
                 printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
@@ -5181,6 +5182,7 @@ int main(int argc, char* argv[])
             {
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
+                if (myself.role == ROLE_YA) printf(" M=%d", myself.mode);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
                 printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
@@ -5321,6 +5323,7 @@ int main(int argc, char* argv[])
             {
                 printf("Attribute Result:\n");
                 printf("%s", pcName[myself.role - ROLE_PC]);
+                if (myself.role == ROLE_YA) printf(" M=%d", myself.mode);
                 if ((myself.role == ROLE_WU || myself.role == ROLE_XI || myself.role == ROLE_XIA) && myself.growth > 0) printf(" G=%d", myself.growth);
                 printf(" %d %d %d %d\n", myself.lvl, myself.kfLvl, myself.sklSlot, myself.quality);
                 printf("%s", wishAmulStr);
