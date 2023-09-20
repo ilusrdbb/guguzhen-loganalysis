@@ -10,6 +10,10 @@
 
 关于压缩包内计算器的说明:
 
+b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
+
+解压release的压缩包，将压缩包内的newkf64.exe覆盖至b大计算器的目录里
+
 装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND
 
 天赋 不动如山 SHAN
@@ -21,6 +25,8 @@
 野怪 史莱姆 SHI
 
 使用方法：
+
+收割机脚本：https://kf.miaola.work/read.php?fid=5&tid=1000914&sf=823
 
 解压release的压缩包，由于新装备的存在，暂时需要配合压缩包内的计算器使用
 
