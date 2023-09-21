@@ -12,7 +12,7 @@
 
 b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
-解压release的压缩包，将压缩包内的newkf64.exe覆盖至b大计算器的目录里
+解压release的压缩包，将压缩包内的newkf_64.exe覆盖至b大计算器的目录里
 
 装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND
 
@@ -55,3 +55,5 @@ A:附议
 TODO 将来有空会开发的功能
 
 计算器战斗记录支持浮点
+
+优化计算器胜率的计算方式
