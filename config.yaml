@@ -10,7 +10,7 @@ max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
 # 2023年6月6号之后的记录会根据血量、护盾、图标大致推算点数，误差极大需要注意
-last_date: '2023-09-01'
+last_date: '2023-09-15'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: 'AAA 8'
@@ -126,6 +126,25 @@ int_prop_u: 0.4
 int_prop_d: 0.2
 # 智力双下 智力在全部点数中的占比，此值必须大于0小于等于0.1
 int_prop_dd: 0.001
+
+
+# 固定加点模板列表 符合模板的会无视推测过程按照point值加点
+# enemy 匹配具体玩家名称 如果匹配全部则填空字符串''
+# card 匹配卡片 如果匹配全部则填空字符串''
+# gear 匹配四件装备 如匹配任意装备则填NONE
+# attribute 匹配六围加点箭头 如匹配任意箭头则填any dd双下d单下u单上du双上
+# 如果有多个符合的模板会按照第一个模板配置 下例
+template:
+  - enemy: 'ilusrdbb'
+    card: 'AI'
+    gear: 'BOW NONE NONE NONE'
+    attribute: 'any any any any any any'
+    point: '1 1 114 1 514 1'
+  - enemy: ''
+    card: ''
+    gear: 'SWORD GLOVES PLATE SCARF'
+    attribute: 'dd d u du any any'
+    point: '1 1919 1 810 1 1'
 
 
 # 装备映射

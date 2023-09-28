@@ -6,12 +6,14 @@ import datetime
 import random
 import time
 
-from core import config, util, enemy, battle, sql, attribute
+from core import config, util, enemy, battle, sql, attribute, template
 
 
 def start():
     # 加载配置文件
     config._init()
+    # 加载模板
+    template_list = template.init_template()
     # 加载系数缓存数据库文件
     sql.init_db()
     # 解析排行榜
@@ -55,11 +57,18 @@ def start():
             enemy_data.kf_level = w_dict.get(enemy_data.enemy_name).get('kf_level')
         # 初始化战斗数据
         battle_data = battle.Battle(enemy_data.battle_log)
-        # 初始化点数
-        attr_data = attribute.Attribute(enemy_data)
-        # 点数推断
+        # 获取护符
         aumlet_str = build_aumlet_str(enemy_data.enemy_card, battle_data.gear_list[0])
-        attribute.cal_attr(enemy_data, battle_data, attr_data, aumlet_str)
+        # 模板匹配
+        match_template = template.match_template(template_list, enemy_data, battle_data)
+        if match_template:
+            attr_data = attribute.Attribute(None)
+            template.build_template_attr(match_template, attr_data)
+        else:
+            # 初始化点数
+            attr_data = attribute.Attribute(enemy_data)
+            # 点数推断
+            attribute.cal_attr(enemy_data, battle_data, attr_data, aumlet_str)
         result_list = []
         # 构造角色
         result_list.append(build_first_line(enemy_data, w_dict))
@@ -79,8 +88,18 @@ def start():
         # 构造map
         result_str = '\n'.join(result_list) + '\n\n'
         result_dict[enemy_data.enemy_name] = result_str
+        move_element_to_end(result_dict, enemy_data.enemy_name)
     # 输出
     util.write_data(result_dict)
+
+
+# 将字典中元素移动至末尾
+def move_element_to_end(input_dict, key_to_move):
+    if key_to_move in input_dict:
+        # 弹出元素并保存其值
+        element_value = input_dict.pop(key_to_move)
+        # 重新将元素添加到字典的末尾
+        input_dict[key_to_move] = element_value
 
 
 # 构造第8行
