@@ -101,7 +101,7 @@ enum
     GEAR_VULTURE,   // 秃鹫手环
     GEAR_RING,      // 海星戒指
     GEAR_DEVOUR,    // 噬魔戒指
-    GEAR_REFLECT,   // 折光戒指
+    GEAR_REFRACT,   // 折光戒指
     GEAR_PLATE,     // 探险者铁甲
     GEAR_LEATHER,   // 探险者皮甲
     GEAR_CLOTH,     // 探险者布甲
@@ -162,7 +162,7 @@ enum
     MYST_VULTURE = 0x000400, // 额外增加20%对护盾的实际吸血给生命值
     MYST_RING = 0x000800, // 舞增加(锦上添花伤害的20%)的普通伤害
     MYST_DEVOUR = 0x001000, // 命运链接获得的护盾回复的50%添加到生命回复
-    MYST_REFLECT = 0x002000, // 自己出手并不会消耗掉先兆感知
+    MYST_REFRACT = 0x002000, // 自己出手并不会消耗掉先兆感知
     MYST_CLOAK = 0x004000, // 护盾最大值+50%
     MYST_THORN = 0x008000, // 增加25%固定伤害反弹
     MYST_WOOD = 0x010000, // 被攻击时回复(5%自身最大生命值)
@@ -331,7 +331,7 @@ const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZH
 const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "MING", "MIN", "WU", "XI", "XIA", "YA" };
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
-    "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "REFLECT",
+    "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "REFRACT",
     "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
@@ -1172,7 +1172,7 @@ bool readPlayer(FILE* fp, Player& pc)
             else if (strcmp(buf, "BRACELET") == 0) b.myst |= MYST_BRACELET;
             else if (strcmp(buf, "RING") == 0) b.myst |= MYST_RING;
             else if (strcmp(buf, "DEVOUR") == 0) b.myst |= MYST_DEVOUR;
-            else if (strcmp(buf, "REFLECT") == 0) b.myst |= MYST_REFLECT;
+            else if (strcmp(buf, "REFRACT") == 0) b.myst |= MYST_REFRACT;
             else if (strcmp(buf, "VULTURE") == 0) b.myst |= MYST_VULTURE;
             else if (strcmp(buf, "WOOD") == 0) b.myst |= MYST_WOOD;
             else if (strcmp(buf, "CAPE") == 0) b.myst |= MYST_CAPE;
@@ -2335,12 +2335,12 @@ void preparePcBStat(const Player& pc, BStat& b)
             hpPlus += round(b.hpM * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_DEVOUR;
             break;
-        case GEAR_REFLECT:
+        case GEAR_REFRACT:
             b.spdA += int(g.lvl * 2.0 * (g.percent[0] / 10.0)) / 10.0;
             b.cRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
             b.cBrcP += int(g.lvl / 20.0 * (g.percent[2] / 10.0)) / 10.0;
             hpAdd += tAgi * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 10.0);
-            if (g.isMyst) b.myst |= MYST_REFLECT;
+            if (g.isMyst) b.myst |= MYST_REFRACT;
             break;
         case GEAR_PLATE:
             hpAdd += int(g.lvl * 20 * (g.percent[0] / 10.0)) / 10.0;
@@ -2999,7 +2999,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += b0.hpM - b0.hp;
         }
-        if (b0.role == ROLE_MIN && b0.sklC > 0 && !(b0.myst & MYST_REFLECT)) b0.sklC = 0;
+        if (b0.role == ROLE_MIN && b0.sklC > 0 && !(b0.myst & MYST_REFRACT)) b0.sklC = 0;
         if (b0.psvSkl & AURA_XIAO)
         {
             aa[s] += int(b1.hpM * 0.015) + int(b1.sldM * 0.015);
