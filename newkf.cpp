@@ -101,6 +101,7 @@ enum
     GEAR_VULTURE,   // 秃鹫手环
     GEAR_RING,      // 海星戒指
     GEAR_DEVOUR,    // 噬魔戒指
+    GEAR_REFLECT,   // 折光戒指
     GEAR_PLATE,     // 探险者铁甲
     GEAR_LEATHER,   // 探险者皮甲
     GEAR_CLOTH,     // 探险者布甲
@@ -148,26 +149,27 @@ enum
     AURA_COUNT = 30,
     FLAG_STAT = 1 << AURA_COUNT,
 
-    MYST_BLADE = 0x00001, // 暴击时附带(物理攻击力*50%)的绝对伤害
-    MYST_ASSBOW = 0x00002, // 攻击附带(对方当前护盾值*30%)的物理伤害
-    MYST_DAGGER = 0x00004, // 星火宝石的效果翻倍 血精宝石的伤害提升(星火*15%)
-    MYST_WAND = 0x00008, // 魔力压制增加40%技能伤害，第一击必释放技能
-    MYST_SHIELD = 0x00010, // 削弱对方40%的回血和回盾效果
-    MYST_CLAYMORE = 0x00020, // 暴击率100%
-    MYST_SPEAR = 0x00040, // 攻击附带(对方当前生命值*30%)的魔法伤害
-    MYST_COLORFUL = 0x00080, // 彩金对剑无视对方情况同时附带物理和魔法伤害
-    MYST_LIMPIDWAND = 0x00100, // 澄空之心额外获得(15%对方魔法防御)的魔法附加穿透。
-    MYST_BRACELET = 0x00200, // 20%几率特殊暴击，魔法伤害增加100%
-    MYST_VULTURE = 0x00400, // 额外增加20%对护盾的实际吸血给生命值
-    MYST_RING = 0x00800, // 舞增加(锦上添花伤害的20%)的普通伤害
-    MYST_DEVOUR = 0x01000, // 命运链接获得的护盾回复的50%添加到生命回复
-    MYST_CLOAK = 0x02000, // 护盾最大值+35%
-    MYST_THORN = 0x04000, // 增加25%固定伤害反弹
-    MYST_WOOD = 0x08000, // 被攻击时回复(5%自身最大生命值)
-    MYST_CAPE = 0x10000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
-    MYST_TIARA = 0x20000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
-    MYST_RIBBON = 0x40000, // 锁定元气无限为低于30%血量判定。
-    MYST_HUNT = 0x80000, // 圣银弩箭30%物理攻击转换为绝对伤害
+    MYST_BLADE = 0x000001, // 暴击时附带(物理攻击力*50%)的绝对伤害
+    MYST_ASSBOW = 0x000002, // 攻击附带(对方当前护盾值*30%)的物理伤害
+    MYST_DAGGER = 0x000004, // 星火宝石的效果翻倍 血精宝石的伤害提升(星火*15%)
+    MYST_WAND = 0x000008, // 魔力压制增加40%技能伤害，第一击必释放技能
+    MYST_SHIELD = 0x000010, // 削弱对方40%的回血和回盾效果
+    MYST_CLAYMORE = 0x000020, // 暴击率100%
+    MYST_SPEAR = 0x000040, // 攻击附带(对方当前生命值*30%)的魔法伤害
+    MYST_COLORFUL = 0x000080, // 彩金对剑无视对方情况同时附带物理和魔法伤害
+    MYST_LIMPIDWAND = 0x000100, // 澄空之心额外获得(15%对方魔法防御)的魔法附加穿透。
+    MYST_BRACELET = 0x000200, // 20%几率特殊暴击，魔法伤害增加100%
+    MYST_VULTURE = 0x000400, // 额外增加20%对护盾的实际吸血给生命值
+    MYST_RING = 0x000800, // 舞增加(锦上添花伤害的20%)的普通伤害
+    MYST_DEVOUR = 0x001000, // 命运链接获得的护盾回复的50%添加到生命回复
+    MYST_REFLECT = 0x002000, // 自己出手并不会消耗掉先兆感知
+    MYST_CLOAK = 0x004000, // 护盾最大值+50%
+    MYST_THORN = 0x008000, // 增加25%固定伤害反弹
+    MYST_WOOD = 0x010000, // 被攻击时回复(5%自身最大生命值)
+    MYST_CAPE = 0x020000, // 被攻击回合时攻击方50%的物理伤害转换为魔法伤害
+    MYST_TIARA = 0x040000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
+    MYST_RIBBON = 0x080000, // 锁定元气无限为低于30%血量判定。
+    MYST_HUNT = 0x100000, // 圣银弩箭30%物理攻击转换为绝对伤害
 
     PREF_SHANG = 0, // 诅咒=伤口恶化+精神创伤
     PREF_BO,        // 法神=破魔之心+波澜不惊
@@ -329,9 +331,9 @@ const char* const npcName[NPC_COUNT] = { "MU", "ZHU", "DENG", "SHOU", "MU2", "ZH
 const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "MING", "MIN", "WU", "XI", "XIA", "YA" };
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
-    "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "PLATE",
-    "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
-const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+    "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "REFLECT",
+    "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
+const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
     "SHI", "XIN", "FENG", "TIAO", "YA",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
@@ -1170,11 +1172,13 @@ bool readPlayer(FILE* fp, Player& pc)
             else if (strcmp(buf, "BRACELET") == 0) b.myst |= MYST_BRACELET;
             else if (strcmp(buf, "RING") == 0) b.myst |= MYST_RING;
             else if (strcmp(buf, "DEVOUR") == 0) b.myst |= MYST_DEVOUR;
+            else if (strcmp(buf, "REFLECT") == 0) b.myst |= MYST_REFLECT;
             else if (strcmp(buf, "VULTURE") == 0) b.myst |= MYST_VULTURE;
             else if (strcmp(buf, "WOOD") == 0) b.myst |= MYST_WOOD;
             else if (strcmp(buf, "CAPE") == 0) b.myst |= MYST_CAPE;
             else if (strcmp(buf, "TIARA") == 0) b.myst |= MYST_TIARA;
             else if (strcmp(buf, "RIBBON") == 0) b.myst |= MYST_RIBBON;
+            else if (strcmp(buf, "HUNT") == 0) b.myst |= MYST_HUNT;
             else
             {
                 fseek(fp, pos, SEEK_SET);
@@ -2331,6 +2335,13 @@ void preparePcBStat(const Player& pc, BStat& b)
             hpPlus += round(b.hpM * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_DEVOUR;
             break;
+        case GEAR_REFLECT:
+            b.spdA += int(g.lvl * 2.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.cRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
+            b.cBrcP += int(g.lvl / 20.0 * (g.percent[2] / 10.0)) / 10.0;
+            hpAdd += tAgi * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 10.0);
+            if (g.isMyst) b.myst |= MYST_REFLECT;
+            break;
         case GEAR_PLATE:
             hpAdd += int(g.lvl * 20 * (g.percent[0] / 10.0)) / 10.0;
             b.pDefA += int(g.lvl * (g.percent[1] / 10.0)) / 10.0;
@@ -2988,7 +2999,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += b0.hpM - b0.hp;
         }
-        if (b0.role == ROLE_MIN && b0.sklC > 0) b0.sklC = 0;
+        if (b0.role == ROLE_MIN && b0.sklC > 0 && !(b0.myst & MYST_REFLECT)) b0.sklC = 0;
         if (b0.psvSkl & AURA_XIAO)
         {
             aa[s] += int(b1.hpM * 0.015) + int(b1.sldM * 0.015);

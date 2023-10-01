@@ -10,7 +10,7 @@ max_kf_level: 1100
 # 在此日期前的跳过不记录，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
 # 如记录中存在2023年3月10日前的数据，请勿填空或设置为2023年3月10日前，因为之前的数据格式未适配
 # 2023年6月6号之后的记录会根据血量、护盾、图标大致推算点数，误差极大需要注意
-last_date: '2023-09-15'
+last_date: '2023-09-20'
 # 护符配置，格式 角色_武器: 护符或角色: 护符，当未精确匹配到武器时使用角色的护符，都未匹配使用default属性的值
 amulet_config:
   default: 'AAA 8'
@@ -30,7 +30,7 @@ amulet_config:
 wish_config: '100 100 100 100 100 200 200 200 200 50 50 50 50 50'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
 default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'CAPE', 'THORN', 'DAGGER', 'WAND', 'LIMPIDWAND',
-                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK', 'HUNT']
+                       'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL', 'CLOAK', 'HUNT', 'REFLECT']
 # 默认成长值
 default_g: 100000
 # 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
@@ -63,6 +63,7 @@ gear_config:
   COLORFUL: '120 100 150 150'
   HUNT: '120 100 150 150'
   LIMPIDWAND: '100 150 150 120'
+  REFLECT: '150 100 120 150'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定普通雅的模式 0白天1黑夜
@@ -221,6 +222,7 @@ gear_map:
   冰树杖弗洛斯特斯塔弗: 'LIMPIDWAND'
   辉光剑征服者: 'COLORFUL'
   狱天耳环: 'HUNT'
+  折光戒指: 'REFLECT'
 
 
 # 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解
