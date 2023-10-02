@@ -113,6 +113,7 @@ enum
     GEAR_TIARA,     // 占星师的耳饰
     GEAR_RIBBON,    // 萌爪耳钉
     GEAR_HUNT,      // 猎魔耳环
+    GEAR_FIERCE,    // 凶神耳环
     GEAR_COUNT,
 
     AURA_SHI = 0x00000001, // 启程之誓
@@ -162,7 +163,7 @@ enum
     MYST_VULTURE = 0x000400, // 额外增加20%对护盾的实际吸血给生命值
     MYST_RING = 0x000800, // 舞增加(锦上添花伤害的20%)的普通伤害
     MYST_DEVOUR = 0x001000, // 命运链接获得的护盾回复的50%添加到生命回复
-    MYST_REFRACT = 0x002000, // 自己出手并不会消耗掉先兆感知
+    MYST_REFRACT = 0x002000, // 攻击满血满盾的对手会恢复先兆感知
     MYST_CLOAK = 0x004000, // 护盾最大值+50%
     MYST_THORN = 0x008000, // 增加25%固定伤害反弹
     MYST_WOOD = 0x010000, // 被攻击时回复(5%自身最大生命值)
@@ -170,6 +171,7 @@ enum
     MYST_TIARA = 0x040000, // 星芒之盾的护盾最大值提升至45%，减速效果提升至4%
     MYST_RIBBON = 0x080000, // 锁定元气无限为低于30%血量判定。
     MYST_HUNT = 0x100000, // 圣银弩箭30%物理攻击转换为绝对伤害
+    MYST_FIERCE = 0x200000, // 同时拥有白天和夜晚的技能效果
 
     PREF_SHANG = 0, // 诅咒=伤口恶化+精神创伤
     PREF_BO,        // 法神=破魔之心+波澜不惊
@@ -332,8 +334,8 @@ const char* const pcName[PC_COUNT] = { "MO", "LIN", "AI", "MENG", "WEI", "YI", "
 const char* const gearName[GEAR_COUNT] = {
     "NONE", "SWORD", "BOW", "STAFF", "BLADE", "ASSBOW", "DAGGER", "WAND", "SHIELD",
     "CLAYMORE", "SPEAR", "COLORFUL", "LIMPIDWAND", "GLOVES", "BRACELET", "VULTURE", "RING", "DEVOUR", "REFRACT",
-    "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON" , "HUNT" };
-const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+    "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON", "HUNT", "FIERCE" };
+const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
     "SHI", "XIN", "FENG", "TIAO", "YA",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
@@ -1179,6 +1181,7 @@ bool readPlayer(FILE* fp, Player& pc)
             else if (strcmp(buf, "TIARA") == 0) b.myst |= MYST_TIARA;
             else if (strcmp(buf, "RIBBON") == 0) b.myst |= MYST_RIBBON;
             else if (strcmp(buf, "HUNT") == 0) b.myst |= MYST_HUNT;
+            else if (strcmp(buf, "FIERCE") == 0) b.myst |= MYST_FIERCE;
             else
             {
                 fseek(fp, pos, SEEK_SET);
@@ -2410,6 +2413,13 @@ void preparePcBStat(const Player& pc, BStat& b)
             hpPlus += round(b.hpM * (int(int(g.lvl * 0.06) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_HUNT;
             break;
+        case GEAR_FIERCE:
+            b.pBrcA += int(g.lvl * 0.5 * (g.percent[0] / 10.0)) / 10.0;
+            b.pDefA += int(tStr / 10.0) * (int(int(g.lvl / 250.0) * (g.percent[1] / 10.0)) / 10.0);
+            b.mDefA += int(tAgi / 10.0) * (int(int(g.lvl / 250.0) * (g.percent[2] / 10.0)) / 10.0);
+            b.sRateB += int(g.lvl * 0.4 * (g.percent[3] / 10.0)) / 10.0;
+            if (g.isMyst) b.myst |= MYST_FIERCE;
+            break;
         }
     }
     b.hpM += hpPlus + hpAdd;
@@ -2791,14 +2801,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b[i].role == ROLE_YA)
         {
-            if (b[i].mode == 0)
+            if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
             {
                 b[i].pDefB *= 1.2;
                 b[i].pDefA *= 1.2;
                 b[i].mDefB *= 1.2;
                 b[i].mDefA *= 1.2;
             }
-            if (b[i].mode == 1)
+            if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
             {
                 b[1 - i].mAtkB *= 0.7;
                 b[1 - i].mAtkA *= 0.7;
@@ -2999,7 +3009,13 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += b0.hpM - b0.hp;
         }
-        if (b0.role == ROLE_MIN && b0.sklC > 0 && !(b0.myst & MYST_REFRACT)) b0.sklC = 0;
+        if (b0.role == ROLE_MIN && b0.sklC > 0)
+        {
+            if (!(b0.myst & MYST_REFRACT) || b1.hp != b1.hpM || b1.sld != b1.sldM)
+            {
+                b0.sklC = 0;
+            }
+        }
         if (b0.psvSkl & AURA_XIAO)
         {
             aa[s] += int(b1.hpM * 0.015) + int(b1.sldM * 0.015);

@@ -14,7 +14,7 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 解压release的压缩包，将压缩包内的newkf_64.exe覆盖至b大计算器的目录里
 
-装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND 折光戒指 REFRACT
+装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND 折光戒指 REFRACT 凶神耳环 FIERCE
 
 天赋 不动如山 SHAN
 
