@@ -34,6 +34,10 @@ def start():
         # 防守记录跳过
         if data.get('type') == 'defense':
             continue
+        # 段位限制
+        if config.read_config('rank_limit') and data.get('rank') \
+                and data.get('rank') != config.read_config('rank_limit'):
+            continue
         # 初始化对手数据
         enemy_data = enemy.Enemy(data)
         # 白名单
@@ -201,6 +205,10 @@ def get_w_dict(json_data):
             continue
         # 防守记录跳过
         if data.get('type') == 'defense':
+            continue
+        # 段位限制
+        if config.read_config('rank_limit') and data.get('rank') \
+                and data.get('rank') != config.read_config('rank_limit'):
             continue
         # 白名单
         if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
