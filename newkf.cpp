@@ -2110,8 +2110,8 @@ void preparePcBStat(const Player& pc, BStat& b)
 
     b.mode = pc.mode;
 
-    b.atkLvl = pc.kfLvl > 1500 ? 15 : pc.kfLvl / 100;
-    b.defLvl = pc.kfLvl > 1500 ? 15 : pc.kfLvl / 100;
+    b.atkLvl = pc.kfLvl > 1600 ? 16 : pc.kfLvl / 100;
+    b.defLvl = pc.kfLvl > 1600 ? 16 : pc.kfLvl / 100;
 
     b.tStr = pc.attr[ATTR_STR];
     b.tAgi = pc.attr[ATTR_AGI];
@@ -2134,7 +2134,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 300 && vitMnd >= 200 ? 7.0 : 0.0) +
         (pc.kfLvl >= 600 && vitMnd >= 500 ? 10.0 : 0.0) +
         (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0))) + (tStr *
-        (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 30.0 : 0.0));
+        (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 25.0 : 0.0));
     b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2.0 : 0.0) +
         (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
     b.hpRecA = 0.0;
@@ -2197,7 +2197,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
-    b.rflP = 0.0;
+    b.rflP = (pc.kfLvl >= 1600 && tVit + tSpr + tMnd > tStr + tAgi + tInt ? 10.0 : 0.0);
     b.psvSkl = pc.auraSkl;
     b.myst = 0;
     b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);

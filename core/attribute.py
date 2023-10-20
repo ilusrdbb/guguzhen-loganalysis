@@ -465,7 +465,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     t_vm_list = get_vm_list(enemy_data, attr_data, icon_list)
     t_str_mul = 0
     if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        t_str_mul += 30
+        t_str_mul += 25
     # 启程心 附加生命
     xin_ratio = 0
     if 'XIN' in battle_data.talent_list:
