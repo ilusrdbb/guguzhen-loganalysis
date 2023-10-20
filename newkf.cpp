@@ -2197,7 +2197,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
-    b.rflP = (pc.kfLvl >= 1600 && tVit + tSpr + tMnd > tStr + tAgi + tInt ? 10.0 : 0.0);
+    b.rflP = pc.kfLvl >= 1600 && tVit + tSpr + tMnd > tStr + tAgi + tInt ? 10.0 : 0.0;
     b.psvSkl = pc.auraSkl;
     b.myst = 0;
     b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
