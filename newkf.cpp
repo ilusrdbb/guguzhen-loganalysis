@@ -654,7 +654,8 @@ inline int myrand(int* rseed, int m)
     const int R = 0x7FFFFFFF % M;
     *rseed = M * (*rseed % Q) - R * (*rseed / Q);
     if (*rseed < 0) *rseed += 0x7FFFFFFF;
-    return *rseed % m;
+    // TODO this is a guguzhen bug,(return *rseed % m) is correct
+    return 1 + (*rseed % m);
 }
 
 inline int64_t myrand64(int* rseed, int64_t m)
@@ -2155,7 +2156,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 1200 && tAgi > tStr + tInt ? 10.0 : 0.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
     b.aAtk = 0.0;
-    b.spdB = tAgi * 3;
+    b.spdB = tAgi * 3.0;
     b.spdA = tAgi * ((pc.kfLvl >= 1000 && tAgi >= 1000 ? 0.5 : 0.0) +
         (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_SPDA];
     b.pBrcP = (pc.kfLvl >= 900 && tStr >= 1500 ? 20.0 : 0.0);
@@ -2164,17 +2165,17 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mBrcP = (pc.kfLvl >= 900 && tInt >= 1500 ? 20.0 : 0.0);
     b.mBrcA = tInt * ((pc.kfLvl >= 100 ? 1.0 : 0.0) +
         (allAttrBool ? 1.0 : 0.0)) + pc.wish[WISH_MBRCA];
-    b.sRateB = tInt + (pc.kfLvl >= 50 ? tStr / 2.0 : 0.0);
-    b.cRateB = tAgi + (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi / 10.0 : 0.0);
+    b.sRateB = int(tInt + (pc.kfLvl >= 50 ? tStr / 2.0 : 0.0));
+    b.cRateB = int(tAgi + (pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi / 10.0 : 0.0));
     b.cBrcP = 0.0;
     b.lchP = 0.0;
     b.pDefB = tVit * (1.0 +
         (pc.kfLvl >= 400 ? 1.0 : 0.0) +
         (pc.kfLvl >= 900 && vitMnd >= 1500 ? 2.0 : 0.0) +
         (allAttrBool ? 2.0 : 0.0)) +
-        tSpr / 2 * (1 +
+        tSpr / 2.0 * (1.0 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-            (pc.kfLvl >= 1100 ? 1.0 : 0.0) +
+            (pc.kfLvl >= 1100 && tSpr >= 1500 ? 1.0 : 0.0) +
             (allAttrBool ? 2.0 : 0.0));
     b.pDefA = pc.wish[WISH_PDEFA] * 1.0;
     b.mDefB = tMnd * (1.0 +
@@ -2183,7 +2184,7 @@ void preparePcBStat(const Player& pc, BStat& b)
         (allAttrBool ? 2.0 : 0.0)) +
         tSpr / 2.0 * (1.0 +
             (pc.kfLvl >= 400 ? 1.0 : 0.0) +
-            (pc.kfLvl >= 1100 ? 1.0 : 0.0) +
+            (pc.kfLvl >= 1100 && tSpr >= 1500 ? 1.0 : 0.0) +
             (allAttrBool ? 2.0 : 0.0));
     b.mDefA = pc.wish[WISH_MDEFA] * 1.0;
     b.pRdc = 0.0;
@@ -2224,42 +2225,42 @@ void preparePcBStat(const Player& pc, BStat& b)
         switch (g.type)
         {
         case GEAR_SWORD:
-            b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.mAtkA += int(g.lvl * 10 * (g.percent[1] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
             b.pBrcA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_BOW:
-            b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.mAtkA += int(g.lvl * 10 * (g.percent[1] / 10.0)) / 10.0;
-            b.spdA += int(g.lvl * 2 * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.spdA += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_STAFF:
-            b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.mAtkA += int(g.lvl * 10 * (g.percent[1] / 10.0)) / 10.0;
-            b.mBrcP += int((g.lvl / 20.0 + 5) * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.mBrcP += int((g.lvl / 20.0 + 5.0) * (g.percent[2] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_BLADE:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.cBrcP += int((g.lvl / 20.0 + 10) * (g.percent[2] / 10.0)) / 10.0;
-            b.pBrcP += int((g.lvl / 20.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20.0) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.cBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[2] / 10.0)) / 10.0;
+            b.pBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_BLADE;
             break;
         case GEAR_ASSBOW:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 30) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.cBrcP += int((g.lvl / 20.0 + 10) * (g.percent[1] / 10.0)) / 10.0;
-            b.pBrcP += int((g.lvl / 20.0 + 10) * (g.percent[2] / 10.0)) / 10.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 30.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.cBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[1] / 10.0)) / 10.0;
+            b.pBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[2] / 10.0)) / 10.0;
             b.pBrcA += int(g.lvl * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_ASSBOW;
             break;
         case GEAR_DAGGER:
             pAtkPlus += round(b.pAtkB * (int(g.lvl / 5.0 * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             mAtkPlus += round(b.mAtkB * (int(g.lvl / 5.0 * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.spdA += int(g.lvl * 4 * (g.percent[2] / 10.0)) / 10.0;
-            spdPlus += int(b.spdB * (int((g.lvl / 5.0 + 25) * (g.percent[3] / 10.0)) / 1000.0) * 10.0) / 10.0;
+            b.spdA += int(g.lvl * 4.0 * (g.percent[2] / 10.0)) / 10.0;
+            spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 25.0) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) / 100.0;
             if (g.isMyst) b.myst |= MYST_DAGGER;
             break;
         case GEAR_WAND:
@@ -2270,58 +2271,58 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_WAND;
             break;
         case GEAR_SHIELD:
-            b.lchP += int((g.lvl / 15.0 + 10) * (g.percent[0] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[0] / 10.0)) / 10.0;
             b.rflP += int(g.lvl / 15.0 * (g.percent[1] / 10.0)) / 10.0;
             b.pDefA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_SHIELD;
             break;
         case GEAR_CLAYMORE:
-            b.pAtkA += int(g.lvl * 20 * (g.percent[0] / 10.0)) / 10.0;
-            b.pAtkA += int(g.lvl * 20 * (g.percent[1] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 20.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 20.0 * (g.percent[1] / 10.0)) / 10.0;
             pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 30) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.cBrcP += int((g.lvl / 20.0 + 1) * (g.percent[3] / 10.0)) / 10.0;
+            b.cBrcP += int((g.lvl / 20.0 + 1.0) * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_CLAYMORE;
             break;
         case GEAR_SPEAR:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 50) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.pBrcP += int((g.lvl / 20.0 + 10) * (g.percent[1] / 10.0)) / 10.0;
-            b.mBrcA += int(g.lvl * 2 * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 50.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.pBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[1] / 10.0)) / 10.0;
+            b.mBrcA += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_SPEAR;
             break;
         case GEAR_COLORFUL:
-            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 10) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 10.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 10.0) * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            spdPlus += round(b.spdB * (int((g.lvl / 5.0 + 20.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.aAtk += tAgi * int(g.lvl * 0.04 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_COLORFUL;
             break;
         case GEAR_LIMPIDWAND:
-            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.mBrcP += int((g.lvl / 20.0 + 5) * (g.percent[1] / 10.0)) / 10.0;
+            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 20.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.mBrcP += int((g.lvl / 20.0 + 5.0) * (g.percent[1] / 10.0)) / 10.0;
             spdPlus += round(b.spdB * (int((g.lvl / 5.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.spdA += tInt * int(g.lvl / 375.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_LIMPIDWAND;
             break;
         case GEAR_GLOVES:
-            b.pAtkA += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.mAtkA += int(g.lvl * 10 * (g.percent[1] / 10.0)) / 10.0;
-            b.spdA += int(g.lvl * 2 * (g.percent[2] / 10.0)) / 10.0;
-            hpAdd += int(g.lvl * 10 * (g.percent[3] / 10.0)) / 10.0;
+            b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.spdA += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 10.0 * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_BRACELET:
-            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 1) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.mBrcP += int((g.lvl / 20.0 + 1) * (g.percent[1] / 10.0)) / 10.0;
-            sldAdd += int(g.lvl * 20 * (g.percent[2] / 10.0)) / 10.0;
+            mAtkPlus += round(b.mAtkB * (int((g.lvl / 5.0 + 1.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.mBrcP += int((g.lvl / 20.0 + 1.0) * (g.percent[1] / 10.0)) / 10.0;
+            sldAdd += int(g.lvl * 20.0 * (g.percent[2] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_BRACELET;
             break;
         case GEAR_VULTURE:
-            b.lchP += int((g.lvl / 15.0 + 1) * (g.percent[0] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 1) * (g.percent[1] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 1) * (g.percent[2] / 10.0)) / 10.0;
-            b.spdA += int(g.lvl * 2 * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[0] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[1] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[2] / 10.0)) / 10.0;
+            b.spdA += int(g.lvl * 2.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_VULTURE;
             break;
         case GEAR_RING:
@@ -2334,8 +2335,9 @@ void preparePcBStat(const Player& pc, BStat& b)
         case GEAR_DEVOUR:
             b.mBrcA += int(g.lvl * 0.5 * (g.percent[0] / 10.0)) / 10.0;
             b.sRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
-            hpAdd += tStr * (int(int(g.lvl * 0.08) * (g.percent[2] / 10.0)) / 10.0);
-            hpPlus += round(b.hpM * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
+            hpAdd += tStr * (int(g.lvl * 0.08 * (g.percent[2] / 10.0)) / 10.0);
+            // TODO not sure 0.0699?
+            hpPlus += round(b.hpM * (int(g.lvl * 0.07 * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_DEVOUR;
             break;
         case GEAR_REFRACT:
@@ -2346,77 +2348,77 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_REFRACT;
             break;
         case GEAR_PLATE:
-            hpAdd += int(g.lvl * 20 * (g.percent[0] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 20.0 * (g.percent[0] / 10.0)) / 10.0;
             b.pDefA += int(g.lvl * (g.percent[1] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
-            b.hpRecA += int(g.lvl * 10 * (g.percent[3] / 10.0)) / 10.0;
+            b.hpRecA += int(g.lvl * 10.0 * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_LEATHER:
         case GEAR_CLOTH:
-            hpAdd += int(g.lvl * 25 * (g.percent[0] / 10.0)) / 10.0;
-            b.pRdc += int(g.lvl * 2 * (g.percent[1] / 10.0)) / 10.0;
-            b.mRdc += int(g.lvl * 2 * (g.percent[2] / 10.0)) / 10.0;
-            b.hpRecA += int(g.lvl * 6 * (g.percent[3] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 25.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.pRdc += int(g.lvl * 2.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.mRdc += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.hpRecA += int(g.lvl * 6.0 * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_CLOAK:
-            hpAdd += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.sldRecA += int(g.lvl * 60 * (g.percent[1] / 10.0)) / 10.0;
-            sldPlus += round(b.sldM * (int((g.lvl / 5.0 + 25) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            sldAdd += int(g.lvl * 50 * (g.percent[3] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.sldRecA += int(g.lvl * 60.0 * (g.percent[1] / 10.0)) / 10.0;
+            sldPlus += round(b.sldM * (int((g.lvl / 5.0 + 25.0) * (g.percent[2] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            sldAdd += int(g.lvl * 50.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_CLOAK;
             break;
         case GEAR_THORN:
-            hpPlus += round(b.hpM * (int((g.lvl / 5.0 + 20) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            hpPlus += round(b.hpM * (int((g.lvl / 5.0 + 20.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.pDefA += int(g.lvl * (g.percent[1] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
-            b.rflP += int((g.lvl / 15.0 + 10) * (g.percent[3] / 10.0)) / 10.0;
+            b.rflP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_THORN;
             break;
         case GEAR_WOOD:
-            hpPlus += round(b.hpM * (int((g.lvl / 5.0 + 50) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            b.pRdc += int(g.lvl * 5 * (g.percent[1] / 10.0)) / 10.0;
-            b.mRdc += int(g.lvl * 5 * (g.percent[2] / 10.0)) / 10.0;
-            b.hpRecA += int(g.lvl * 20 * (g.percent[3] / 10.0)) / 10.0;
+            hpPlus += round(b.hpM * (int((g.lvl / 5.0 + 50.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
+            b.pRdc += int(g.lvl * 5.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.mRdc += int(g.lvl * 5.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.hpRecA += int(g.lvl * 20.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_WOOD;
             break;
         case GEAR_CAPE:
             sldPlus += round(b.sldM * (int((g.lvl / 5.0 + 50) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            sldAdd += int(g.lvl * 100 * (g.percent[1] / 10.0)) / 10.0;
+            sldAdd += int(g.lvl * 100.0 * (g.percent[1] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
-            b.mRdc += int(g.lvl * 5 * (g.percent[3] / 10.0)) / 10.0;
+            b.mRdc += int(g.lvl * 5.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_CAPE;
             break;
         case GEAR_SCARF:
-            hpAdd += int(g.lvl * 10 * (g.percent[0] / 10.0)) / 10.0;
-            b.pRdc += int(g.lvl * 2 * (g.percent[1] / 10.0)) / 10.0;
-            b.mRdc += int(g.lvl * 2 * (g.percent[2] / 10.0)) / 10.0;
-            b.hpRecA += int(g.lvl * 4 * (g.percent[3] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
+            b.pRdc += int(g.lvl * 2.0 * (g.percent[1] / 10.0)) / 10.0;
+            b.mRdc += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.hpRecA += int(g.lvl * 4.0 * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_TIARA:
-            hpAdd += int(g.lvl * 5 * (g.percent[0] / 10.0)) / 10.0;
+            hpAdd += int(g.lvl * 5.0 * (g.percent[0] / 10.0)) / 10.0;
             sldPlus += round(b.sldM * (int(g.lvl / 5.0 * (g.percent[1] / 10.0)) / 1000.0) * 100.0) / 100.0;
-            sldAdd += int(g.lvl * 20 * (g.percent[2] / 10.0)) / 10.0;
-            b.pRdc += int(g.lvl * 2 * (g.percent[3] / 10.0)) / 10.0;
+            sldAdd += int(g.lvl * 20.0 * (g.percent[2] / 10.0)) / 10.0;
+            b.pRdc += int(g.lvl * 2.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_TIARA;
             break;
         case GEAR_RIBBON:
-            b.pRdc += b.tVit * (int(g.lvl / 120.0 * (g.percent[0] / 10.0)) / 10.0);
-            b.mRdc += b.tMnd * (int(g.lvl / 120.0 * (g.percent[1] / 10.0)) / 10.0);
+            b.pRdc += b.tVit * (int(g.lvl * 0.0085 * (g.percent[0] / 10.0)) / 10.0);
+            b.mRdc += b.tMnd * (int(g.lvl * 0.0085 * (g.percent[1] / 10.0)) / 10.0);
             hpAdd += b.tVit * (int(g.lvl / 30.0 * (g.percent[2] / 10.0)) / 10.0);
             hpAdd += b.tMnd * (int(g.lvl / 30.0 * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_RIBBON;
             break;
         case GEAR_HUNT:
             b.sRateB += int(g.lvl * 0.4 * (g.percent[0] / 10.0)) / 10.0;
-            hpAdd += tStr * (int(int(g.lvl * 0.08) * (g.percent[1] / 10.0)) / 10.0);
-            hpAdd += tAgi * (int(int(g.lvl * 0.08) * (g.percent[2] / 10.0)) / 10.0);
-            hpPlus += round(b.hpM * (int(int(g.lvl * 0.06) * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
+            hpAdd += tStr * (int(g.lvl * 0.08 * (g.percent[1] / 10.0)) / 10.0);
+            hpAdd += tAgi * (int(g.lvl * 0.08 * (g.percent[2] / 10.0)) / 10.0);
+            hpPlus += round(b.hpM * (int(g.lvl * 0.06 * (g.percent[3] / 10.0)) / 1000.0) * 100.0) /100.0;
             if (g.isMyst) b.myst |= MYST_HUNT;
             break;
         case GEAR_FIERCE:
             b.pBrcA += int(g.lvl * 0.5 * (g.percent[0] / 10.0)) / 10.0;
-            b.pDefA += int(tStr / 10.0) * (int(int(g.lvl / 250.0) * (g.percent[1] / 10.0)) / 10.0);
-            b.mDefA += int(tAgi / 10.0) * (int(int(g.lvl / 250.0) * (g.percent[2] / 10.0)) / 10.0);
+            b.pDefA += int(tStr / 10.0) * (int(g.lvl / 250.0 * (g.percent[1] / 10.0)) / 10.0);
+            b.mDefA += int(tAgi / 10.0) * (int(g.lvl / 250.0 * (g.percent[2] / 10.0)) / 10.0);
             b.sRateB += int(g.lvl * 0.4 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_FIERCE;
             break;
@@ -2430,8 +2432,8 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.pAtkB += pAtkPlus;
     b.mAtkB += mAtkPlus;
     b.spdB += spdPlus;
-    b.sRateP = b.sRateB * 100.0 / (b.sRateB + 99.0);
-    b.cRateP = b.cRateB * 100.0 / (b.cRateB + 99.0);
+    b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+    b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
     b.sldM += sldPlus + sldAdd;
     if (pc.role == ROLE_XIA)
     {
@@ -2549,6 +2551,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             prepareLiuStat(b[i], rseed);
         }
     }
+    // TODO fuck double and xyf
     int sRateRdc = ((b[0].sRateB + b[1].sRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
     int cRateRdc = ((b[0].cRateB + b[1].cRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
     int mystBladeDmg[2] = { 0, 0 };
@@ -3699,6 +3702,8 @@ void showState(const BStat& b)
     printf("Role                   : %s\n",
         b.role >= ROLE_PC ? pcName[b.role - ROLE_PC] : npcName[b.role - ROLE_NPC]);
     printf("Level                  : %d\n", b.lvl);
+    printf("Attack Level           : %d\n", b.atkLvl);
+    printf("Defence Level          : %d\n", b.defLvl);
     printf("Max HP                 : %.2f\n", b.hpM);
     printf("HP Recover             : %.2f%%+%.2f\n", b.hpRecP, b.hpRecA);
     printf("Physical Attack        : %.2f+%.2f\n", b.pAtkB, b.pAtkA);
@@ -3711,8 +3716,8 @@ void showState(const BStat& b)
     printf("Critical Rate          : %.2f(%.2f%%)\n", b.cRateB, b.cRateP);
     printf("Critical Breach        : %.2f%%\n", b.cBrcP);
     printf("Life Steal             : %.2f%%\n", b.lchP);
-    printf("Physical Defence       : %.2f+%.2f(%d%%)\n", b.pDefB, b.pDefA, calcDefRate(b.pDefB + b.pDefA, 0, 0, 0, 0, 9999, false, false, -1));
-    printf("Magical Defence        : %.2f+%.2f(%d%%)\n", b.mDefB, b.mDefA, calcDefRate(b.mDefB + b.mDefA, 0, 0, 0, 0, 9999, false, false, -1));
+    printf("Physical Defence       : %.2f+%.2f(%.2f%%)\n", b.pDefB, b.pDefA, round((b.pDefB + b.pDefA) * 10.0) / 100.0);
+    printf("Magical Defence        : %.2f+%.2f(%.2f%%)\n", b.mDefB, b.mDefA, round((b.mDefB + b.mDefA) * 10.0) / 100.0);
     printf("Physical Damage Reduce : %.2f\n", b.pRdc);
     printf("Magical Damage Reduce  : %.2f\n", b.mRdc);
     printf("Max Shield             : %.2f\n", b.sldM);
@@ -3720,8 +3725,6 @@ void showState(const BStat& b)
     printf("Damage Reflection      : %.2f%%\n", b.rflP);
     printf("Critical Defence       : %.2f%%\n", b.cDef);
     printf("Skill Defence          : %.2f%%\n", b.sDef);
-    printf("Attack Level           : %d\n", b.atkLvl);
-    printf("Defence Level          : %d\n", b.defLvl);
     printf("Aura Skill Set         :");
     for (int i = 0; i < AURA_COUNT; ++i)
     {
