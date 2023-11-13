@@ -654,8 +654,7 @@ inline int myrand(int* rseed, int m)
     const int R = 0x7FFFFFFF % M;
     *rseed = M * (*rseed % Q) - R * (*rseed / Q);
     if (*rseed < 0) *rseed += 0x7FFFFFFF;
-    // TODO this is a guguzhen bug,(return *rseed % m) is correct
-    return 1 + (*rseed % m);
+    return *rseed % m;
 }
 
 inline int64_t myrand64(int* rseed, int64_t m)
@@ -669,6 +668,12 @@ inline int64_t myrand64(int* rseed, int64_t m)
 inline int rand100(int* rseed)
 {
     return myrand(rseed, 100);
+}
+
+inline int bugRand100(int* rseed)
+{
+    // TODO this is a guguzhen bug,(return myrand(rseed, 100)) is correct
+    return 1 + myrand(rseed, 100);
 }
 
 bool isNumberDot(const char* s)
@@ -2949,8 +2954,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         else
         {
-            isS = (rand100(rseed) < b0.sRateP);
-            isC = (rand100(rseed) < b0.cRateP);
+            isS = (bugRand100(rseed) < b0.sRateP);
+            isC = (bugRand100(rseed) < b0.cRateP);
             isMC = (b0.myst & MYST_BRACELET && rand100(rseed) < 20);
             isE = (b0.psvSkl & AURA_E && rand100(rseed) < 1);
             if (b0.role == ROLE_MO && b0.myst & MYST_WAND && b0.sklC == 0)
