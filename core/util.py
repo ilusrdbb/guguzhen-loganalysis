@@ -5,6 +5,8 @@
 
 import json
 import os
+import time
+
 import requests
 
 from core import config
@@ -48,6 +50,7 @@ def write_data(result_map):
 
 # 通用post请求
 def http_post(url, param, fail_info):
+    time.sleep(1)
     proxy = config.read_config('proxy_url') if config.read_config('proxy_url') else None
     proxies = {'http': proxy}
     headers = config.read_config('headers')
@@ -65,6 +68,7 @@ def http_post(url, param, fail_info):
 
 # 通用get请求
 def http_get(url, param, fail_info):
+    time.sleep(1)
     proxy = config.read_config('proxy_url') if config.read_config('proxy_url') else None
     proxies = {'http': proxy}
     headers = config.read_config('headers')
