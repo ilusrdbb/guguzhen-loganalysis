@@ -226,13 +226,13 @@ enum
 
 struct BStat
 {
-    int role;    // 角色类型
-    int lvl;     // 等级
+    int role;       // 角色类型
+    int lvl;        // 等级
     double hp;      // 当前生命
     double hpM;     // 最大生命
-    double hpRecP;  // 百分比生命回复
+    int hpRecP;     // 百分比生命回复
     double hpRecA;  // 附加生命回复
-    double hpRecRR; // 生命回复减少率(百分比)
+    int hpRecRR;    // 生命回复减少率(百分比)
     double pAtkB;   // 基础物理攻击
     double pAtkA;   // 附加物理攻击
     double pAtkR;   // 物理攻击增加率(百分比)
@@ -242,7 +242,7 @@ struct BStat
     double aAtk;    // 绝对攻击
     double spdB;    // 基础攻击速度
     double spdA;    // 附加攻击速度
-    double spdRR;   // 减速倍率(百分比)
+    int spdRR;      // 减速倍率(百分比)
     double spdC;    // 速度计数
     double pBrcP;   // 百分比物理穿透
     double pBrcA;   // 附加物理穿透
@@ -262,16 +262,16 @@ struct BStat
     double mRdc;    // 魔法减伤
     double sld;     // 当前护盾
     double sldM;    // 最大护盾
-    double sldRecP; // 百分比护盾回复
+    int sldRecP;    // 百分比护盾回复
     double sldRecA; // 附加护盾回复
-    double sldRecRR;// 护盾回复减少率(百分比)
+    int sldRecRR;   // 护盾回复减少率(百分比)
     double rflP;    // 百分比伤害反弹
-    double cDef;   // 基础暴击抵抗
-    double sDef;   // 基础技能防御
-    int psvSkl;  // 被动技能组合(光环、flag)
-    int myst;    // 神秘属性组合 
-    int sklC;    // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
-    int houC;    // 后发制人计数
+    int cDef;       // 基础暴击抵抗
+    int sDef;       // 基础技能防御
+    int psvSkl;     // 被动技能组合(光环、flag)
+    int myst;       // 神秘属性组合
+    int sklC;       // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
+    int houC;       // 后发制人计数
     uint16_t wish[WISH_COUNT]; // 许愿池点数
     uint8_t amul[AMUL_COUNT]; // 护身符点数
     bool hpPot;  // 生命药水是否已使用
@@ -289,6 +289,9 @@ struct BStat
 
     int atkLvl; // 进攻等级
     int defLvl; // 防御等级
+
+    double hpS;     // 回合开始时最大生命
+    double sldS;    // 回合开始时最大护盾
 
     std::string alias;
 };
@@ -1130,11 +1133,11 @@ bool readPlayer(FILE* fp, Player& pc)
                 return false;
             }
         }
-        if (fscanf(fp, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d",
+        if (fscanf(fp, "%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%d%.2f%.2f%d%.2f%.2f%.2f%.2f%.2f%d%d",
             &b.pBrcP, &b.pBrcA, &b.mBrcP, &b.mBrcA, &b.cBrcP,
             &b.spdB, &b.pDefB, &b.pRdc, &b.mDefB, &b.mRdc,
             &b.hpM, &b.hpRecP, &b.hpRecA, &b.sldM, &b.sldRecP, &b.sldRecA,
-            &b.cRateB, &b.sRateB, &b.rflP, &b.lchP) != 20)
+            &b.cRateB, &b.sRateB, &b.rflP, &b.lchP, &b.cDef, &b.sDef) != 22)
         {
             fseek(fp, pos, SEEK_SET);
             return false;
@@ -1198,22 +1201,22 @@ bool readPlayer(FILE* fp, Player& pc)
         b.lvl = pc.lvl = -1;
         b.hp = b.hpM;
         b.hpRecRR = 0;
-        b.pAtkA = 0;
+        b.pAtkA = 0.0;
         if (mAtkAdd != -1)
         {
-            b.mAtkA = b.mAtkB - b.sRateB * 12 * (100 + mAtkAdd) / 100;
-            if (b.mAtkA < 0) b.mAtkA = 0;
+            b.mAtkA = b.mAtkB - b.sRateB * 12 * (100 + mAtkAdd) / 100.0;
+            if (b.mAtkA < 0) b.mAtkA = 0.0;
             b.mAtkB -= b.mAtkA;
         }
-        b.spdA = 0;
+        b.spdA = 0.0;
         b.spdRR = 0;
         b.spdC = b.spdB;
-        b.sRateP = b.sRateB * 100 / (b.sRateB + 99);
-        b.cRateP = b.cRateB * 100 / (b.cRateB + 99);
-        b.pDefA = 0;
-        b.mDefA = 0;
+        b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+        b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
+        b.pDefA = 0.0;
+        b.mDefA = 0.0;
         b.sld = b.sldM;
-        b.sldRecRR = 0;
+        b.sldRecRR = 0.0;
         b.sklC = (b.role == ROLE_MIN ? 1 : b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
         b.houC = 0;
         b.alias = pc.alias;
@@ -1647,9 +1650,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 2.5;
         b.mDefB = npc.lvl * 3.0;
         b.hpM = npc.lvl * 200.0;
-        b.hpRecP = 5.0;
+        b.hpRecP = 5;
         b.sldM = npc.lvl * 30.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1672,9 +1675,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 1.0;
         b.mDefB = npc.lvl * 1.0;
         b.hpM = npc.lvl * 50.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = 0.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 50.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1697,9 +1700,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 1.0;
         b.mDefB = npc.lvl * 1.0;
         b.hpM = 1.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = npc.lvl * 500.0;
-        b.sldRecP = 5.0;
+        b.sldRecP = 5;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1722,9 +1725,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 5.0;
         b.mDefB = npc.lvl * 3.0;
         b.hpM = npc.lvl * 300.0;
-        b.hpRecP = 5.0;
+        b.hpRecP = 5;
         b.sldM = 0.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 40.0;
         b.pRdc = 0.0;
@@ -1747,9 +1750,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 5.0;
         b.mDefB = npc.lvl * 5.0;
         b.hpM = npc.lvl * 600.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = npc.lvl * 600.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1772,9 +1775,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 4.0;
         b.mDefB = npc.lvl * 4.0;
         b.hpM = npc.lvl * 10.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = npc.lvl * 400.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1797,9 +1800,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 5.0;
         b.mDefB = npc.lvl * 5.0;
         b.hpM = 1.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = npc.lvl * 900.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1822,9 +1825,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 8.0;
         b.mDefB = npc.lvl * 8.0;
         b.hpM = npc.lvl * 600.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = 0.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 30.0;
         b.pRdc = 0.0;
@@ -1847,9 +1850,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 4.0;
         b.mDefB = npc.lvl * 4.0;
         b.hpM = npc.lvl * 400.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = 0.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 0.0;
         b.pRdc = 0.0;
@@ -1872,9 +1875,9 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.pDefB = npc.lvl * 6.0;
         b.mDefB = npc.lvl * 6.0;
         b.hpM = npc.lvl * 900.0;
-        b.hpRecP = 0.0;
+        b.hpRecP = 0;
         b.sldM = 0.0;
-        b.sldRecP = 0.0;
+        b.sldRecP = 0;
         b.lchP = 0.0;
         b.rflP = 80.0;
         b.pRdc = 0.0;
@@ -1889,7 +1892,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         // Init base status later
         b.pAtkB = b.mAtkB = b.spdB = 0.0;
         b.pBrcP = b.pBrcA = b.mBrcP = b.mBrcA = b.cBrcP = 0.0;
-        b.pDefB = b.mDefB = b.hpM = b.hpRecP = b.sldM = b.sldRecP = 0.0;
+        b.pDefB = b.mDefB = b.hpM = b.sldM = 0.0;
+        b.hpRecP = b.sldRecP = 0;
         b.lchP = b.rflP = b.sRateB = b.cRateB = 0.0;
         b.pRdc = b.mRdc = 0.0;
         b.defLvl = b.atkLvl = 0;
@@ -1901,17 +1905,17 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.mAtkB = npc.lvl * 60.0;
         b.aAtk = npc.lvl * 10.0;
         b.spdB = npc.lvl * 5.0;
-        b.pBrcP = 0.0; // not sure
-        b.pBrcA = npc.lvl * 3.0; // not sure
-        b.mBrcP = 0.0; // not sure
-        b.mBrcA = npc.lvl * 3.0; // not sure
-        b.cBrcP = 0.0;
+        b.pBrcP = 30.0;
+        b.pBrcA = npc.lvl * 2.0;
+        b.mBrcP = 30.0;
+        b.mBrcA = npc.lvl * 2.0;
+        b.cBrcP = 20.0;
         b.pDefB = npc.lvl * 3.0;
         b.mDefB = npc.lvl * 3.0;
         b.hpM = npc.lvl * 300.0;
-        b.hpRecP = 4.0;
+        b.hpRecP = 4;
         b.sldM = npc.lvl * 400.0;
-        b.sldRecP = 6.0;
+        b.sldRecP = 6;
         b.lchP = 10.0;
         b.rflP = 10.0;
         b.pRdc = npc.lvl * 10.0;
@@ -1928,14 +1932,14 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
     b.lvl = npc.lvl;
     b.hp = b.hpM;
     b.hpRecA = 0.0;
-    b.hpRecRR = 0.0;
+    b.hpRecRR = 0;
     b.pAtkA = 0.0;
     b.mAtkA = 0.0;
     b.spdA = 0.0;
-    b.spdRR = 0.0;
-    b.spdC = b.spdB * (1 - b.spdRR / 100);
-    b.sRateP = b.sRateB * 100 / (b.sRateB + 99);
-    b.cRateP = b.cRateB * 100 / (b.cRateB + 99);
+    b.spdRR = 0;
+    b.spdC = b.spdB * (1 - b.spdRR / 100.0);
+    b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+    b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
     b.pDefA = 0.0;
     b.mDefA = 0.0;
     b.sld = b.sldM;
@@ -2049,19 +2053,19 @@ void prepareLiuStat(BStat& b, int* rseed)
     case 0:
         b.hp = b.hpM = b.lvl * hpCoef * 1.0;
         b.sld = b.sldM = b.lvl * sldCoef * 1.0;
-        b.hpRecP = b.sldRecP = 10.0;
+        b.hpRecP = b.sldRecP = 10;
         b.psvSkl |= AURA_DIAN;
         break;
     case 1:
         b.hp = b.hpM = b.lvl * hpCoef * 3.0;
         b.sld = b.sldM = (b.lvl * sldCoef + 9) / 10;
-        b.hpRecP = b.sldRecP = 0.0;
+        b.hpRecP = b.sldRecP = 0;
         b.psvSkl |= AURA_SHENG | AURA_REN;
         break;
     case 2:
         b.hp = b.hpM = (b.lvl * hpCoef + 9) / 10;
         b.sld = b.sldM = b.lvl * sldCoef * 6.0;
-        b.hpRecP = b.sldRecP = 0.0;
+        b.hpRecP = b.sldRecP = 0;
         b.psvSkl |= AURA_DUN | AURA_ZHI;
         break;
     }
@@ -2141,12 +2145,12 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 600 && vitMnd >= 500 ? 10.0 : 0.0) +
         (pc.kfLvl >= 800 && vitMnd >= 1000 ? 17.0 : 0.0))) + (tStr *
         (pc.kfLvl >= 1300 && tStr > tAgi + tInt + tVit + tSpr + tMnd ? 25.0 : 0.0));
-    b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2.0 : 0.0) +
-        (pc.kfLvl >= 500 && tStr >= 500 ? 3.0 : 0.0);
+    b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2 : 0) +
+        (pc.kfLvl >= 500 && tStr >= 500 ? 3 : 0);
     b.hpRecA = 0.0;
-    b.hpRecRR = 0.0;
-    b.cDef = 0.0;
-    b.sDef = 0.0;
+    b.hpRecRR = 0;
+    b.cDef = 0;
+    b.sDef = 0;
     b.pAtkB = tStr * (10.0 +
         (pc.kfLvl >= 50 ? 3.0 : 0.0) +
         (pc.kfLvl >= 200 && tStr >= 200 ? 4.0 : 0.0) +
@@ -2199,8 +2203,8 @@ void preparePcBStat(const Player& pc, BStat& b)
         (pc.kfLvl >= 600 && tSpr >= 500 ? 21.0 : 0.0) +
         (pc.kfLvl >= 800 && tSpr >= 1000 ? 32.0 : 0.0))) + (tInt *
         (pc.kfLvl >= 1400 && tInt > tStr + tAgi + tVit + tSpr + tMnd ? 45.0 : 0.0));
-    b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2.0 : 0.0) +
-        (pc.kfLvl >= 500 && tInt >= 500 ? 3.0 : 0.0);
+    b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2 : 0) +
+        (pc.kfLvl >= 500 && tInt >= 500 ? 3 : 0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
     b.rflP = pc.kfLvl >= 1600 && tVit + tSpr + tMnd > tStr + tAgi + tInt ? 10.0 : 0.0;
@@ -2445,20 +2449,20 @@ void preparePcBStat(const Player& pc, BStat& b)
         b.sldM += pc.growth > 100000 ? 100000 : pc.growth;
     }
     b.hp = b.hpM;
-    b.spdRR = 0.0;
+    b.spdRR = 0;
     b.spdC = b.spdB + b.spdA;
     b.sld = b.sldM;
 
     b.alias = pc.alias;
 }
 
-inline int calcDefRate(int def, int defP, int brc, int cBrc, int brcA, int defMax, bool isDunh, bool isZhi, int hongBrcA)
+inline int calcDefRate(double def, int defP, double brc, double cBrc, double brcA, int defMax, bool isDunh, bool isZhi, int hongBrcA)
 {
     if (hongBrcA != -1)
     {
-        if (brc < 40)
+        if (int(brc) <= 40)
         {
-            brc = 40;
+            brc = 40.0;
         }
         else
         {
@@ -2466,14 +2470,14 @@ inline int calcDefRate(int def, int defP, int brc, int cBrc, int brcA, int defMa
         }
     }
     int brcP = (int)(brc * (isDunh ? 0.65 : 1.0)) + (int)(cBrc * (isDunh ? 0.65 : 1.0));
-    int r = def * (100 + defP - brcP);
-    r = (r >= 0 ? r : r - 99) / 100 - brcA;
+    int r = int(def * (100 + defP - brcP));
+    r = (r >= 0 ? r : r - 99) / 100 - int(brcA);
     r = (r >= 0 ? r / 10 : isZhi && isDunh ? 5 : isZhi ? 10 : -30);
     if (r > defMax) r = defMax;
     if (debug)
     {
         printf("DefRate: def=%d(+%d%%) brc=%d%%+%d dr=%d dunh=%s zhi=%s hongA=%d\n",
-            def, defP, brcP, brcA, r,
+            int(def), defP, brcP, int(brcA), r,
             isDunh ? "true" : "false", isZhi ? "true" : "false", hongBrcA);
     }
     return r;
@@ -2556,16 +2560,15 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             prepareLiuStat(b[i], rseed);
         }
     }
-    // TODO fuck double and xyf
-    int sRateRdc = ((b[0].sRateB + b[1].sRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
-    int cRateRdc = ((b[0].cRateB + b[1].cRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
-    int mystBladeDmg[2] = { 0, 0 };
+
+    double sRateRdc = ((b[0].sRateB + b[1].sRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
+    double cRateRdc = ((b[0].cRateB + b[1].cRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
     for (int i = 0; i < 2; ++i)
     {
         int hpMAdd = 0;
         int sldMAdd = 0;
-        b[i].sRateB = (b[i].sRateB > sRateRdc ? b[i].sRateB - sRateRdc : 0);
-        b[i].cRateB = (b[i].cRateB > cRateRdc ? b[i].cRateB - cRateRdc : 0);
+        b[i].sRateB = (b[i].sRateB > sRateRdc ? b[i].sRateB - sRateRdc : 0.0);
+        b[i].cRateB = (b[i].cRateB > cRateRdc ? b[i].cRateB - cRateRdc : 0.0);
         b[i].sRateP = b[i].sRateB * 100 / (b[i].sRateB + 99);
         b[i].cRateP = b[i].cRateB * 100 / (b[i].cRateB + 99);
         b[i].pAtkR = b[i].amul[AMUL_PATK];
@@ -2575,31 +2578,27 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[1 - i].hpRecRR += 40;
             b[1 - i].sldRecRR += 40;
         }
-        if (b[i].myst & MYST_CLAYMORE)
-        {
-            b[i].cRateP = 100;
-        }
         if (b[i].psvSkl & AURA_TIAO && b[i].lvl < b[1 - i].lvl)
         {
             int lvlDiff = b[1 - i].lvl - b[i].lvl;
             if (b[1 - i].role < ROLE_PC && lvlDiff > 100) lvlDiff = 100;
-            b[i].pAtkA += lvlDiff * 20;
-            b[i].mAtkA += lvlDiff * 20;
+            b[i].pAtkA += lvlDiff * 20.0;
+            b[i].mAtkA += lvlDiff * 20.0;
             if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_BI)
             {
-                b[i].pBrcA = (revMul(b[i].pBrcA, 1.15) + lvlDiff * 2) * 1.15;
+                b[i].pBrcA += int(lvlDiff * 2.3);
             }
             else
             {
-                b[i].pBrcA += lvlDiff * 2;
+                b[i].pBrcA += lvlDiff * 2.0;
             }
             if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_MO)
             {
-                b[i].mBrcA = (revMul(b[i].mBrcA, 1.15) + lvlDiff * 2) * 1.15;
+                b[i].mBrcA += int(lvlDiff * 2.3);
             }
             else
             {
-                b[i].mBrcA += lvlDiff * 2;
+                b[i].mBrcA += lvlDiff * 2.0;
             }
         }
         if (b[i].psvSkl & AURA_YA && b[i].lvl > b[1 - i].lvl)
@@ -2610,42 +2609,32 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 if (b[i].psvSkl & AURA_JU)
                 {
-                    b[i].spdA = revMul(b[i].spdA, 1.3);
-                    b[i].spdA += lvlDiff * 3;
-                    b[i].spdA *= 1.3;
+                    b[i].spdA += int(lvlDiff * 3.9);
                 }
                 else
                 {
-                    b[i].spdA += lvlDiff * 3;
+                    b[i].spdA += lvlDiff * 3.0;
                 }
+                double defMul = 1.0;
+                double intFlag = false;
                 if (b[i].psvSkl & AURA_DIAN)
                 {
-                    b[i].pDefA = revMul(b[i].pDefA, 1.3);
-                    b[i].mDefA = revMul(b[i].mDefA, 1.3);
+                    defMul *= 1.3;
+                    intFlag = true;
                 }
                 if (b[i].role == ROLE_MING)
                 {
-                    b[i].pDefA = revMul(b[i].pDefA, 0.5);
-                    b[i].mDefA = revMul(b[i].mDefA, 0.5);
+                    defMul *= 0.5;
+                    intFlag = true;
                 }
-                b[i].pDefA += lvlDiff * 3;
-                b[i].mDefA += lvlDiff * 3;
-                if (b[i].role == ROLE_MING)
-                {
-                    b[i].pDefA *= 0.5;
-                    b[i].mDefA *= 0.5;
-                }
-                if (b[i].psvSkl & AURA_DIAN)
-                {
-                    b[i].pDefA *= 1.3;
-                    b[i].mDefA *= 1.3;
-                }
+                b[i].pDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
+                b[i].mDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
             }
             else
             {
-                b[i].spdA += lvlDiff * 3;
-                b[i].pDefA += lvlDiff * 3;
-                b[i].mDefA += lvlDiff * 3;
+                b[i].spdA += lvlDiff * 3.0;
+                b[i].pDefA += lvlDiff * 3.0;
+                b[i].mDefA += lvlDiff * 3.0;
             }
         }
         if (b[i].psvSkl & AURA_XUE)
@@ -2658,16 +2647,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b[i].psvSkl & AURA_SHEN)
         {
-            b[1 - i].sldRecRR += 70;
+            b[1 - i].sldRecRR += 70.0;
         }
         if (b[i].role == ROLE_WEI)
         {
-            b[i].sRateP += 10;
+            b[i].sRateP += 10.0;
         }
         if (b[i].role == ROLE_WU)
         {
-            b[i].pAtkR += 30;
-            b[i].mAtkR += 30;
+            b[i].pAtkR += 30.0;
+            b[i].mAtkR += 30.0;
             b[i].spdRR -= 30;
         }
         if (b[i].role == ROLE_XIA)
@@ -2675,7 +2664,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[i].mBrcA += int((b[1 - i].pDefB + b[1 - i].pDefA) * 0.35);
             if (b[i].myst & MYST_LIMPIDWAND)
             {
-                b[i].mBrcA += int((b[1 - i].mDefB + b[1 - i].mDefA) * 0.15);
+                b[i].mBrcA += (b[1 - i].mDefB + b[1 - i].mDefA) * 0.15;
             }
         }
         if (b[i].role == ROLE_MO)
@@ -2689,8 +2678,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].sRateP += b[i].amul[AMUL_SKL];
         b[i].cDef += b[i].amul[AMUL_CRTR];
         b[i].sDef += b[i].amul[AMUL_SKLR];
-        if (b[i].cRateP > 100) b[i].cRateP = 100;
-        if (b[i].sRateP > 100) b[i].sRateP = 100;
+        if (int(b[i].cRateP) > 100) b[i].cRateP = 100.0;
+        if (int(b[i].sRateP) > 100) b[i].sRateP = 100.0;
         if (!(b[i].psvSkl & FLAG_STAT))
         {
             if (b[i].myst & MYST_CLOAK)
@@ -2699,47 +2688,47 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].myst & MYST_THORN)
             {
-                b[i].rflP += 25;
+                b[i].rflP += 25.0;
             }
             if (b[i].psvSkl & AURA_SHI)
             {
-                b[i].pRdc += int(b[i].lvl * 2 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
-                b[i].mRdc += int(b[i].lvl * 2 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
+                b[i].pRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
+                b[i].mRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
             }
             if (b[i].psvSkl & AURA_FENG)
             {
-                b[i].pAtkA += int(b[i].lvl * 5 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
-                b[i].mAtkA += int(b[i].lvl * 5 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
+                b[i].pAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
+                b[i].mAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
             }
             if (b[i].psvSkl & AURA_XIN)
             {
-                b[i].hpM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
-                b[i].sldM += int(b[i].lvl * 10 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+                b[i].hpM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
+                b[i].sldM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
             }
             if (b[i].psvSkl & AURA_BI)
             {
-                b[i].pBrcP *= 1.15;
-                b[i].pBrcA *= 1.15;
+                b[i].pBrcP = int(b[i].pBrcP * 1.15);
+                b[i].pBrcA = int(b[i].pBrcA * 1.15);
             }
             if (b[i].psvSkl & AURA_MO)
             {
-                b[i].mBrcP *= 1.15;
-                b[i].mBrcA *= 1.15;
+                b[i].mBrcP = int(b[i].mBrcP * 1.15);
+                b[i].mBrcA = int(b[i].mBrcA * 1.15);
             }
             if (b[i].psvSkl & AURA_XUE)
             {
-                b[i].lchP += 10;
+                b[i].lchP += 10.0;
             }
             if (b[i].psvSkl & AURA_CI)
             {
-                b[i].pDefB += b[i].pDefB / 10;
-                b[i].mDefB += b[i].mDefB / 10;
-                b[i].rflP += 10;
+                b[i].pDefB += int(b[i].pDefB / 10.0);
+                b[i].mDefB += int(b[i].mDefB / 10.0);
+                b[i].rflP += 10.0;
             }
             if (b[i].psvSkl & AURA_JU)
             {
-                b[i].spdB = b[i].spdB * 1.3;
-                b[i].spdA = b[i].spdA * 1.3;
+                b[i].spdB = int(b[i].spdB * 1.3);
+                b[i].spdA = int(b[i].spdA * 1.3);
             }
             if (b[i].role == ROLE_MO)
             {
@@ -2755,7 +2744,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_AI)
             {
-                b[i].lchP += 15;
+                b[i].lchP += 15.0;
             }
             if (b[i].role == ROLE_YI)
             {
@@ -2764,17 +2753,17 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b[i].role == ROLE_MING)
             {
                 hpMAdd += 90;
-                b[i].pDefB *= 0.5;
-                b[i].pDefA *= 0.5;
-                b[i].mDefB *= 0.5;
-                b[i].mDefA *= 0.5;
+                b[i].pDefB = int(b[i].pDefB * 0.5);
+                b[i].pDefA = int(b[i].pDefA * 0.5);
+                b[i].mDefB = int(b[i].mDefB * 0.5);
+                b[i].mDefA = int(b[i].mDefA* 0.5);
             }
             if (b[i].role == ROLE_WU)
             {
                 hpMAdd += 30;
                 sldMAdd += 30;
-                b[i].pDefB *= 1.15;
-                b[i].mDefB *= 1.15;
+                b[i].pDefB = int(b[i].pDefB * 1.15);
+                b[i].mDefB = int(b[i].mDefB * 1.15);
             }
             if (b[i].role == ROLE_XI)
             {
@@ -2782,29 +2771,29 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].psvSkl & AURA_DIAN)
             {
-                b[i].pDefB *= 1.3;
-                b[i].pDefA *= 1.3;
-                b[i].mDefB *= 1.3;
-                b[i].mDefA *= 1.3;
+                b[i].pDefB = int(b[i].pDefB * 1.3);
+                b[i].pDefA = int(b[i].pDefA * 1.3);
+                b[i].mDefB = int(b[i].mDefB * 1.3);
+                b[i].mDefA = int(b[i].mDefA * 1.3);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
             b[i].lchP += b[i].amul[AMUL_LCH];
             b[i].rflP += b[i].amul[AMUL_RFL];
-            b[i].rflP = b[i].rflP > 150.0 ? 150.0 : b[i].rflP;
+            b[i].rflP = int(b[i].rflP) >= 150 ? 150.0 : b[i].rflP;
         }
         if (b[i].role == ROLE_XIA)
         {
             // Process mAtk growth after AURA_FENG
             if (b[i].mAtkB + b[i].mAtkA > b[1 - i].mAtkB + b[1 - i].mAtkA)
             {
-                b[i].mAtkB *= 1.3;
-                b[i].mAtkA *= 1.3;
+                b[i].mAtkB = int(b[i].mAtkB * 1.3);
+                b[i].mAtkA = int(b[i].mAtkA * 1.3);
             }
             else
             {
-                b[i].spdB *= 1.3;
-                b[i].spdA *= 1.3;
+                b[i].spdB = int(b[i].spdB * 1.3);
+                b[i].spdA = int(b[i].spdA * 1.3);
             }
         }
         if (b[i].role == ROLE_YA)
@@ -2830,7 +2819,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].sldM *= 1 + sldMAdd / 100.0;
         b[i].hp = b[i].hpM;
         b[i].sld = b[i].sldM;
-        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
+        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
         b[i].hpPot = false;
         b[i].sldPot = false;
         b[i].ziFlag = false;
@@ -2855,11 +2844,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     int lastSide = 0;
     int roundN[2] = { 0, 0 };
     int renCounter = 3;
-    if (b[0].tAgi > b[1].tAgi && b[0].tAgi > b[1].tAgi * 6)
+    if (b[0].tAgi > b[1].tAgi && b[0].tAgi >= b[1].tAgi * 6)
     {
         renCounter = 4;
     }
-    if (b[1].tAgi > b[0].tAgi && b[1].tAgi > b[0].tAgi * 6)
+    if (b[1].tAgi > b[0].tAgi && b[1].tAgi >= b[0].tAgi * 6)
     {
         renCounter = 4;
     }
@@ -2867,12 +2856,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     {
         int s = b[0].spdC >= b[1].spdC ? 0 : 1;
         b[s].spdC -= b[1 - s].spdC;
-        b[1 - s].spdC = 0;
+        b[1 - s].spdC = 0.0;
         if (roundCounter == renCounter && b[1 - lastSide].psvSkl & AURA_REN)
         {
             //b[lastSide].spdC = 0;
             s = 1 - lastSide;
-            b[s].spdC = 1;
+            b[s].spdC = 1.0;
         }
         BStat& b0 = b[s];
         BStat& b1 = b[1 - s];
@@ -2886,16 +2875,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         //roundFlag |= (1 << s);
         if (debug)
         {
-            printf("Timing: %d(%d*%d%%=%d) %d(%d*%d%%=%d)\n",
+            printf("Timing: %.2f(%.2f*%d%%=%.2f) %.2f(%.2f*%d%%=%.2f)\n",
                 b[0].spdC, b[0].spdA + b[0].spdB, 100 - b[0].spdRR,
-                int((b[0].spdA + b[0].spdB) * (1 - b[0].spdRR / 100.0)),
+                (b[0].spdA + b[0].spdB) * (1 - b[0].spdRR / 100.0),
                 b[1].spdC, b[1].spdA + b[1].spdB, 100 - b[1].spdRR,
-                int((b[1].spdA + b[1].spdB) * (1 - b[1].spdRR / 100.0)));
+                (b[1].spdA + b[1].spdB) * (1 - b[1].spdRR / 100.0));
         }
 
-        int pa[2] = { 0, 0 };
-        int ma[2] = { 0, 0 };
-        int aa[2] = { 0, 0 };
+        double pa[2] = { 0.0, 0.0 };
+        double ma[2] = { 0.0, 0.0 };
+        double aa[2] = { 0.0, 0.0 };
         int hd[2] = { 0, 0 };
         int hr[2] = { 0, 0 };
         int sd[2] = { 0, 0 };
@@ -2954,10 +2943,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         else
         {
-            isS = (bugRand100(rseed) < b0.sRateP);
-            isC = (bugRand100(rseed) < b0.cRateP);
+            isS = (bugRand100(rseed) < int(b0.sRateP));
+            isC = (bugRand100(rseed) < int(b0.cRateP));
             isMC = (b0.myst & MYST_BRACELET && rand100(rseed) < 20);
             isE = (b0.psvSkl & AURA_E && rand100(rseed) < 1);
+            if (b0.myst & MYST_CLAYMORE)
+            {
+                isC = true;
+            }
             if (b0.role == ROLE_MO && b0.myst & MYST_WAND && b0.sklC == 0)
             {
                 isS = true;
@@ -2972,15 +2965,22 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 isC = true;
             }
         }
+
+        // init recovery base
+        b0.hpS = b0.hpM;
+        b0.sldS = b0.sldM;
+        b1.hpS = b1.hpM;
+        b1.sldS = b1.sldM;
+
         pa[s] = b0.pAtkB + b0.pAtkA;
         ma[s] = b0.mAtkB + b0.mAtkA;
         aa[s] = b0.aAtk;
-        if (b1.spdRR > speedReduceMax) b1.spdRR = speedReduceMax;
+        if (b1.spdRR >= speedReduceMax) b1.spdRR = speedReduceMax;
         if (b1.role == ROLE_YI && b1.spdRR > 0) b1.spdRR = 0;
         if (b0.role == ROLE_AI)
         {
             b0.sklC += (b0.myst & MYST_DAGGER ? 2 : 1);
-            aa[s] += (b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 9 * (b0.myst & MYST_DAGGER ? 20 + b0.sklC * 3 : 20) / 400;
+            aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 9 * (b0.myst & MYST_DAGGER ? 20 + b0.sklC * 3 : 20) / 400.0);
         }
         if (b0.role == ROLE_MENG)
         {
@@ -3010,8 +3010,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_WU && b0.myst & MYST_RING)
         {
-            pa[s] += (b0.sklC + 100) * 0.2;
-            ma[s] += (b0.sklC + 100) * 0.2;
+            pa[s] += int((b0.sklC + 100) * 0.2);
+            ma[s] += int((b0.sklC + 100) * 0.2);
         }
         if (b0.role == ROLE_XI && b0.hp < b0.hpM / 2)
         {
@@ -3038,11 +3038,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.myst & MYST_ASSBOW)
         {
-            pa[s] += b1.sld * 3 / 10;
+            pa[s] += int(b1.sld * 0.3);
         }
         if (b0.myst & MYST_SPEAR)
         {
-            ma[s] += b1.hp * 3 / 10;
+            ma[s] += int(b1.hp * 0.3);
         }
         if (isE)
         {
@@ -3051,27 +3051,32 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.role == ROLE_YA)
         {
-            pa[s] += (int)((b0.mAtkB + b0.mAtkA) * 0.2 * round);
-            pa[s] += (int)((b0.pAtkB + b0.pAtkA) * 0.2 * round);
+            pa[s] += (b0.mAtkB + b0.mAtkA + b0.pAtkB + b0.pAtkA) * 0.2 * round;
         }
+
+        double moRfl = (((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01);
+
         if (isS)
         {
             // ya is special
             if (b0.role == ROLE_YA)
             {
                 b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
+                pa[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
+                b1.hpM *= 0.95;
+                b1.sldM *= 0.95;
             }
         }
         if (isC)
         {
-            pa[s] *= 2;
-            ma[s] += ma[s] / 2;
-            aa[s] *= 2;
+            pa[s] *= 2.0;
+            ma[s] = int(ma[s] * 1.5);
+            aa[s] *= 2.0;
             if (b0.role == ROLE_MIN)
             {
-                pa[s] += pa[s] * 0.65;
-                ma[s] += ma[s] * 0.65;
-                aa[s] += aa[s] * 0.65;
+                pa[s] = int(pa[s] * 1.65);
+                ma[s] = int(ma[s] * 1.65);
+                aa[s] = int(aa[s] * 1.65);
             }
             if (b0.role == ROLE_LIN && b0.sklC == 0)
             {
@@ -3084,11 +3089,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 if (spd <= 0) spd = 1;
                 int spd2 = int((b1.spdB + b1.spdA) * (1 - b1.spdRR / 100.0));
                 if (spd2 <= 0) spd2 = 1;
-                aa[s] += (spd > spd2 * 3 ? spd * 12 : spd * 9) / 5;
+                aa[s] += int((spd > spd2 * 3 ? spd * 12 : spd * 9) / 5);
             }
             if (b0.myst & MYST_BLADE)
             {
-                aa[s] += (b0.pAtkB + b0.pAtkA) / 2;;
+                aa[s] += int((b0.pAtkB + b0.pAtkA) / 2);
             }
         }
         if (isS)
@@ -3096,39 +3101,39 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             switch (b0.role)
             {
             case ROLE_MU:
-                pa[s] += b0.pAtkB * 3;
-                hr[s] += b0.hpM / 10;
+                pa[s] += b0.pAtkB * 3.0;
+                hr[s] += int(b0.hpM / 10);
                 break;
             case ROLE_ZHU:
                 ma[s] += b0.mAtkB;
                 b1.spdRR += 20;
                 break;
             case ROLE_DENG:
-                ma[s] += b0.sld * 3 / 10;
-                sr[s] += b0.sldM / 10;
+                ma[s] += int(b0.sld * 0.3);
+                sr[s] += int(b0.sldM / 10);
                 break;
             case ROLE_SHOU:
-                pa[s] += b0.hpM / 5;
-                hr[s] += b0.hpM * 3 / 10;
+                pa[s] += int(b0.hpM / 5);
+                hr[s] += int(b0.hpM * 0.3);
                 break;
             case ROLE_MU2:
             case ROLE_YU2:
-                pa[s] += b0.pAtkB * 5;
+                pa[s] += b0.pAtkB * 5.0;
                 break;
             case ROLE_ZHU2:
-                ma[s] += b0.mAtkB * 5;
+                ma[s] += b0.mAtkB * 5.0;
                 break;
             case ROLE_DENG2:
-                ma[s] += b0.sldM * 2 / 5;
+                ma[s] += int(b0.sldM * 0.4);
                 break;
             case ROLE_SHOU2:
             case ROLE_HAO2:
             case ROLE_LIU:
-                pa[s] += b0.hpM * 2 / 5;
+                pa[s] += int(b0.hpM * 0.4);
                 break;
             case ROLE_SHI:
-                pa[s] += b0.pAtkB * 3;
-                ma[s] += b0.mAtkB * 3;
+                pa[s] += b0.pAtkB * 3.0;
+                ma[s] += b0.mAtkB * 3.0;
                 aa[s] += b0.pAtkB + b0.mAtkB;
                 break;
             case ROLE_MO:
@@ -3150,9 +3155,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_LIN:
             {
-                int dmg = (b0.pAtkB + b0.pAtkA) * 3;
-                pa[s] += dmg;
-                ma[s] += dmg;
+                pa[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
+                ma[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
                 break;
             }
             case ROLE_AI:
@@ -3161,8 +3165,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 break;
             case ROLE_MENG:
                 b0.sklC += 7;
-                ma[s] += (b0.mAtkB + b0.mAtkA) * b0.sklC / 4;
-                b1.spdRR += b0.sklC / 2;
+                ma[s] += int((b0.mAtkB + b0.mAtkA) * b0.sklC / 4.0);
+                b1.spdRR += int(b0.sklC / 2);
                 if (b1.spdRR > 100) b1.spdRR = 100;
                 break;
             case ROLE_WEI:
@@ -3193,8 +3197,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 int hpRate = (b0.hpM - b0.hp) * 100 / b0.hpM;
                 int dmg = (b0.pAtkB + b0.pAtkA) * 3 * (1 + hpRate / 100.0);
-                if (b0.hp + b0.sld < (b0.hpM + b0.sldM) / 10 ||
-                    b1.hp + b1.sld < (b1.hpM + b1.sldM) / 10)
+                if (b0.hp + b0.sld < (b0.hpM + b0.sldM) / 10.0 ||
+                    b1.hp + b1.sld < (b1.hpM + b1.sldM) / 10.0)
                 {
                     aa[s] += dmg;
                 }
@@ -3209,13 +3213,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 int dmgAdd = (b1.mDefB + b1.mDefA) / 10;
                 if (dmgAdd > 200) dmgAdd = 200;
                 ma[s] += (b0.mAtkB + b0.mAtkA) * 2 * (1 + dmgAdd / 100.0);
-                break;
-            }
-            case ROLE_YA:
-            {
-                pa[s] += (b0.pAtkB + b0.pAtkA) * 3;
-                b1.hpM *= 0.95;
-                b1.sldM *= 0.95;
                 break;
             }
             }
@@ -3236,7 +3233,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (isMC)
         {
-            ma[s] *= 2;
+            ma[s] *= 2.0;
         }
         if (b0.psvSkl & AURA_HOU)
         {
@@ -3249,22 +3246,21 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         pa[s] = int(pa[s] * (1 + b0.pAtkR * 0.01));
         ma[s] = int(ma[s] * (1 + b0.mAtkR * 0.01));
 
-        int rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP / 2 : b1.rflP);
-        int pRfl = 0;
-        int mRfl = (pa[s] * 0.7 + ma[s] * 0.7 + aa[s] * 0.5) * (rflPFixed / 100.0);
-        if (b1.role == ROLE_MO) mRfl += int((((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01));
+        double rflPFixed = (b0.psvSkl & AURA_DI ? b1.rflP / 2.0 : b1.rflP);
+        double pRfl = 0.0;
+        double mRfl = (pa[s] * 0.7 + ma[s] * 0.7 + aa[s] * 0.5) * (rflPFixed / 100.0);
+        if (b1.role == ROLE_MO) mRfl += int(moRfl);
 
         if (b0.role == ROLE_MING)
         {
-            pa[s] += pRfl * 2 / 5;
-            ma[s] += mRfl * 2 / 5;
+            pa[s] += int(pRfl * 0.4);
+            ma[s] += int(mRfl * 0.4);
         }
         if (b1.role == ROLE_MING)
         {
-            pRfl += pa[s] * 2 / 5;
-            mRfl += ma[s] * 2 / 5;
+            pRfl += int(pa[s] * 0.4);
+            mRfl += int(ma[s] * 0.4);
         }
-
         if (b1.myst & MYST_CAPE)
         {
             int convert = pa[s] / 2;
@@ -3273,28 +3269,28 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.psvSkl & AURA_DIAN)
         {
-            pa[s] *= 0.7;
-            ma[s] *= 0.7;
+            pa[s] = int(pa[s] * 0.7);
+            ma[s] = int(ma[s] * 0.7);
         }
         if (b1.psvSkl & AURA_DIAN)
         {
-            pRfl *= 0.7;
-            mRfl *= 0.7;
+            pRfl = int(pRfl * 0.7);
+            mRfl = int(mRfl * 0.7);
         }
         if (b0.psvSkl & AURA_ZI)
         {
             if (!b0.ziFlag)
             {
                 b0.ziFlag = true;
-                pa[s] *= 1.5;
-                ma[s] *= 1.5;
-                aa[s] *= 1.5;
+                pa[s] = int(pa[s] * 1.5);
+                ma[s] = int(ma[s] * 1.5);
+                aa[s] = int(aa[s] * 1.5);
             }
             else
             {
-                pa[s] *= 0.9;
-                ma[s] *= 0.9;
-                aa[s] *= 0.9;
+                pa[s] = int(pa[s] * 0.9);
+                ma[s] = int(ma[s] * 0.9);
+                aa[s] = int(aa[s] * 0.9);
             }
         }
         if (b0.atkLvl > b1.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
@@ -3317,24 +3313,22 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             aa[s] *= (1 - b1.sDef / 100.0);
         }
 
-        int sldRemain = b1.sld;
+        int sldRemain = (int)b1.sld;
         bool sldActive = (sldRemain > 0);
         if (ma[s] > 0)
         {
-
             int dr = calcDefRate(b1.mDefB + b1.mDefA, b1.amul[AMUL_MDEF],
-                b0.mBrcP + (b0.psvSkl & AURA_BO && (b0.hp > b0.hpM * 0.7 && b0.sld > b0.sldM * 0.7) ? 30 : 0),
-                isC ? b0.cBrcP : 0, b0.mBrcA,
+                b0.mBrcP + (b0.psvSkl & AURA_BO && (b0.hp > b0.hpM * 0.7 && b0.sld > b0.sldM * 0.7) ? 30.0 : 0.0),
+                isC ? b0.cBrcP : 0.0, b0.mBrcA,
                 (b1.psvSkl & AURA_SHENG) ? 80 : 75,
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
-            int ma2 = ma[s];
             if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
-                ma2 *= 1 - 0.03 * lvlDiff;
+                ma[s] *= 1 - 0.03 * lvlDiff;
             }
-            ma[s] = ma2;
+            int ma2 = (int)ma[s];
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -2)) ma2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) ma2 /= 10;
             if (b1.psvSkl & AURA_JUE) ma2 *= 0.8;
@@ -3376,13 +3370,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 (b1.psvSkl & AURA_SHENG) ? 80 : 75,
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
                 (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
-            int pa2 = pa[s];
             if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
-                pa2 *= 1 - 0.03 * lvlDiff;
+                pa[s] *= 1 - 0.03 * lvlDiff;
             }
-            pa[s] = pa2;
+            int pa2 = (int)pa[s];
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -1)) pa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) pa2 /= 10;
             if (b1.psvSkl & AURA_JUE) pa2 *= 0.8;
@@ -3419,13 +3412,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (aa[s] > 0)
         {
-            int aa2 = aa[s];
             if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
-                aa2 *= 1 - 0.03 * lvlDiff;
+                aa[s] *= 1 - 0.03 * lvlDiff;
             }
-            aa[s] = aa2;
+            int aa2 = (int)aa[s];
             if (b1.role == ROLE_MIN && (b1.sklC > 0 || b1.sklC == -3)) aa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
             // if (b1.psvSkl & AURA_JUE) aa2 *= 1;
@@ -3450,11 +3442,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b1.role == ROLE_WEI && b1.sklC) b1.sklC = 0;
 
-        hr[s] += ((int64_t)hd[1 - s]) * b0.lchP / 100;
-        sr[s] += ((int64_t)sd[1 - s]) * b0.lchP / 125;
-        if (b0.myst & MYST_VULTURE) hr[s] += ((int64_t)sd[1 - s]) * b0.lchP / 625;
+        hr[s] += ((int64_t)hd[1 - s]) * int(b0.lchP) / 100;
+        sr[s] += ((int64_t)sd[1 - s]) * int(b0.lchP) / 125;
+        if (b0.myst & MYST_VULTURE) hr[s] += ((int64_t)sd[1 - s]) * int(b0.lchP) / 625;
 
-        sldRemain = b0.sld;
+        sldRemain = (int)b0.sld;
         sldActive = (sldRemain > 0);
         if (mRfl > 0)
         {
@@ -3462,18 +3454,18 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.mBrcP + (b1.psvSkl & AURA_BO && (b1.hp > b1.hpM * 0.7 && b1.sld > b1.sldM * 0.7) ? 30 : 0),
                 0, b1.mBrcA, (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
-            int ma2 = mRfl;
             if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
-                ma2 *= 1 + 0.03 * lvlDiff;
+                mRfl *= 1 + 0.03 * lvlDiff;
             }
             if (b1.defLvl < b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
-                ma2 *= 1 - 0.03 * lvlDiff;
+                mRfl *= 1 - 0.03 * lvlDiff;
             }
-            ma[1 - s] = ma2;
+            int ma2 = mRfl;
+            ma[1 - s] = mRfl;
             if (b0.role == ROLE_MIN && b0.sklC == -2) ma2 = 0;
             if (b0.psvSkl & AURA_JUE) ma2 *= 0.8;
             if (b0.psvSkl & AURA_DI) ma2 *= 0.1;
@@ -3510,18 +3502,18 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b1.pBrcP, 0, b1.pBrcA,
                 (b0.psvSkl & AURA_SHENG) ? 80 : 75,
                 b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
-            int pa2 = pRfl;
             if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
-                pa2 *= 1 + 0.03 * lvlDiff;
+                pRfl *= 1 + 0.03 * lvlDiff;
             }
             if (b1.defLvl < b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b0.defLvl - b1.defLvl > 20 ? 20 : b0.defLvl - b1.defLvl;
-                pa2 *= 1 - 0.03 * lvlDiff;
+                pRfl *= 1 - 0.03 * lvlDiff;
             }
-            pa[1 - s] = pa2;
+            int pa2 = pRfl;
+            pa[1 - s] = pRfl;
             if (b0.role == ROLE_MIN && b0.sklC == -1) pa2 = 0;
             if (b0.psvSkl & AURA_JUE) pa2 *= 0.8;
             if (b0.psvSkl & AURA_DI) pa2 *= 0.1;
@@ -3551,26 +3543,26 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (hd2 < 0) hd2 = 0;
             hd[s] += hd2;
         }
-        hr[1 - s] += ((int64_t)hd[s]) * b1.lchP / 200;
-        sr[1 - s] += ((int64_t)sd[s]) * b1.lchP / 250;
-        if (b1.myst & MYST_VULTURE) hr[1 - s] += ((int64_t)sd[s]) * b1.lchP / 1250;
+        hr[1 - s] += ((int64_t)hd[s]) * int(b1.lchP) / 200;
+        sr[1 - s] += ((int64_t)sd[s]) * int(b1.lchP) / 250;
+        if (b1.myst & MYST_VULTURE) hr[1 - s] += ((int64_t)sd[s]) * int(b1.lchP) / 1250;
         if (b1.myst & MYST_WOOD)
         {
-            hr[1 - s] += b1.hpM / 20;
+            hr[1 - s] += b1.hpS / 20;
         }
-        if (!b1.hpPot && b1.hp <= b1.hpM * 4 / 5)
+        if (!b1.hpPot && int(b1.hp) <= int(b1.hpS * 0.8))
         {
-            hr[1 - s] += b1.hpM * b1.wish[WISH_HP_POT] / 200;
+            hr[1 - s] += b1.hpS * b1.wish[WISH_HP_POT] / 200;
             b1.hpPot = true;
         }
-        if (!b1.sldPot && b1.sld <= b1.sldM * 4 / 5)
+        if (!b1.sldPot && int(b1.sld) <= int(b1.sldS * 0.8))
         {
-            sr[1 - s] += b1.sldM * b1.wish[WISH_SLD_POT] / 200;
+            sr[1 - s] += b1.sldS * b1.wish[WISH_SLD_POT] / 200;
             b1.sldPot = true;
         }
         if (b1.role == ROLE_MIN && b1.sklC > 0) --b1.sklC;
 
-        if (b0.spdRR > speedReduceMax) b0.spdRR = speedReduceMax;
+        if (b0.spdRR >= speedReduceMax) b0.spdRR = speedReduceMax;
         if (b0.role == ROLE_YI && b0.spdRR > 0) b0.spdRR = 0;
         if (b1.role == ROLE_MENG)
         {
@@ -3590,22 +3582,22 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 {
                     if (b[i].myst & MYST_RIBBON)
                     {
-                        hr[i] += b[i].hpM * 3 / 50;
+                        hr[i] += b[i].hpS * 0.06;
                     }
                     else
                     {
-                        if (b[i].hp < b[i].hpM * 3 / 10)
+                        if (int(b[i].hp) <= int(b[i].hpS * 0.3))
                         {
-                            hr[i] += b[i].hpM * 3 / 50;
+                            hr[i] += b[i].hpS * 0.06;
                         }
                         else
                         {
-                            hr[i] += b[i].hpM * 3 / 100;
+                            hr[i] += b[i].hpS * 0.03;
                         }
                     }
                 }
-                hr[i] += (b[i].hpM * b[i].hpRecP / 100 + b[i].hpRecA) / 4;
-                sr[i] += (b[i].sldM * b[i].sldRecP / 100 + b[i].sldRecA) / 4;
+                hr[i] += (b[i].hpS * b[i].hpRecP / 100 + b[i].hpRecA) / 4;
+                sr[i] += (b[i].sldS * b[i].sldRecP / 100 + b[i].sldRecA) / 4;
                 if (debug)
                 {
                     printf("side=%d hp=%d hd=%d hr=%d sld=%d sd=%d sr=%d\n",
@@ -3660,10 +3652,10 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             printf("  %d/%d ", roundN[s], roundN[0] + roundN[1]);
             showRound(s == 0 && isC, s == 0 && isS,
-                pa[0], ma[0], aa[0], hd[0], sd[0], hr[0], sr[0]);
+                int(pa[0]), int(ma[0]), int(aa[0]), hd[0], sd[0], hr[0], sr[0]);
             printf("  %s  ", s == 0 ? "->" : "<-");
             showRound(s == 1 && isC, s == 1 && isS,
-                pa[1], ma[1], aa[1], hd[1], sd[1], hr[1], sr[1]);
+                int(pa[1]), int(ma[1]), int(aa[1]), hd[1], sd[1], hr[1], sr[1]);
             printf("\n");
             printf("HP:%d SLD:%d  --  HP:%d SLD:%d\n", int(b[0].hp), int(b[0].sld), int(b[1].hp), int(b[1].sld));
         }
@@ -3710,7 +3702,7 @@ void showState(const BStat& b)
     printf("Attack Level           : %d\n", b.atkLvl);
     printf("Defence Level          : %d\n", b.defLvl);
     printf("Max HP                 : %.2f\n", b.hpM);
-    printf("HP Recover             : %.2f%%+%.2f\n", b.hpRecP, b.hpRecA);
+    printf("HP Recover             : %d%%+%.2f\n", b.hpRecP, b.hpRecA);
     printf("Physical Attack        : %.2f+%.2f\n", b.pAtkB, b.pAtkA);
     printf("Magical Attack         : %.2f+%.2f\n", b.mAtkB, b.mAtkA);
     printf("Absolute Attack        : %.2f\n", b.aAtk);
@@ -3726,10 +3718,10 @@ void showState(const BStat& b)
     printf("Physical Damage Reduce : %.2f\n", b.pRdc);
     printf("Magical Damage Reduce  : %.2f\n", b.mRdc);
     printf("Max Shield             : %.2f\n", b.sldM);
-    printf("Shield Recover         : %.2f%%+%.2f\n", b.sldRecP, b.sldRecA);
+    printf("Shield Recover         : %d%%+%.2f\n", b.sldRecP, b.sldRecA);
     printf("Damage Reflection      : %.2f%%\n", b.rflP);
-    printf("Critical Defence       : %.2f%%\n", b.cDef);
-    printf("Skill Defence          : %.2f%%\n", b.sDef);
+    printf("Critical Defence       : %d%%\n", b.cDef);
+    printf("Skill Defence          : %d%%\n", b.sDef);
     printf("Aura Skill Set         :");
     for (int i = 0; i < AURA_COUNT; ++i)
     {
