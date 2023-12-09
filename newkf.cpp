@@ -3019,7 +3019,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             pa[s] += b0.hpM - b0.hp;
         }
-        if (b0.role == ROLE_MIN && !b0.minFlag)
+        if (b0.role == ROLE_MIN)
         {
             b0.minFlag = ((b0.myst & MYST_REFRACT) && int(b1.hp) == int(b1.hpM) && int(b1.sld) == int(b1.sldM));
         }
