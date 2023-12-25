@@ -138,7 +138,7 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
             attr_data.t_str = config.read_config('1300_str')
             attr_data.all_point -= attr_data.t_str
     # 缺少点数补偿
-    if attr_data.all_point < 0:
+    if attr_data.all_point <= 0:
         lost_point = attr_data.t_str + attr_data.t_agi + attr_data.t_int \
                      + attr_data.t_vit + attr_data.t_spr + attr_data.t_mnd \
                      - attr_data.final_point
