@@ -161,12 +161,18 @@ def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
     # 先从敏捷补，上箭头补到敏捷剩1000，下箭头补到箭头上限
     if 'angle-up' in icon_list[1] and attr_data.t_agi > 1000 \
             - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA'):
-        new_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
-        diff_point = attr_data.t_agi - new_agi
-        attr_data.t_agi = new_agi
-        if diff_point >= _lost_point:
+        # 如果是比较特殊的加点 比如敏捷意志都是单上则全补偿给敏捷
+        if 'angle-up' not in icon_list[3] and 'angle-up' not in icon_list[5]:
+            new_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
+            diff_point = attr_data.t_agi - new_agi
+            attr_data.t_agi = new_agi
+            if diff_point >= _lost_point:
+                return
+            _lost_point -= diff_point
+        else:
+            new_agi = attr_data.t_agi - _lost_point
+            attr_data.t_agi = new_agi
             return
-        _lost_point -= diff_point
     else:
         new_agi = attr_data.t_agi - _lost_point
         if new_agi < 1:
@@ -189,7 +195,8 @@ def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
         _lost_point -= (getattr(attr_data, most_attr_name) - 1)
         setattr(attr_data, most_attr_name, 1)
     else:
-        check_value = icon_check_amulet(most_attr_value, attr_data.final_apple_point, icon_str, aumlet_str, most_attr_name)
+        check_value = icon_check_amulet(most_attr_value, attr_data.final_apple_point, icon_str, aumlet_str,
+                                        most_attr_name)
         if check_value <= most_attr_value:
             setattr(attr_data, most_attr_name, most_attr_value)
             return
@@ -321,7 +328,8 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 附加护盾
     gear_add = 0
     if gear_list[1] == 'BRACELET':
-        gear_add += int(gear_level_list[1]) * 20 * int(config.read_config('gear_config')['BRACELET'].split(' ')[2]) / 100
+        gear_add += int(gear_level_list[1]) * 20 * int(
+            config.read_config('gear_config')['BRACELET'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 50 * int(config.read_config('gear_config')['CLOAK'].split(' ')[3]) / 100
     if gear_list[2] == 'CAPE':
@@ -331,9 +339,11 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 百分比护盾
     gear_mul = 1
     if gear_list[2] == 'CLOAK':
-        gear_mul += (int(gear_level_list[2]) / 5 + 25) * int(config.read_config('gear_config')['CLOAK'].split(' ')[2]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 25) * int(
+            config.read_config('gear_config')['CLOAK'].split(' ')[2]) / 10000
     if gear_list[2] == 'CAPE':
-        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['CAPE'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(
+            config.read_config('gear_config')['CAPE'].split(' ')[0]) / 10000
     if gear_list[3] == 'TIARA':
         gear_mul += int(gear_level_list[3]) / 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[1]) / 10000
     # 霞 成长值
@@ -479,11 +489,14 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[3]) / 100
     if gear_list[1] == 'DEVOUR':
         if 'double-angle-up' in icon_list[0]:
-            gear_add += 1500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+            gear_add += 1500 * int(gear_level_list[1]) * 0.08 * int(
+                config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[0]:
-            gear_add += 800 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+            gear_add += 800 * int(gear_level_list[1]) * 0.08 * int(
+                config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
         elif 'icon-angle-down' in icon_list[0]:
-            gear_add += 500 * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+            gear_add += 500 * int(gear_level_list[1]) * 0.08 * int(
+                config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100
     if gear_list[3] == 'SCARF':
@@ -492,40 +505,56 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         gear_add += int(gear_level_list[3]) * 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[0]) / 100
     if gear_list[3] == 'RIBBON':
         if 'double-angle-up' in icon_list[3]:
-            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[3]:
-            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+            gear_add += 800 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
         elif 'icon-angle-down' in icon_list[3]:
-            gear_add += 500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
+            gear_add += 500 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
         if 'double-angle-up' in icon_list[5]:
-            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+            gear_add += 1200 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
         elif 'angle-up' in icon_list[5]:
-            gear_add += 800 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+            gear_add += 800 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
         elif 'icon-angle-down' in icon_list[5]:
-            gear_add += 500 * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+            gear_add += 500 * int(gear_level_list[3]) / 30 * int(
+                config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
     if gear_list[3] == 'HUNT':
         if 'double-angle-up' in icon_list[0]:
-            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         elif 'angle-up' in icon_list[0]:
-            gear_add += 800 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+            gear_add += 800 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         elif 'icon-angle-down' in icon_list[0]:
-            gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
+            gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         if 'double-angle-up' in icon_list[1]:
-            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[1]:
-            gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+            gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'icon-angle-down' in icon_list[1]:
-            gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+            gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(
+                config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
     # 装备 百分比生命
     gear_mul = 1
     if gear_list[1] == 'DEVOUR':
-        gear_mul += int(gear_level_list[1]) * 0.07 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[3]) / 10000
+        gear_mul += int(gear_level_list[1]) * 0.07 * int(
+            config.read_config('gear_config')['DEVOUR'].split(' ')[3]) / 10000
     if gear_list[2] == 'THORN':
-        gear_mul += (int(gear_level_list[2]) / 5 + 20) * int(config.read_config('gear_config')['THORN'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 20) * int(
+            config.read_config('gear_config')['THORN'].split(' ')[0]) / 10000
     if gear_list[2] == 'WOOD':
-        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['WOOD'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(
+            config.read_config('gear_config')['WOOD'].split(' ')[0]) / 10000
     if gear_list[3] == 'HUNT':
-        gear_mul += int(gear_level_list[3]) * 0.06 * int(config.read_config('gear_config')['HUNT'].split(' ')[3]) / 10000
+        gear_mul += int(gear_level_list[3]) * 0.06 * int(
+            config.read_config('gear_config')['HUNT'].split(' ')[3]) / 10000
     # 希 成长值
     g_add = 0
     if enemy_data.enemy_card == 'XI':
@@ -572,7 +601,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
                 break
     # 正数校验
     if _vit_mnd <= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND')
-                     + aumlet_from_str(aumlet_str, 'AAA') * 2 + 4):
+                    + aumlet_from_str(aumlet_str, 'AAA') * 2 + 4):
         attr_data.t_vit = 1
         attr_data.t_mnd = 1
         attr_data.all_point -= 2
@@ -617,6 +646,7 @@ def check_vm_diff(t_vm_mul, t_vit_mnd):
         return 1000
     return 0
 
+
 # 获取可能的争夺加成的体意血量
 def get_vm_list(enemy_data, attr_data, icon_list):
     result_list = []
@@ -660,7 +690,7 @@ def get_vm_list(enemy_data, attr_data, icon_list):
         max_vm_mul += 10
     if enemy_data.kf_level >= 800 and max_point >= 1000:
         max_vm_mul += 17
-    vm_mul_list = [35, 35+7, 35+7+10, 35+7+10+17]
+    vm_mul_list = [35, 35 + 7, 35 + 7 + 10, 35 + 7 + 10 + 17]
     for vm in vm_mul_list:
         if max_vm_mul >= vm >= min_vm_mul:
             result_list.append(vm)

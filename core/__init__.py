@@ -50,11 +50,17 @@ def start():
         if config.read_config('min_card_level') and enemy_data.card_level < config.read_config('min_card_level'):
             continue
         # 日期跳过
-        if config.read_config('last_date'):
-            last_datetime = datetime.datetime.strptime(config.read_config('last_date') + ' 00:00:00.000',
+        if config.read_config('start_date'):
+            start_datetime = datetime.datetime.strptime(config.read_config('start_date') + ' 00:00:00.000',
                                                        "%Y-%m-%d %H:%M:%S.%f")
-            last_timestamp = int(time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
-            if last_timestamp > enemy_data.battle_timestamp:
+            start_timestamp = int(time.mktime(start_datetime.timetuple()) * 1000.0 + start_datetime.microsecond / 1000.0)
+            if start_timestamp > enemy_data.battle_timestamp:
+                continue
+        if config.read_config('end_date'):
+            end_datetime = datetime.datetime.strptime(config.read_config('end_date') + ' 23:59:59.999',
+                                                       "%Y-%m-%d %H:%M:%S.%f")
+            end_timestamp = int(time.mktime(end_datetime.timetuple()) * 1000.0 + end_datetime.microsecond / 1000.0)
+            if end_timestamp < enemy_data.battle_timestamp:
                 continue
         # 争夺等级
         if w_dict.get(enemy_data.enemy_name) and w_dict.get(enemy_data.enemy_name).get('kf_level'):
@@ -220,12 +226,17 @@ def get_w_dict(json_data):
         if config.read_config('min_card_level') and int(data['charlevel']) < config.read_config('min_card_level'):
             continue
         # 日期跳过
-        if config.read_config('last_date'):
-            last_datetime = datetime.datetime.strptime(config.read_config('last_date') + ' 00:00:00.000',
+        if config.read_config('start_date'):
+            start_datetime = datetime.datetime.strptime(config.read_config('start_date') + ' 00:00:00.000',
                                                        "%Y-%m-%d %H:%M:%S.%f")
-            last_timestamp = int(
-                time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
-            if last_timestamp > data['time']:
+            start_timestamp = int(time.mktime(start_datetime.timetuple()) * 1000.0 + start_datetime.microsecond / 1000.0)
+            if start_timestamp > data['time']:
+                continue
+        if config.read_config('end_date'):
+            end_datetime = datetime.datetime.strptime(config.read_config('end_date') + ' 23:59:59.999',
+                                                       "%Y-%m-%d %H:%M:%S.%f")
+            end_timestamp = int(time.mktime(end_datetime.timetuple()) * 1000.0 + end_datetime.microsecond / 1000.0)
+            if end_timestamp < data['time']:
                 continue
         # 计数
         if data['enemyname'] in result_map:
