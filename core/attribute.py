@@ -161,18 +161,12 @@ def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
     # 先从敏捷补，上箭头补到敏捷剩1000，下箭头补到箭头上限
     if 'angle-up' in icon_list[1] and attr_data.t_agi > 1000 \
             - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA'):
-        # 如果是比较特殊的加点 比如敏捷意志都是单上则全补偿给敏捷
-        if 'angle-up' not in icon_list[3] and 'angle-up' not in icon_list[5]:
-            new_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
-            diff_point = attr_data.t_agi - new_agi
-            attr_data.t_agi = new_agi
-            if diff_point >= _lost_point:
-                return
-            _lost_point -= diff_point
-        else:
-            new_agi = attr_data.t_agi - _lost_point
-            attr_data.t_agi = new_agi
+        new_agi = 1000 - aumlet_from_str(aumlet_str, 'AGI') - aumlet_from_str(aumlet_str, 'AAA')
+        diff_point = attr_data.t_agi - new_agi
+        attr_data.t_agi = new_agi
+        if diff_point >= _lost_point:
             return
+        _lost_point -= diff_point
     else:
         new_agi = attr_data.t_agi - _lost_point
         if new_agi < 1:
@@ -202,10 +196,14 @@ def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
             return
         setattr(attr_data, most_attr_name, check_value)
         _lost_point = check_value - most_attr_value
-    # 找次高的补 不校验了
+    # 找次高的补 补完出现负数从敏捷补
     more_attr_name = attr_name_list[1]
     more_attr_value = getattr(attr_data, more_attr_name) - _lost_point
-    setattr(attr_data, more_attr_name, more_attr_value)
+    if more_attr_value > 0:
+        setattr(attr_data, more_attr_name, more_attr_value)
+    else:
+        attr_data.t_agi -= _lost_point
+
 
 
 # 排序精体意 返回属性名list
