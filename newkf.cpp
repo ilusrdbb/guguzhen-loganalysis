@@ -2845,20 +2845,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     int roundCounter = 0;
     int lastSide = 0;
     int roundN[2] = { 0, 0 };
-    int renCounter = 3;
-    if (b[0].tAgi > b[1].tAgi && b[0].tAgi >= b[1].tAgi * 6)
-    {
-        renCounter = 4;
-    }
-    if (b[1].tAgi > b[0].tAgi && b[1].tAgi >= b[0].tAgi * 6)
-    {
-        renCounter = 4;
-    }
     for (int round = 1;; ++round)
     {
         int s = b[0].spdC >= b[1].spdC ? 0 : 1;
         b[s].spdC -= b[1 - s].spdC;
         b[1 - s].spdC = 0.0;
+        int renCounter = 3;
+        if (b[lastSide].tAgi > b[1 - lastSide].tAgi && b[lastSide].tAgi >= b[1 - lastSide].tAgi * 6)
+        {
+            renCounter = 4;
+        }
         if (roundCounter == renCounter && b[1 - lastSide].psvSkl & AURA_REN)
         {
             //b[lastSide].spdC = 0;
