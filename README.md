@@ -1,14 +1,12 @@
 # guguzhen-loganalysis
 
-咕咕镇战斗记录转计算器PC数据工具
-
-由于目前不分析具体的战斗记录只是脑补对面的装备以及大致根据图标推断点数，**会与实际产生极大的误差**
-
-本项目基于pycharm开发，建议环境python 3.9，并根据requirements安装依赖
-
 更新日志： https://kf.miaola.work/read.php?tid=976407&sf=aa2
 
-关于压缩包内计算器的说明:
+本工具分两个部分，咕咕镇战斗记录转计算器PC数据工具、魔改b大的计算器。
+
+**如果只使用计算器，解压release的压缩包后，只需将压缩包内的newkf_64.exe覆盖至b大计算器的目录里，其他文件不用管**
+
+## 关于计算器的说明:
 
 b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
@@ -24,7 +22,11 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 野怪 史莱姆 SHI
 
-使用方法：
+## 关于战斗记录转计算器PC数据工具的说明:
+
+由于目前不分析具体的战斗记录只是脑补对面的装备以及大致根据图标推断点数，**会与实际产生极大的误差**
+
+本项目基于pycharm开发，建议环境python 3.9，并根据requirements安装依赖
 
 收割机脚本：https://kf.miaola.work/read.php?fid=5&tid=1000914&sf=823
 
@@ -38,7 +40,7 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 注意，通过主题插件自定义装备图片的情况下程序无法获取装备品质，此时默认对手全为非红装，请尽量使用插件默认主题或不使用插件
 
-最后，感谢五神、熊大、Mulexe、kizunahitotsu为本项目提供建议与测试数据
+最后，感谢五神、熊大、Mulexe、kizunahitotsu、testla为本项目提供建议与测试数据
 
 Q:能读取战斗记录吗，误差太大了
 
