@@ -113,30 +113,17 @@ def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
     # 点数正数校验
     if t_int == 2 or t_int < 1:
         t_int = 1
-    if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        # 1400争夺要求智力点数校验
-        if t_int <= config.read_config('1400_int'):
-            t_int = config.read_config('1400_int')
     if t_int >= attr_data.all_point - 1:
-        if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-            # 1400争夺缺少的点数最后补
-            pass
-        else:
-            # 非1400不补偿，直接榨干剩余点数
-            attr_data.t_int = attr_data.all_point - 1
-            attr_data.t_str = 1
-            return
+        # 直接榨干剩余点数
+        attr_data.t_int = attr_data.all_point - 1
+        attr_data.t_str = 1
+        return
     attr_data.t_int = t_int
     attr_data.all_point -= t_int
     # 最后看力量
     attr_data.t_str = attr_data.all_point
     if attr_data.t_str < 1:
         attr_data.t_str = 1
-    if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        # 1300争夺要求力量点数校验
-        if attr_data.t_str <= config.read_config('1300_str'):
-            attr_data.t_str = config.read_config('1300_str')
-            attr_data.all_point -= attr_data.t_str
     # 缺少点数补偿
     if attr_data.all_point <= 0:
         lost_point = attr_data.t_str + attr_data.t_agi + attr_data.t_int \
@@ -203,7 +190,6 @@ def lost_point_compensation(lost_point, icon_list, attr_data, aumlet_str):
         setattr(attr_data, more_attr_name, more_attr_value)
     else:
         attr_data.t_agi -= _lost_point
-
 
 
 # 排序精体意 返回属性名list
@@ -302,20 +288,10 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         attr_data.all_point -= 1
         return
     # 加点，每点精神或智力有多少护盾
-    t_spr_mul = 65
-    t_int_mul = 0
-    if enemy_data.kf_level >= 300:
-        # 双下已过滤 200点精神 无条件达成
-        t_spr_mul += 13
-    if enemy_data.kf_level >= 600:
-        # 600争夺 500点精神
-        t_spr_mul += 21
-    if enemy_data.kf_level >= 800 and 'angle-up' in icon_list[4]:
-        # 单上/双上 800争夺 1000点精神
-        t_spr_mul += 32
-    if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        # 智力双上 1400争夺
-        t_int_mul += 45
+    kf_level = enemy_data.kf_level
+    if kf_level >= 2000:
+        kf_level = 2000
+    t_spr_mul = 65 + int(kf_level / 100) * 3.4
     # 启程心 附加护盾
     xin_ratio = 0
     if 'XIN' in battle_data.talent_list:
@@ -364,17 +340,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         final_ratio += 0.3
     # 反推
     base_sld = (sld / final_ratio - g_add - gear_add - wish_add - xin_add) / gear_mul
-    if enemy_data.kf_level >= 1400 and 'double-angle-up' in icon_list[2]:
-        # 1400系数 扣去智力加成的护盾
-        base_sld -= (t_int_mul * config.read_config('1400_int'))
-        if base_sld < 0:
-            attr_data.t_spr = 1
-            attr_data.all_point -= 1
-            return
     attr_data.t_spr = int(base_sld / t_spr_mul)
-    # 争夺要求点数校验
-    if attr_data.t_spr < 1000 and 'angle-up' in icon_list[4]:
-        attr_data.t_spr = 1000
     # 箭头校验
     attr_data.t_spr = icon_check(attr_data.t_spr, attr_data.final_apple_point, icon_list[4])
     # 点数正数校验
@@ -469,11 +435,11 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     gear_list = battle_data.gear_list
     gear_level_list = battle_data.gear_level_list
     hp = battle_data.hp
-    # 加点，可能有的争夺加成
-    t_vm_list = get_vm_list(enemy_data, attr_data, icon_list)
-    t_str_mul = 0
-    if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        t_str_mul += 25
+    # 加点，每点体意有多少生命
+    kf_level = enemy_data.kf_level
+    if kf_level >= 2000:
+        kf_level = 2000
+    t_vm_mul = 35 + int(kf_level / 100) * 1.7
     # 启程心 附加生命
     xin_ratio = 0
     if 'XIN' in battle_data.talent_list:
@@ -531,7 +497,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
             gear_add += 500 * int(gear_level_list[3]) * 0.08 * int(
                 config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
         if 'double-angle-up' in icon_list[1]:
-            gear_add += 1500 * int(gear_level_list[3]) * 0.08 * int(
+            gear_add += 2500 * int(gear_level_list[3]) * 0.08 * int(
                 config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
         elif 'angle-up' in icon_list[1]:
             gear_add += 1000 * int(gear_level_list[3]) * 0.08 * int(
@@ -577,45 +543,26 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         attr_data.t_mnd = 1
         attr_data.all_point -= 2
         return
-    if enemy_data.kf_level >= 1300 and 'double-angle-up' in icon_list[0]:
-        # 1300系数
-        base_hp -= t_str_mul * config.read_config('1300_str')
-    # 分析获取最终的争夺加成
-    _vit_mnd = 0
-    for t_vm_mul in t_vm_list:
-        t_vit_mnd = int(base_hp / t_vm_mul)
-        check_point = check_vm_diff(t_vm_mul, t_vit_mnd)
-        if check_point < 0:
-            continue
-        if check_point == 0:
-            _vit_mnd = t_vit_mnd
-            break
-    if _vit_mnd == 0:
-        for t_vm_mul in t_vm_list:
-            t_vit_mnd = int(base_hp / t_vm_mul)
-            check_point = check_vm_diff(t_vm_mul, t_vit_mnd)
-            if check_point and check_point > 0:
-                _vit_mnd = check_point
-                break
+    t_vit_mnd = int(base_hp / t_vm_mul)
     # 正数校验
-    if _vit_mnd <= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND')
+    if t_vit_mnd <= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'MND')
                     + aumlet_from_str(aumlet_str, 'AAA') * 2 + 4):
         attr_data.t_vit = 1
         attr_data.t_mnd = 1
         attr_data.all_point -= 2
         return
     # 点数溢出校验
-    if attr_data.all_point <= _vit_mnd + 3:
-        _vit_mnd = attr_data.all_point - 3
+    if attr_data.all_point <= t_vit_mnd + 3:
+        t_vit_mnd = attr_data.all_point - 3
         attr_data.t_str = 1
         attr_data.t_int = 1
         attr_data.t_agi = 1
         attr_data.all_point = 0
         # 分体意
-        split_vit_mnd(_vit_mnd, attr_data, icon_list, aumlet_str)
+        split_vit_mnd(t_vit_mnd, attr_data, icon_list, aumlet_str)
         return
     # 分体意
-    split_vit_mnd(_vit_mnd, attr_data, icon_list, aumlet_str)
+    split_vit_mnd(t_vit_mnd, attr_data, icon_list, aumlet_str)
     # 箭头校验
     attr_data.t_vit = icon_check(attr_data.t_vit, attr_data.final_apple_point, icon_list[3])
     attr_data.t_vit -= (aumlet_from_str(aumlet_str, 'VIT') + aumlet_from_str(aumlet_str, 'AAA'))
@@ -626,73 +573,6 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     if attr_data.t_mnd < 1:
         attr_data.t_mnd = 1
     attr_data.all_point -= (attr_data.t_vit + attr_data.t_mnd)
-
-
-# 判断点数是否符合争夺边界 不符合差值为正舍弃结果 差值为负补到差值
-def check_vm_diff(t_vm_mul, t_vit_mnd):
-    if t_vm_mul == 35 and t_vit_mnd >= 200:
-        return -1
-    if t_vm_mul == 35 + 7 and t_vit_mnd >= 500:
-        return -1
-    if t_vm_mul == 35 + 7 and t_vit_mnd < 200:
-        return 200
-    if t_vm_mul == 35 + 7 + 10 and t_vit_mnd >= 1000:
-        return -1
-    if t_vm_mul == 35 + 7 + 10 and t_vit_mnd < 500:
-        return 500
-    if t_vm_mul == 35 + 7 + 10 + 17 and t_vit_mnd < 1000:
-        return 1000
-    return 0
-
-
-# 获取可能的争夺加成的体意血量
-def get_vm_list(enemy_data, attr_data, icon_list):
-    result_list = []
-    # 获取箭头对应的上下限
-    if 'double-angle-down' in icon_list[3]:
-        min_point = 1
-        max_point = attr_data.point_down
-    elif 'icon-angle-down' in icon_list[3]:
-        min_point = attr_data.point_down + 1
-        max_point = attr_data.point_up
-    elif 'icon-angle-up' in icon_list[3]:
-        min_point = attr_data.point_up + 1
-        max_point = attr_data.point_double_up
-    else:
-        min_point = attr_data.point_double_up + 1
-        max_point = attr_data.final_point
-    if 'double-angle-down' in icon_list[5]:
-        min_point += 1
-        max_point += attr_data.point_down
-    elif 'icon-angle-down' in icon_list[5]:
-        min_point += attr_data.point_down + 1
-        max_point += attr_data.point_up
-    elif 'icon-angle-up' in icon_list[5]:
-        min_point += attr_data.point_up + 1
-        max_point += attr_data.point_double_up
-    else:
-        min_point += attr_data.point_double_up + 1
-        max_point = attr_data.final_point
-    # 下限区间
-    min_vm_mul = 35
-    if enemy_data.kf_level >= 300 and min_point >= 200:
-        min_vm_mul += 7
-    if enemy_data.kf_level >= 600 and min_point >= 500:
-        min_vm_mul += 10
-    if enemy_data.kf_level >= 800 and min_point >= 1000:
-        min_vm_mul += 17
-    max_vm_mul = 35
-    if enemy_data.kf_level >= 300 and max_point >= 200:
-        max_vm_mul += 7
-    if enemy_data.kf_level >= 600 and max_point >= 500:
-        max_vm_mul += 10
-    if enemy_data.kf_level >= 800 and max_point >= 1000:
-        max_vm_mul += 17
-    vm_mul_list = [35, 35 + 7, 35 + 7 + 10, 35 + 7 + 10 + 17]
-    for vm in vm_mul_list:
-        if max_vm_mul >= vm >= min_vm_mul:
-            result_list.append(vm)
-    return result_list
 
 
 # 根据比例图标拆分体意
