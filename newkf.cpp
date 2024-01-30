@@ -2168,12 +2168,12 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.pDefB = tVit * (1.0 +
         (pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
         tSpr * (0.5 +
-            (pc.kfLvl >= 2000 ? 2.0 : int(pc.kfLvl / 100) * 0.1));
+            (pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
     b.pDefA = pc.wish[WISH_PDEFA] * 1.0;
     b.mDefB = tMnd * (1.0 +
         (pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
         tSpr * (0.5 +
-            (pc.kfLvl >= 2000 ? 2.0 : int(pc.kfLvl / 100) * 0.1));
+            (pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
     b.mDefA = pc.wish[WISH_MDEFA] * 1.0;
     b.pRdc = 0.0;
     b.mRdc = 0.0;
