@@ -2142,8 +2142,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.lvl = pc.lvl;
     b.hpM = vitMnd * (35.0 +
         (pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7));
-    b.hpRecP = (pc.kfLvl >= 200 && tStr >= 200 ? 2 : 0) +
-        (pc.kfLvl >= 500 && tStr >= 500 ? 3 : 0);
+    b.hpRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.hpRecA = 0.0;
     b.hpRecRR = 0;
     b.cDef = 0;
@@ -2179,8 +2178,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mRdc = 0.0;
     b.sldM = tSpr * (65.0 +
         (pc.kfLvl >= 2000 ? 68.0 : int(pc.kfLvl / 100) * 3.4));
-    b.sldRecP = (pc.kfLvl >= 200 && tInt >= 200 ? 2 : 0) +
-        (pc.kfLvl >= 500 && tInt >= 500 ? 3 : 0);
+    b.sldRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
     b.rflP = 0.0;
