@@ -2916,7 +2916,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             isS = (bugRand100(rseed) < int(b0.sRateP));
             isC = (bugRand100(rseed) < int(b0.cRateP));
-            isMC = (b0.myst & MYST_BRACELET && rand100(rseed) < 20);
             isE = (b0.psvSkl & AURA_E && rand100(rseed) < 1);
             if (b0.myst & MYST_CLAYMORE)
             {
@@ -2935,6 +2934,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 isC = true;
             }
+            isMC = (b0.myst & MYST_BRACELET && isC && rand100(rseed) < 20);
         }
 
         // init recovery base
