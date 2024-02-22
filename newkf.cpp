@@ -3034,6 +3034,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         double moRfl = (((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01);
 
+        if (isS)
+        {
+            // ya is special
+            if (b0.role == ROLE_YA)
+            {
+                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
+                b1.hpM *= 0.95;
+                b1.sldM *= 0.95;
+            }
+        }
         if (isC)
         {
             pa[s] *= 2.0;
@@ -3184,10 +3194,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_YA:
             {
-                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
                 pa[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
-                b1.hpM *= 0.95;
-                b1.sldM *= 0.95;
                 break;
             }
             }
