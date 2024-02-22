@@ -2779,6 +2779,20 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].mDefB *= 1.2;
                 b[i].mDefA *= 1.2;
             }
+        }
+        b[i].hpM *= 1 + hpMAdd / 100.0;
+        b[i].sldM *= 1 + sldMAdd / 100.0;
+        b[i].hp = b[i].hpM;
+        b[i].sld = b[i].sldM;
+        b[i].hpPot = false;
+        b[i].sldPot = false;
+        b[i].ziFlag = false;
+        b[i].minFlag = (b[i].role == ROLE_MIN);
+    }
+    for (int i = 0; i < 2; ++i)
+    {
+        if (b[i].role == ROLE_YA)
+        {
             if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
             {
                 b[1 - i].mAtkB *= 0.7;
@@ -2789,16 +2803,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[1 - i].spdA *= 0.7;
             }
         }
-        b[i].hpM *= 1 + hpMAdd / 100.0;
-        b[i].sldM *= 1 + sldMAdd / 100.0;
-        b[i].hp = b[i].hpM;
-        b[i].sld = b[i].sldM;
-        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
-        b[i].hpPot = false;
-        b[i].sldPot = false;
-        b[i].ziFlag = false;
-        b[i].minFlag = (b[i].role == ROLE_MIN);
     }
+    for (int i = 0; i < 2; ++i)
+    {
+        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
+    }
+
     //if (b[0].hpRecRR > 100) b[0].hpRecRR = 100;
     //if (b[0].sldRecRR > 100) b[0].sldRecRR = 100;
     if (b[0].role == ROLE_YI && b[0].hpRecRR > 0) b[0].hpRecRR = 0;
@@ -3024,17 +3034,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         double moRfl = (((b1.mAtkB + b1.mAtkA) * 0.55) + b1.sldM * 0.07) * (1 + b1.mAtkR * 0.01);
 
-        if (isS)
-        {
-            // ya is special
-            if (b0.role == ROLE_YA)
-            {
-                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
-                pa[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
-                b1.hpM *= 0.95;
-                b1.sldM *= 0.95;
-            }
-        }
         if (isC)
         {
             pa[s] *= 2.0;
@@ -3183,6 +3182,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 ma[s] += (b0.mAtkB + b0.mAtkA) * 2 * (1 + dmgAdd / 100.0);
                 break;
             }
+            case ROLE_YA:
+            {
+                b0.pAtkB += (b1.hpM + b1.sldM) * 0.05;
+                pa[s] += (b0.pAtkB + b0.pAtkA) * 3.0;
+                b1.hpM *= 0.95;
+                b1.sldM *= 0.95;
+                break;
+            }
             }
         }
         if (b0.role == ROLE_WEI)
@@ -3307,7 +3314,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 if (sdMax < 0) sdMax = 0;
                 if (debug && sdMax > 0)
                 {
-                    printf("MA-SLD: ma=%d sld=%d\n", ma2, sdMax);
+                    printf("MA-SLD: ma=%d sld=%d\n", int(ma2), int(sdMax));
                 }
                 if (sdMax <= sldRemain)
                 {
@@ -3326,7 +3333,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int hd2 = int(ma2 * (1 - dr / 100.0)) - b1.mRdc;
             if (debug && ma2 > 0)
             {
-                printf("MA-HP: ma=%d hd=%d\n", ma2, hd2);
+                printf("MA-HP: ma=%d hd=%d\n", int(ma2), int(hd2));
             }
             if (hd2 < 0) hd2 = 0;
             hd[1 - s] += hd2;
@@ -3354,7 +3361,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 if (sdMax < 0) sdMax = 0;
                 if (debug && sdMax > 0)
                 {
-                    printf("PA-SLD: pa=%d sld=%d\n", pa2, sdMax);
+                    printf("PA-SLD: pa=%d sld=%d\n", int(pa2), int(sdMax));
                 }
                 if (sdMax <= sldRemain)
                 {
@@ -3373,7 +3380,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int hd2 = int(pa2 * (1 - dr / 100.0)) - b1.pRdc;
             if (debug && pa2 > 0)
             {
-                printf("PA-HP: pa=%d hd=%d\n", pa2, hd2);
+                printf("PA-HP: pa=%d hd=%d\n", int(pa2), int(hd2));
             }
             if (hd2 < 0) hd2 = 0;
             hd[1 - s] += hd2;
@@ -3459,7 +3466,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int hd2 = int(ma2 * (1 - dr / 100.0)) - b0.mRdc;
             if (debug && ma2 > 0)
             {
-                printf("MR-HP: ma=%d hd=%d\n", ma2, hd2);
+                printf("MR-HP: ma=%d hd=%d\n", int(ma2), int(hd2));
             }
             if (hd2 < 0) hd2 = 0;
             hd[s] += hd2;
@@ -3506,7 +3513,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int hd2 = int(pa2 * (1 - dr / 100.0)) - b0.pRdc;
             if (debug && pa2 > 0)
             {
-                printf("PR-HP: pa=%d hd=%d\n", pa2, hd2);
+                printf("PR-HP: pa=%d hd=%d\n", int(pa2), int(hd2));
             }
             if (hd2 < 0) hd2 = 0;
             hd[s] += hd2;
@@ -3569,7 +3576,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 if (debug)
                 {
                     printf("side=%d hp=%d hd=%d hr=%d sld=%d sd=%d sr=%d\n",
-                        i, b[i].hp, hd[i], hr[i], b[i].sld, sd[i], sr[i]);
+                        i, int(b[i].hp), int(hd[i]), int(hr[i]), int(b[i].sld), int(sd[i]), int(sr[i]));
                 }
                 if (hd[i] >= b[i].hp)
                 {
