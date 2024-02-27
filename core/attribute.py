@@ -463,13 +463,13 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
                 config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[1] == 'REFRACT':
         if 'double-angle-up' in icon_list[1]:
-            gear_add += 2500 * int(gear_level_list[1]) * 0.07 * int(
+            gear_add += 2500 * int(gear_level_list[1]) * 0.05 * int(
                 config.read_config('gear_config')['REFRACT'].split(' ')[3]) / 100
         elif 'angle-up' in icon_list[1]:
-            gear_add += 1000 * int(gear_level_list[1]) * 0.07 * int(
+            gear_add += 1000 * int(gear_level_list[1]) * 0.05 * int(
                 config.read_config('gear_config')['REFRACT'].split(' ')[3]) / 100
         elif 'icon-angle-down' in icon_list[1]:
-            gear_add += 500 * int(gear_level_list[1]) * 0.07 * int(
+            gear_add += 500 * int(gear_level_list[1]) * 0.05 * int(
                 config.read_config('gear_config')['REFRACT'].split(' ')[3]) / 100
     if gear_list[2] == 'CLOAK':
         gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100

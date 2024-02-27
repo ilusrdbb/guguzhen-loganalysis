@@ -2327,7 +2327,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             b.spdA += int(g.lvl * 2.0 * (g.percent[0] / 10.0)) / 10.0;
             b.cRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
             b.cBrcP += int(g.lvl / 20.0 * (g.percent[2] / 10.0)) / 10.0;
-            hpAdd += tAgi * (int(int(g.lvl * 0.07) * (g.percent[3] / 10.0)) / 10.0);
+            hpAdd += tAgi * (int(int(g.lvl * 0.05) * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_REFRACT;
             break;
         case GEAR_PLATE:
@@ -3042,9 +3042,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             aa[s] *= 2.0;
             if (b0.role == ROLE_MIN)
             {
-                pa[s] = int(pa[s] * 1.65);
-                ma[s] = int(ma[s] * 1.65);
-                aa[s] = int(aa[s] * 1.65);
+                pa[s] = int(pa[s] * 1.55);
+                ma[s] = int(ma[s] * 1.55);
+                aa[s] = int(aa[s] * 1.55);
             }
             if (b0.role == ROLE_LIN && b0.sklC == 0)
             {
@@ -3388,7 +3388,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int aa2 = (int)aa[s];
             if (b1.role == ROLE_MIN && (b1.minFlag || b1.sklC == -3)) aa2 = 0;
             if (b1.role == ROLE_WEI && b1.sklC) aa2 /= 10;
-            // if (b1.psvSkl & AURA_JUE) aa2 *= 1;
+            if (b1.psvSkl & AURA_JUE) aa2 *= 0.8;
             if (b1.psvSkl & AURA_DI) aa2 *= 0.12;
             if (sldActive)
             {
