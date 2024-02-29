@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2022/12/16 14:16
 # @Author : chaocai
-import datetime
-import random
-import time
-
 from core import config, util, enemy, battle, sql, attribute, template
 
 
@@ -19,52 +15,22 @@ def start():
     # 解析排行榜
     if config.read_config('is_search_level'):
         enemy.init_top_players()
-    # 解析json
-    json_data = util.file_load()
+    # 解析收割机脚本导出文件
+    json_data_dict = util.file_load()
     # 权重统计 论坛获取系数 防守记录分析
-    w_dict = get_w_dict(json_data)
+    w_dict = json_data_dict['w_dict']
     # 删除输出文件
     util.del_file(config.read_config('output_path'))
-    # 利用dict的特性新的覆盖旧的
+    # 临时存储战斗数据，防止重复分析影响性能
+    battle_map = {}
+    for cache_enemy_data in json_data_dict['enemy_list']:
+        battle_map[cache_enemy_data.enemy_name] = cache_enemy_data
+    # 最终分析结果
     result_dict = {}
-    for data in json_data:
-        # 排除野怪结果
-        if data['char'] == '野怪':
-            continue
-        # 防守记录跳过
-        if data.get('type') == 'defense':
-            continue
-        # 段位限制
-        if config.read_config('rank_limit') and data.get('rank') \
-                and data.get('rank') != config.read_config('rank_limit'):
-            continue
-        # 初始化对手数据
-        enemy_data = enemy.Enemy(data)
-        # 白名单
-        if config.read_config('white_list') and enemy_data.enemy_name not in config.read_config('white_list'):
-            continue
-        # 黑名单跳过
-        if config.read_config('black_list') and enemy_data.enemy_name in config.read_config('black_list'):
-            continue
-        # 等级跳过
-        if config.read_config('min_card_level') and enemy_data.card_level < config.read_config('min_card_level'):
-            continue
-        # 日期跳过
-        if config.read_config('start_date'):
-            start_datetime = datetime.datetime.strptime(config.read_config('start_date') + ' 00:00:00.000',
-                                                       "%Y-%m-%d %H:%M:%S.%f")
-            start_timestamp = int(time.mktime(start_datetime.timetuple()) * 1000.0 + start_datetime.microsecond / 1000.0)
-            if start_timestamp > enemy_data.battle_timestamp:
-                continue
-        if config.read_config('end_date'):
-            end_datetime = datetime.datetime.strptime(config.read_config('end_date') + ' 23:59:59.999',
-                                                       "%Y-%m-%d %H:%M:%S.%f")
-            end_timestamp = int(time.mktime(end_datetime.timetuple()) * 1000.0 + end_datetime.microsecond / 1000.0)
-            if end_timestamp < enemy_data.battle_timestamp:
-                continue
+    for enemy_name in battle_map:
+        enemy_data = battle_map.get(enemy_name)
         # 争夺等级
-        if w_dict.get(enemy_data.enemy_name) and w_dict.get(enemy_data.enemy_name).get('kf_level'):
-            enemy_data.kf_level = w_dict.get(enemy_data.enemy_name).get('kf_level')
+        enemy_data.kf_level = w_dict.get(enemy_data.enemy_name).get('kf_level')
         # 初始化战斗数据
         battle_data = battle.Battle(enemy_data.battle_log)
         # 获取护符
@@ -98,18 +64,9 @@ def start():
         # 构造map
         result_str = '\n'.join(result_list) + '\n\n'
         result_dict[enemy_data.enemy_name] = result_str
-        move_element_to_end(result_dict, enemy_data.enemy_name)
+        util.move_element_to_end(result_dict, enemy_data.enemy_name)
     # 输出
     util.write_data(result_dict)
-
-
-# 将字典中元素移动至末尾
-def move_element_to_end(input_dict, key_to_move):
-    if key_to_move in input_dict:
-        # 弹出元素并保存其值
-        element_value = input_dict.pop(key_to_move)
-        # 重新将元素添加到字典的末尾
-        input_dict[key_to_move] = element_value
 
 
 # 构造第8行
@@ -201,125 +158,5 @@ def build_aumlet_str(enemy_card, weapon):
 # 构造第三行
 def build_third_line(aumlet):
     return 'AMULET ' + aumlet + ' ENDAMULET'
-
-
-def get_w_dict(json_data):
-    result_map = {}
-    for data in json_data:
-        # 排除野怪结果
-        if data['char'] == '野怪':
-            continue
-        # 防守记录跳过
-        if data.get('type') == 'defense':
-            continue
-        # 段位限制
-        if config.read_config('rank_limit') and data.get('rank') \
-                and data.get('rank') != config.read_config('rank_limit'):
-            continue
-        # 白名单
-        if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
-            continue
-        # 黑名单跳过
-        if config.read_config('black_list') and data['enemyname'] in config.read_config('black_list'):
-            continue
-        # 等级跳过
-        if config.read_config('min_card_level') and int(data['charlevel']) < config.read_config('min_card_level'):
-            continue
-        # 日期跳过
-        if config.read_config('start_date'):
-            start_datetime = datetime.datetime.strptime(config.read_config('start_date') + ' 00:00:00.000',
-                                                       "%Y-%m-%d %H:%M:%S.%f")
-            start_timestamp = int(time.mktime(start_datetime.timetuple()) * 1000.0 + start_datetime.microsecond / 1000.0)
-            if start_timestamp > data['time']:
-                continue
-        if config.read_config('end_date'):
-            end_datetime = datetime.datetime.strptime(config.read_config('end_date') + ' 23:59:59.999',
-                                                       "%Y-%m-%d %H:%M:%S.%f")
-            end_timestamp = int(time.mktime(end_datetime.timetuple()) * 1000.0 + end_datetime.microsecond / 1000.0)
-            if end_timestamp < data['time']:
-                continue
-        # 计数
-        if data['enemyname'] in result_map:
-            result_map[data['enemyname']]['weight'] += 1
-        else:
-            enemy_data = {'enemy_name': data['enemyname'],
-                          'enemy_card': config.read_config('card_map').get(data['char']),
-                          'weight': 1}
-            if config.read_config('is_search_level') and config.read_config('cookie') and int(data['charlevel']) == 850:
-                # 通过论坛发帖获取真实的系数
-                enemy_data['kf_level'] = enemy.get_kf_level(data['enemyname'])
-            result_map[data['enemyname']] = enemy_data
-    # 防守记录分析
-    if config.read_config('is_analyse_defense'):
-        for data in json_data:
-            # 排除野怪结果
-            if data['char'] == '野怪':
-                continue
-            # 白名单
-            if config.read_config('white_list') and data['enemyname'] not in config.read_config('white_list'):
-                continue
-            # 黑名单跳过
-            if config.read_config('black_list') and data['enemyname'] in config.read_config('black_list'):
-                continue
-            # 等级跳过
-            if config.read_config('min_card_level') and int(data['charlevel']) < config.read_config('min_card_level'):
-                continue
-            # 日期跳过
-            if config.read_config('last_date'):
-                last_datetime = datetime.datetime.strptime(config.read_config('last_date') + ' 00:00:00.000',
-                                                           "%Y-%m-%d %H:%M:%S.%f")
-                last_timestamp = int(
-                    time.mktime(last_datetime.timetuple()) * 1000.0 + last_datetime.microsecond / 1000.0)
-                if last_timestamp > data['time']:
-                    continue
-            if data.get('type') == 'defense':
-                defense_name = data['enemyname']
-                defense_card = config.read_config('card_map').get(data['char'])
-                defense_level = config.read_config('max_kf_level')
-                if config.read_config('is_search_level') and config.read_config('cookie') and int(data['charlevel']) == 850:
-                    defense_level = enemy.get_kf_level(defense_name)
-                # 获取匹配数据
-                match_name = match_defense_name(defense_name, defense_card, defense_level, result_map)
-                if match_name:
-                    result_map[match_name]['weight'] += 1
-    return result_map
-
-
-# 防守数据匹配进攻数据
-def match_defense_name(defense_name, defense_card, defense_level, result_map):
-    # 名称与卡片匹配
-    if result_map.get(defense_name) and result_map.get(defense_name).get('enemy_card'):
-        return defense_name
-    # 不匹配卡片时匹配进攻记录最接近系数的同卡片记录
-    match_list = []
-    for enemy_name in result_map:
-        if result_map[enemy_name].get('kf_level') and result_map[enemy_name]['enemy_card'] == defense_card:
-            match_list.append(result_map[enemy_name])
-    if match_list:
-        # 找最接近系数的
-        return random.choice(find_closest_dicts(defense_level, match_list))['enemy_name']
-    return None
-
-
-# 找最接近系数的list
-def find_closest_dicts(target_num, dict_list):
-    if not target_num:
-        target_num = config.read_config('max_kf_level')
-    closest_dicts = []
-    # 初始化最小差值
-    min_difference = 2000
-    for dictionary in dict_list:
-        num = dictionary.get("kf_level")
-        # 计算差值的绝对值
-        difference = abs(target_num - num)
-        if difference < min_difference:
-            # 重置最接近的字典列表
-            closest_dicts = [dictionary]
-            # 更新最小差值
-            min_difference = difference
-        elif difference == min_difference:
-            # 如果有多个字典与最小差值相等，则添加到列表中
-            closest_dicts.append(dictionary)
-    return closest_dicts
 
 

@@ -8,27 +8,20 @@ from core import config, util, sql
 
 
 class Templete:
-    # 用户名
-    enemy_name = None
-    # 卡片
-    enemy_card = None
-    # 装备列表
-    gear_list = None
-    # 箭头列表
-    attribute_list = None
-    # 点数
-    point = None
-    # 总点数
-    all_point = None
-
     # 初始化对手数据
     def __init__(self, data):
+        # 用户名
         self.enemy_name = data['enemy']
+        # 卡片
         self.enemy_card = data['card']
+        # 装备列表
         self.gear_list = data['gear'].split(' ')
+        # 箭头列表
         self.attribute_list = data['attribute'].split(' ')
+        # 点数
         self.point = data['point']
         point_list = data['point'].split(' ')
+        # 总点数
         self.all_point = int(point_list[0]) + int(point_list[1]) + int(point_list[2]) + \
                          int(point_list[3]) + int(point_list[4]) + int(point_list[5])
 
