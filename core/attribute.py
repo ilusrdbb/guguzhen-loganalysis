@@ -60,7 +60,7 @@ def cal_attr(enemy_data, battle_data, attr_data, aumlet_str):
     # 根据战斗记录 推测智力
     cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str)
     # 剩余点数以及无法根据战斗记录推测时的处理
-    cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str)
+    cal_other_attr(battle_data, attr_data, aumlet_str)
 
 # 战斗记录 魔伤推测智力
 def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
@@ -170,8 +170,8 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
         return
     attr_data.t_int -= (aumlet_from_str(aumlet_str, 'INT') + aumlet_from_str(aumlet_str, 'AAA'))
     # 点数溢出校验
-    if attr_data.final_point <= attr_data.t_str + 1:
-        attr_data.t_int = attr_data.final_point - 1
+    if attr_data.final_point <= attr_data.t_str + attr_data.t_spr + attr_data.t_int + attr_data.t_vit + attr_data.t_mnd + 1:
+        attr_data.t_int = attr_data.final_point - attr_data.t_str - attr_data.t_spr - attr_data.t_vit - attr_data.t_mnd - 1
         attr_data.t_agi = 1
         attr_data.all_point = 0
         return
@@ -296,8 +296,8 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
         return
     attr_data.t_str -= (aumlet_from_str(aumlet_str, 'STR') + aumlet_from_str(aumlet_str, 'AAA'))
     # 点数溢出校验
-    if attr_data.final_point <= attr_data.t_str + 4:
-        attr_data.t_str = attr_data.final_point - 4
+    if attr_data.final_point <= attr_data.t_str + attr_data.t_spr + 4:
+        attr_data.t_str = attr_data.final_point - attr_data.t_spr - 4
         attr_data.t_int = 1
         attr_data.t_agi = 1
         attr_data.t_vit = 1
@@ -342,7 +342,7 @@ def get_level_ratio(enemy_data, level_type):
 
 
 # 根据剩余点数和图标大致推断力量、智力、敏捷
-def cal_other_attr(battle_data, attr_data, enemy_data, aumlet_str):
+def cal_other_attr(battle_data, attr_data, aumlet_str):
     if attr_data.all_point == 0:
         return
     if attr_data.t_str > 0 and attr_data.t_int > 0:
