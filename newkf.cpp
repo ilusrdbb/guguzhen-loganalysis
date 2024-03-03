@@ -2140,18 +2140,15 @@ void preparePcBStat(const Player& pc, BStat& b)
     int vitMnd = tVit + tMnd;
     b.role = pc.role;
     b.lvl = pc.lvl;
-    b.hpM = vitMnd * (35.0 +
-        int(pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7));
+    b.hpM = vitMnd * 35.0 + int(vitMnd * (pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7));
     b.hpRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.hpRecA = 0.0;
     b.hpRecRR = 0;
     b.cDef = 0;
     b.sDef = 0;
-    b.pAtkB = tStr * (10.0 +
-        (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
+    b.pAtkB = tStr * (10.0 + (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
     b.pAtkA = pc.wish[WISH_PATKA] * 5.0;
-    b.mAtkB = tInt * (10.0 +
-        (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
+    b.mAtkB = tInt * (10.0 + (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
     b.aAtk = 0.0;
     b.spdB = tAgi * 3.0;
@@ -2164,20 +2161,15 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.cRateB = tAgi + int(pc.kfLvl >= 1000 && tAgi >= 1000 ? tAgi / 10.0 : 0.0);
     b.cBrcP = 0.0;
     b.lchP = 0.0;
-    b.pDefB = tVit * (1.0 +
-        int(pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
-        tSpr * (0.5 +
-            int(pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
+    b.pDefB = tVit + (tVit *(pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
+        tSpr * (0.5 + int(pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
     b.pDefA = pc.wish[WISH_PDEFA] * 1.0;
-    b.mDefB = tMnd * (1.0 +
-        int(pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
-        tSpr * (0.5 +
-            int(pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
+    b.mDefB = tMnd + int(tMnd * (pc.kfLvl >= 2000 ? 3.0 : int(pc.kfLvl / 100) * 0.15)) +
+        tSpr * 0.5 + int(tSpr * (pc.kfLvl >= 1900 ? 1.5 : int(pc.kfLvl / 100) * 0.08));
     b.mDefA = pc.wish[WISH_MDEFA] * 1.0;
     b.pRdc = 0.0;
     b.mRdc = 0.0;
-    b.sldM = tSpr * (65.0 +
-        int(pc.kfLvl >= 2000 ? 68.0 : int(pc.kfLvl / 100) * 3.4));
+    b.sldM = tSpr * 65.0 + int(tSpr *(pc.kfLvl >= 2000 ? 68.0 : int(pc.kfLvl / 100) * 3.4));
     b.sldRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
