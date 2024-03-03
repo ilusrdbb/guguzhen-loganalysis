@@ -6,7 +6,7 @@ from core import config, util, enemy, battle, sql, attribute, template
 
 
 def start():
-    print('Version 2.8.1')
+    print('Version 2.8.2')
     # 加载配置文件
     config._init()
     # 加载模板
