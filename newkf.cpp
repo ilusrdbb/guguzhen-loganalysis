@@ -2615,12 +2615,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             b[1 - i].sldRecRR += 70.0;
         }
-        if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_BI)
+        if (!(b[i].psvSkl & FLAG_STAT) && (b[i].psvSkl & AURA_BI))
         {
             b[i].pBrcP = int(b[i].pBrcP * 1.15);
             b[i].pBrcA = int(b[i].pBrcA * 1.15);
         }
-        if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_MO)
+        if (!(b[i].psvSkl & FLAG_STAT) && (b[i].psvSkl & AURA_MO))
         {
             b[i].mBrcP = int(b[i].mBrcP * 1.15);
             b[i].mBrcA = int(b[i].mBrcA * 1.15);
