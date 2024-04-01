@@ -2748,20 +2748,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[i].rflP += b[i].amul[AMUL_RFL];
             b[i].rflP = int(b[i].rflP) >= 150 ? 150.0 : b[i].rflP;
         }
-        if (b[i].role == ROLE_XIA)
-        {
-            // Process mAtk growth after AURA_FENG
-            if (b[i].mAtkB + b[i].mAtkA > b[1 - i].mAtkB + b[1 - i].mAtkA)
-            {
-                b[i].mAtkB = int(b[i].mAtkB * 1.3);
-                b[i].mAtkA = int(b[i].mAtkA * 1.3);
-            }
-            else
-            {
-                b[i].spdB = int(b[i].spdB * 1.3);
-                b[i].spdA = int(b[i].spdA * 1.3);
-            }
-        }
         if (b[i].role == ROLE_YA)
         {
             if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
@@ -2783,6 +2769,20 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     }
     for (int i = 0; i < 2; ++i)
     {
+        if (b[i].role == ROLE_XIA)
+        {
+            // Process mAtk growth after AURA_FENG
+            if (b[i].mAtkB + b[i].mAtkA > b[1 - i].mAtkB + b[1 - i].mAtkA)
+            {
+                b[i].mAtkB = int(b[i].mAtkB * 1.3);
+                b[i].mAtkA = int(b[i].mAtkA * 1.3);
+            }
+            else
+            {
+                b[i].spdB = int(b[i].spdB * 1.3);
+                b[i].spdA = int(b[i].spdA * 1.3);
+            }
+        }
         if (b[i].role == ROLE_YA)
         {
             if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
