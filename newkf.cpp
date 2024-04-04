@@ -2654,8 +2654,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].sRateP += b[i].amul[AMUL_SKL];
         b[i].cDef += b[i].amul[AMUL_CRTR];
         b[i].sDef += b[i].amul[AMUL_SKLR];
-        if (int(b[i].cRateP) > 100) b[i].cRateP = 100.0;
-        if (int(b[i].sRateP) > 100) b[i].sRateP = 100.0;
+//        if (int(b[i].cRateP) > 100) b[i].cRateP = 100.0;
+//        if (int(b[i].sRateP) > 100) b[i].sRateP = 100.0;
         if (!(b[i].psvSkl & FLAG_STAT))
         {
             if (b[i].myst & MYST_CLOAK)
