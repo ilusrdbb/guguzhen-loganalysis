@@ -46,7 +46,7 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 感谢熊大对咕咕镇的研究，特别是取整部分
 
-感谢虚空叛逆帝龙、Mulexe、キズナヒトツ、testla提供的建议与测试数据
+感谢虚空叛逆帝龙、Mulexe、キズナヒトツ、testla、zx03提供的建议与测试数据
 
 不感谢xyf创造的咕咕镇，别再瞎jb搞了cnm
 
