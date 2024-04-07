@@ -48,6 +48,8 @@ def init_top_players():
         top_list = dom.xpath(config.read_config('xpath_config')['top'])
         for top in top_list:
             name = top.xpath('td//text()')[1]
+            if name == 'fch_1993':
+                name = '用户236657'
             level = top.xpath('td//text()')[2].replace('级', '')
             cache_data = sql.query(name)
             if cache_data:
@@ -82,6 +84,7 @@ def get_kf_level(enemy_name):
                         sql.update(enemy_name, str(int(forum_level)))
                         print('%s的系数获取成功，系数为%s' % (enemy_name, str(int(forum_level))))
                         return int(forum_level) + config.read_config('shadow_level') + 100
+            return int(cache_data[0][2]) + config.read_config('shadow_level') + 100
     else:
         print('开始获取%s的系数...' % enemy_name)
         search_url = domain + config.read_config('url_config')['search']
@@ -119,10 +122,15 @@ def get_kf_level(enemy_name):
                                     sql.insert(enemy_name, read_dom.xpath(config.read_config('xpath_config')['read'])[0], str(int(forum_level)))
                                     print('%s的系数获取成功，系数为%s' % (enemy_name, str(int(forum_level))))
                                     return int(forum_level) + config.read_config('shadow_level') + 100
+                    else:
+                        # 封禁用户
+                        forum_level = config.read_config('max_kf_level') - config.read_config('shadow_level') - 100
+                        sql.insert(enemy_name, '', str(forum_level))
+                        print('%s未找到发帖记录' % enemy_name)
             else:
                 # 无发帖记录的扔进数据库中
                 forum_level = config.read_config('max_kf_level') - config.read_config('shadow_level') - 100
                 sql.insert(enemy_name, '', str(forum_level))
                 print('%s未找到发帖记录' % enemy_name)
-    # 封禁用户/网络错误
+    # 网络错误/其余异常情况
     return None
