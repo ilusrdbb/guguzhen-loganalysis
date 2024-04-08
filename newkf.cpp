@@ -2727,6 +2727,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 hpMAdd += 10;
             }
+            // todo maybe process in battle?
             if (b[i].psvSkl & AURA_DIAN)
             {
                 b[i].pDefB = int(b[i].pDefB * 1.3);
@@ -2739,16 +2740,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[i].lchP += b[i].amul[AMUL_LCH];
             b[i].rflP += b[i].amul[AMUL_RFL];
             b[i].rflP = int(b[i].rflP) >= 150 ? 150.0 : b[i].rflP;
-        }
-        if (b[i].role == ROLE_YA)
-        {
-            if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
-            {
-                b[i].pDefB = int(b[i].pDefB * 1.2);
-                b[i].pDefA = int(b[i].pDefA * 1.2);
-                b[i].mDefB = int(b[i].mDefB * 1.2);
-                b[i].mDefA = int(b[i].mDefA * 1.2);
-            }
         }
         b[i].hpM *= 1 + hpMAdd / 100.0;
         b[i].sldM *= 1 + sldMAdd / 100.0;
@@ -2781,8 +2772,16 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].spdA = int(b[i].spdA * 1.3);
             }
         }
+        // ya process after xia
         if (b[i].role == ROLE_YA)
         {
+            if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
+            {
+                b[i].pDefB = int(b[i].pDefB * 1.2);
+                b[i].pDefA = int(b[i].pDefA * 1.2);
+                b[i].mDefB = int(b[i].mDefB * 1.2);
+                b[i].mDefA = int(b[i].mDefA * 1.2);
+            }
             if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
             {
                 b[1 - i].mAtkB = int(b[1 - i].mAtkB * 0.7);
@@ -3026,7 +3025,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         if (isS)
         {
-            // ya is special
+            // todo ya is special? maybe blade is special
             if (b0.role == ROLE_YA)
             {
                 b0.pAtkB += (int(b1.hpM * 0.05) + int(b1.sldM * 0.05));
@@ -3060,6 +3059,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b0.myst & MYST_BLADE)
             {
+                // maybe process after skill
                 aa[s] += int((b0.pAtkB + b0.pAtkA) / 2);
             }
         }
