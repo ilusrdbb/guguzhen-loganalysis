@@ -680,6 +680,12 @@ inline int bugRand100(int* rseed)
     return 1 + myrand(rseed, 100);
 }
 
+bool isSignedNumberDot(const char* s)
+{
+    for (; *s; ++s) if ((*s < '0' || *s > '9') && *s != '.' && *s != '-') return false;
+    return true;
+}
+
 bool isNumberDot(const char* s)
 {
     for (; *s; ++s) if ((*s < '0' || *s > '9') && *s != '.') return false;
@@ -932,7 +938,7 @@ bool readPlayer(FILE* fp, Player& pc)
             return false;
         }
     }
-    if (buf[0] == 'W' && buf[1] == '=' && isNumberDot(buf + 2))
+    if (buf[0] == 'W' && buf[1] == '=' && isSignedNumberDot(buf + 2))
     {
         if (sscanf(buf + 2, "%lf", &pc.weight) != 1)
         {
@@ -3935,7 +3941,7 @@ AttrScore calcScorePc(const BStat& stat, bool showDetail, bool showCI, int* rsee
         weight *= 1.0 * (numTests2 - draw) / numTests2;
         totalWinRate += winRate * weight;
         totalHpRate += (numTests2 == draw ? 0.0 : singleHpRate / (numTests2 - draw) * weight);
-        totalWeight += weight;
+        totalWeight += fabs(weight);
     }
     if (totalWeight == 0.0)
     {
