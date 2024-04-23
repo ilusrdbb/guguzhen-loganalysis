@@ -2779,7 +2779,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
         }
         // ya process after xia
-        if (b[i].role == ROLE_YA || (b[i].myst & MYST_FIERCE))
+        if (b[i].role == ROLE_YA)
         {
             if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
             {

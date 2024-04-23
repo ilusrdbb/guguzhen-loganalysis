@@ -122,8 +122,8 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
         base_matk = (m_damage - crt_ratio * pre_add) / (crt_ratio + 2.25)
     else:
         base_matk = (m_damage - crt_ratio * pre_add) / crt_ratio
-    # 黑夜雅 雅头bug
-    if battle_data.my_card == 'YA' or (gear_list[3] == 'FIERCE' and gear_mystery_list[3] == '1'):
+    # 黑夜雅
+    if battle_data.my_card == 'YA':
         base_matk /= 0.7
     # 启程风
     if 'FENG' in battle_data.talent_list:
@@ -245,8 +245,8 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
     else:
         base_patk = (p_damage - di_damage - crt_ratio * pre_add) / crt_ratio
     battle_data.cache_p_atk = base_patk
-    # 黑夜雅 雅头bug
-    if battle_data.my_card == 'YA' or (gear_list[3] == 'FIERCE' and gear_mystery_list[3] == '1'):
+    # 黑夜雅
+    if battle_data.my_card == 'YA':
         base_patk /= 0.7
     # 启程风
     if 'FENG' in battle_data.talent_list:

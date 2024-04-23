@@ -42,7 +42,6 @@ def file_load():
 # 获取权重和论坛系数
 def get_w_dict(filter_enemy_dict):
     result_map = {}
-    defense_cache = {}
     # 进攻记录
     for attack_enemy in filter_enemy_dict['attack_enemy_list']:
         # 计数
@@ -59,65 +58,7 @@ def get_w_dict(filter_enemy_dict):
                 kf_level = enemy.get_kf_level(attack_enemy.enemy_name)
                 if kf_level:
                     result_map[attack_enemy.enemy_name]['kf_level'] = kf_level
-    # 防守记录
-    if config.read_config('is_analyse_defense'):
-        for defense_enemy in filter_enemy_dict['defense_enemy_list']:
-            if defense_enemy.enemy_name in result_map:
-                defense_level = result_map[defense_enemy.enemy_name]['kf_level']
-            elif defense_enemy.enemy_name in defense_cache:
-                defense_level = defense_cache[defense_enemy.enemy_name]
-            elif config.read_config('is_search_level') and config.read_config('cookie') \
-                    and defense_enemy.card_level == 850:
-                defense_level = enemy.get_kf_level(defense_enemy.enemy_name)
-            else:
-                defense_level = defense_enemy.kf_level
-            if defense_level:
-                # 防守获取的等级写入缓存，防止重复网络请求
-                defense_cache[defense_enemy.enemy_name] = defense_level
-                # 获取匹配数据
-                match_name = match_defense_name(defense_enemy.enemy_name, defense_enemy.enemy_card,
-                                                defense_level, result_map)
-                if match_name:
-                    result_map[match_name]['weight'] += 1
     return result_map
-
-
-# 防守数据匹配进攻数据
-def match_defense_name(defense_name, defense_card, defense_level, result_map):
-    # 名称与卡片匹配
-    if result_map.get(defense_name) and result_map.get(defense_name).get('enemy_card'):
-        return defense_name
-    # 不匹配卡片时匹配进攻记录最接近系数的同卡片记录
-    match_list = []
-    for enemy_name in result_map:
-        if result_map[enemy_name].get('kf_level') and result_map[enemy_name]['enemy_card'] == defense_card:
-            match_list.append(result_map[enemy_name])
-    if match_list:
-        # 找最接近系数的
-        return random.choice(find_closest_dicts(defense_level, match_list))['enemy_name']
-    return None
-
-
-# 找最接近系数的list
-def find_closest_dicts(target_num, dict_list):
-    if not target_num:
-        target_num = config.read_config('max_kf_level')
-    closest_dicts = []
-    # 初始化最小差值
-    min_difference = 2000
-    for dictionary in dict_list:
-        num = dictionary.get("kf_level")
-        # 计算差值的绝对值
-        difference = abs(target_num - num)
-        if difference < min_difference:
-            # 重置最接近的字典列表
-            closest_dicts = [dictionary]
-            # 更新最小差值
-            min_difference = difference
-        elif difference == min_difference:
-            # 如果有多个字典与最小差值相等，则添加到列表中
-            closest_dicts.append(dictionary)
-    return closest_dicts
 
 
 # 过滤获取需要分析的进攻/防守数据
