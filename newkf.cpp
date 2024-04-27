@@ -2781,14 +2781,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         // ya process after xia
         if (b[i].role == ROLE_YA)
         {
-            if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
+            if (b[i].mode == 0)
             {
                 b[i].pDefB = int(b[i].pDefB * 1.2);
                 b[i].pDefA = int(b[i].pDefA * 1.2);
                 b[i].mDefB = int(b[i].mDefB * 1.2);
                 b[i].mDefA = int(b[i].mDefA * 1.2);
             }
-            if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
+            if (b[i].mode == 1)
             {
                 b[1 - i].mAtkB = int(b[1 - i].mAtkB * 0.7);
                 b[1 - i].mAtkA = int(b[1 - i].mAtkA * 0.7);
