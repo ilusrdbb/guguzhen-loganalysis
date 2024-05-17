@@ -2428,7 +2428,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.alias = pc.alias;
 }
 
-inline int calcDefRate(double def, int defP, double brc, double cBrc, double brcA, int defMax, bool isDunh, bool isZhi, int hongBrcA)
+inline int calcDefRate(double def, int defP, double brc, double cBrc, double brcA, int defMax, bool isDunh, bool isZhi, int hongBrcA, bool isDian)
 {
     if (hongBrcA != -1)
     {
@@ -2442,15 +2442,15 @@ inline int calcDefRate(double def, int defP, double brc, double cBrc, double brc
         }
     }
     int brcP = (int)(brc * (isDunh ? 0.65 : 1.0)) + (int)(cBrc * (isDunh ? 0.65 : 1.0));
-    int r = int(def * (100 + defP - brcP));
+    int r = int((isDian ? int(def * 1.3) : def) * (100 + defP - brcP));
     r = (r >= 0 ? r : r - 99) / 100 - int(brcA);
     r = (r >= 0 ? r / 10 : isZhi && isDunh ? 5 : isZhi ? 10 : -30);
     if (r > defMax) r = defMax;
     if (debug)
     {
-        printf("DefRate: def=%d(+%d%%) brc=%d%%+%d dr=%d dunh=%s zhi=%s hongA=%d\n",
+        printf("DefRate: def=%d(+%d%%) brc=%d%%+%d dr=%d dunh=%s zhi=%s hongA=%d dian=%s\n",
             int(def), defP, brcP, int(brcA), r,
-            isDunh ? "true" : "false", isZhi ? "true" : "false", hongBrcA);
+            isDunh ? "true" : "false", isZhi ? "true" : "false", hongBrcA, isDian ? "true" : "false");
     }
     return r;
 }
@@ -2732,14 +2732,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b[i].role == ROLE_XI)
             {
                 hpMAdd += 10;
-            }
-            // todo maybe process in battle?
-            if (b[i].psvSkl & AURA_DIAN)
-            {
-                b[i].pDefB = int(b[i].pDefB * 1.3);
-                b[i].pDefA = int(b[i].pDefA * 1.3);
-                b[i].mDefB = int(b[i].mDefB * 1.3);
-                b[i].mDefA = int(b[i].mDefA * 1.3);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
@@ -3300,7 +3292,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 isC ? b0.cBrcP : 0.0, b0.mBrcA,
                 (b1.psvSkl & AURA_SHENG) ? 80 : 75,
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
-                (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
+                (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1, b1.psvSkl & AURA_DIAN);
             if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
@@ -3347,7 +3339,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b0.pBrcP, isC ? b0.cBrcP : 0, b0.pBrcA,
                 (b1.psvSkl & AURA_SHENG) ? 80 : 75,
                 b1.psvSkl & AURA_DUNH, b1.psvSkl & AURA_ZHI,
-                (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1);
+                (b0.psvSkl & AURA_HONG) ? b0.lvl / 2 : -1, b1.psvSkl & AURA_DIAN);
             if (b1.defLvl > b0.defLvl && b1.defLvl > 0 && b0.defLvl > 0)
             {
                 int lvlDiff = b1.defLvl - b0.defLvl > 20 ? 20 : b1.defLvl - b0.defLvl;
@@ -3431,7 +3423,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int dr = calcDefRate(b0.mDefB + b0.mDefA, b0.amul[AMUL_MDEF],
                 b1.mBrcP + (b1.psvSkl & AURA_BO && (b1.hp > b1.hpM * 0.7 && b1.sld > b1.sldM * 0.7) ? 30 : 0),
                 0, b1.mBrcA, (b0.psvSkl & AURA_SHENG) ? 80 : 75,
-                b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
+                b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1, b0.psvSkl & AURA_DIAN);
             if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
@@ -3479,7 +3471,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             int dr = calcDefRate(b0.pDefB + b0.pDefA, b0.amul[AMUL_PDEF],
                 b1.pBrcP, 0, b1.pBrcA,
                 (b0.psvSkl & AURA_SHENG) ? 80 : 75,
-                b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1);
+                b0.psvSkl & AURA_DUNH, b0.psvSkl & AURA_ZHI, -1, b0.psvSkl & AURA_DIAN);
             if (b1.atkLvl > b0.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
             {
                 int lvlDiff = b1.atkLvl - b0.atkLvl > 20 ? 20 : b1.atkLvl - b0.atkLvl;
