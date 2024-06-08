@@ -780,7 +780,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     if enemy_data.enemy_card == 'YI':
         final_ratio += 0.2
     if enemy_data.enemy_card == 'XI':
-        final_ratio += 0.1
+        final_ratio += 0.01 * int(config.read_config('default_g') / 2000)
     if enemy_data.enemy_card == 'MING':
         final_ratio += 0.9
     if enemy_data.enemy_card == 'WU':

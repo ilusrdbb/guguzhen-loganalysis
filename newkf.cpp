@@ -278,6 +278,7 @@ struct BStat
     bool sldPot;  // 护盾药水是否已使用
     bool ziFlag;  // 自信回头是否已发动
     bool minFlag; // 先兆感知是否存在
+    int growth;   // 成长值
 
     int tStr; // 力量加点
     int tAgi; // 敏捷加点
@@ -2406,10 +2407,6 @@ void preparePcBStat(const Player& pc, BStat& b)
         }
     }
     b.hpM += hpPlus + hpAdd;
-    if (pc.role == ROLE_XI)
-    {
-        b.hpM += pc.growth > 100000 ? 100000 : pc.growth;
-    }
     b.pAtkB += pAtkPlus;
     b.mAtkB += mAtkPlus;
     b.spdB += spdPlus;
@@ -2424,6 +2421,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.spdRR = 0;
     b.spdC = b.spdB + b.spdA;
     b.sld = b.sldM;
+    b.growth = pc.growth;
 
     b.alias = pc.alias;
 }
@@ -2731,7 +2729,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_XI)
             {
-                hpMAdd += 10;
+                b[i].lchP += 10.0;
+                hpMAdd += b[i].growth > 100000 ? 50 : int(b[i].growth * 0.0005);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
