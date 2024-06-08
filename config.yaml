@@ -5,14 +5,14 @@ black_list: []
 # 最低卡片等级，小于这个等级的跳过不记录，如果为空则全量抓取
 min_card_level: 840
 # 默认对手争夺等级，当对手为850满级卡且未读取到论坛系数时的争夺等级，目前最高争夺加成等级为2000
-max_kf_level: 1300
+max_kf_level: 1400
 # 自身争夺等级，当分析战斗记录时，用于计算进攻等级差带来的伤害影响，目前最高争夺加成等级为2000
-my_kf_level: 1300
+my_kf_level: 1400
 # 自身技能、暴击抵抗，同上用于分析战斗记录，目前上限为3
 skl_def: 0
 crt_def: 0
 # 时间范围，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
-start_date: '2024-04-01'
+start_date: '2024-06-01'
 end_date: ''
 # 段位限制，只分析此段位的出击记录，填空字符串为不限制，注意此选项需要最新版收割机的支持
 rank_limit: 'SSS'
@@ -32,7 +32,7 @@ amulet_config:
   WU: 'STR 80 AGI 80 VIT 80 MND 80 HP 10 SPD 10 PATK 10 RFL 10 CRT 10 PDEF 10 MDEF 10 AAA 8'
   YA: 'STR 80 AGI 80 INT 80 VIT 60 MND 60 HP 10 SPD 10 PATK 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
 # 默认许愿池
-wish_config: '100 100 100 100 100 400 400 400 400 100 100 100 100 100'
+wish_config: '100 100 100 100 100 500 500 500 500 100 100 100 100 100'
 # 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
 default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'THORN', 'DAGGER', 'WAND',
                        'LIMPIDWAND', 'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL',
