@@ -189,15 +189,15 @@ enum
     WISH_SHI_BUF,    // 启程之誓强化 效果增加5%*W倍 最大100
     WISH_XIN_BUF,    // 启程之心强化 效果增加5%*W倍 最大100
     WISH_FENG_BUF,   // 启程之风强化 效果增加5%*W倍 最大100
-    WISH_PATKA,      // 附加物伤增加5*W 最大1000
-    WISH_MATKA,      // 附加魔伤增加5*W 最大1000
-    WISH_HPM,        // 附加生命增加12*W 最大1000
-    WISH_SLDM,       // 附加护盾增加20*W 最大1000
-    WISH_SPDA,       // 附加攻速增加W 最大200
-    WISH_PBRCA,      // 物理附加穿透增加W 最大200
-    WISH_MBRCA,      // 魔法附加穿透增加W 最大200
-    WISH_PDEFA,      // 物理附加防御增加W 最大200
-    WISH_MDEFA,      // 魔法附加防御增加W 最大200
+    WISH_PATKA,      // 附加物伤增加5*W  最大3000
+    WISH_MATKA,      // 附加魔伤增加5*W  最大3000
+    WISH_HPM,        // 附加生命增加12*W 最大3000
+    WISH_SLDM,       // 附加护盾增加20*W 最大3000
+    WISH_SPDA,       // 附加攻速增加W    最大500
+    WISH_PBRCA,      // 物理附加穿透增加W 最大500
+    WISH_MBRCA,      // 魔法附加穿透增加W 最大500
+    WISH_PDEFA,      // 物理附加防御增加W 最大500
+    WISH_MDEFA,      // 魔法附加防御增加W 最大500
     WISH_COUNT,
 
     AMUL_STR = 0, // 力量
@@ -353,7 +353,7 @@ const int auraCost[AURA_COUNT] = {
     100, 100, 100, 100, 100, 100, 100, 100,
     0 };
 int auraRandCount = 1;
-int wishMax[WISH_COUNT] = { 100, 100, 100, 100, 100, 1000, 1000, 1000, 1000, 200, 200, 200, 200, 200 };
+int wishMax[WISH_COUNT] = { 100, 100, 100, 100, 100, 3000, 3000, 3000, 3000, 500, 500, 500, 500, 500 };
 const char* const prefName[PREF_COUNT] = {
     "SHANG", "BO", "FEI", "HOU", "JU", "HONG", "DIAN", "CI", "JUE" };
 const int prefAura[PREF_COUNT] = {
@@ -2773,14 +2773,14 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         // ya process after xia
         if (b[i].role == ROLE_YA && !(b[i].myst & MYST_FIERCE))
         {
-            if (b[i].mode == 0)
+            if (b[i].mode == 0 || (b[i].myst & MYST_FIERCE))
             {
                 b[i].pDefB = int(b[i].pDefB * 1.2);
                 b[i].pDefA = int(b[i].pDefA * 1.2);
                 b[i].mDefB = int(b[i].mDefB * 1.2);
                 b[i].mDefA = int(b[i].mDefA * 1.2);
             }
-            if (b[i].mode == 1)
+            if (b[i].mode == 1 || (b[i].myst & MYST_FIERCE))
             {
                 b[1 - i].mAtkB = int(b[1 - i].mAtkB * 0.7);
                 b[1 - i].mAtkA = int(b[1 - i].mAtkA * 0.7);
