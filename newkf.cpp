@@ -3144,8 +3144,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             case ROLE_LIN:
             {
-                pa[s] += int((b0.pAtkB + b0.pAtkA) * 3.0);
-                ma[s] += int((b0.pAtkB + b0.pAtkA) * 3.0);
+                pa[s] += int((b0.pAtkB + b0.pAtkA) * 2.2);
+                ma[s] += int((b0.pAtkB + b0.pAtkA) * 2.2);
                 break;
             }
             case ROLE_AI:
