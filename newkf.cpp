@@ -3438,7 +3438,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         hr[s] += int((pa[s] + aa[s]) * b0.lchP / 200.0);
         sr[s] += int((ma[s] + aa[s]) * b0.lchP / 200.0);
-        if (b0.myst & MYST_VULTURE) hr[s] += int((ma[s] + aa[s]) * b0.lchP / 1000.0);
+        if (b0.myst & MYST_VULTURE) hr[s] += int((ma[s] + aa[s]) * b0.lchP / 800.0);
 
         sldRemain = (int)b0.sld;
         sldActive = (sldRemain > 0);
@@ -3539,7 +3539,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         hr[1 - s] += int(pRfl * b1.lchP / 400.0);
         sr[1 - s] += int(mRfl * b1.lchP / 400.0);
-        if (b1.myst & MYST_VULTURE) hr[1 - s] += int(mRfl * b1.lchP / 2000.0);
+        if (b1.myst & MYST_VULTURE) hr[1 - s] += int(mRfl * b1.lchP / 1600.0);
         if (b1.myst & MYST_WOOD)
         {
             hr[1 - s] += b1.hpS / 20;
