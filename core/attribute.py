@@ -62,6 +62,7 @@ def cal_attr(enemy_data, battle_data, attr_data, aumlet_str):
     # 剩余点数以及无法根据战斗记录推测时的处理
     cal_other_attr(battle_data, attr_data, aumlet_str)
 
+
 # 战斗记录 魔伤推测智力
 def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
     if attr_data.all_point == 0:
@@ -99,7 +100,7 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
         if enemy_data.enemy_card == 'WU':
             m_damage -= (100 - battle_data.wu_flag)
         if enemy_data.enemy_card == 'LIN':
-            m_damage -= (battle_data.cache_p_atk * 3)
+            m_damage -= (battle_data.cache_p_atk * 2.2)
     # 暴击倍率
     crt_ratio = 1
     if battle_data.crt_flag:
@@ -110,7 +111,7 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
     pre_add = 0
     # 枪神秘
     if gear_list[0] == 'SPEAR' and gear_mystery_list[0] == '1':
-        pre_add += (0.3 * battle_data.my_turn_hp)
+        pre_add += (0.18 * battle_data.my_turn_hp)
     # 海星神秘
     if enemy_data.enemy_card == 'WU' and gear_list[1] == 'RING' and gear_mystery_list[1] == '1':
         pre_add += 0.2 * (battle_data.wu_flag + 100)
@@ -232,7 +233,7 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
     pre_add = 0
     # 弓神秘
     if gear_list[0] == 'ASSBOW' and gear_mystery_list[0] == '1':
-        pre_add += (0.3 * battle_data.my_turn_sld)
+        pre_add += (0.18 * battle_data.my_turn_sld)
     # 沸血
     if 'FEI' in battle_data.talent_list:
         pre_add += (0.18 * battle_data.hp)
@@ -241,7 +242,7 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
         pre_add += 0.2 * (battle_data.wu_flag + 100)
     # 计算基础物攻
     if enemy_data.enemy_card == 'LIN' and battle_data.skl_flag:
-        base_patk = (p_damage - di_damage - crt_ratio * pre_add) / (crt_ratio + 3)
+        base_patk = (p_damage - di_damage - crt_ratio * pre_add) / (crt_ratio + 2.2)
     else:
         base_patk = (p_damage - di_damage - crt_ratio * pre_add) / crt_ratio
     battle_data.cache_p_atk = base_patk
@@ -606,17 +607,13 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
         gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['CAPE'].split(' ')[0]) / 10000
     if gear_list[3] == 'TIARA':
         gear_mul += int(gear_level_list[3]) / 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[1]) / 10000
-    # 霞 成长值
-    g_add = 0
-    if enemy_data.enemy_card == 'XIA':
-        g_add += config.read_config('default_g')
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'SLD') / 100
     if gear_list[2] == 'CLOAK' and gear_mystery_list[2] == '1':
         final_ratio += 0.5
     if enemy_data.enemy_card == 'MO':
-        final_ratio += 0.4
+        final_ratio += 0.25
     if enemy_data.enemy_card == 'MENG':
         if gear_list[3] == 'TIARA' and gear_mystery_list[3] == '1':
             final_ratio += 0.45
@@ -624,8 +621,10 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
             final_ratio += 0.3
     if enemy_data.enemy_card == 'WU':
         final_ratio += 0.3
+    if enemy_data.enemy_card == 'XIA':
+        final_ratio += 0.01 * int(config.read_config('default_g') / 5000)
     # 反推
-    base_sld = (sld / final_ratio - g_add - gear_add - wish_add - xin_add) / gear_mul
+    base_sld = (sld / final_ratio - gear_add - wish_add - xin_add) / gear_mul
     attr_data.t_spr = int(base_sld / t_spr_mul)
     # 箭头校验
     attr_data.t_spr = icon_check(attr_data.t_spr, attr_data.final_apple_point, icon_list[4])
@@ -768,10 +767,6 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
         gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['WOOD'].split(' ')[0]) / 10000
     if gear_list[3] == 'HUNT':
         gear_mul += int(gear_level_list[3]) * 0.06 * int(config.read_config('gear_config')['HUNT'].split(' ')[3]) / 10000
-    # 希 成长值
-    g_add = 0
-    if enemy_data.enemy_card == 'XI':
-        g_add += config.read_config('default_g')
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'HP') / 100
@@ -786,7 +781,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     if enemy_data.enemy_card == 'WU':
         final_ratio += 0.3
     # 反推
-    base_hp = (hp / final_ratio - g_add - gear_add - wish_add - xin_add) / gear_mul
+    base_hp = (hp / final_ratio - gear_add - wish_add - xin_add) / gear_mul
     if base_hp <= 0:
         attr_data.t_vit = 1
         attr_data.t_mnd = 1

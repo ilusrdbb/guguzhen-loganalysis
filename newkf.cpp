@@ -1670,6 +1670,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_ZHU:
         b.pAtkB = npc.lvl * 2.0;
@@ -1695,6 +1697,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_DENG:
         b.pAtkB = 1.0;
@@ -1720,6 +1724,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_SHOU:
         b.pAtkB = npc.lvl * 33.0;
@@ -1745,6 +1751,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_MU2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1770,6 +1778,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_REN | AURA_WU | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_ZHU2:
         b.pAtkB = 0.0;
@@ -1795,6 +1805,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_DENG2:
         b.pAtkB = 1.0;
@@ -1820,6 +1832,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_DUN | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_SHOU2:
         b.pAtkB = npc.lvl * 80.0;
@@ -1845,6 +1859,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_CI | AURA_REN | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_YU2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1870,6 +1886,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_HAO2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1895,6 +1913,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_CI | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_LIU:
         // Init base status later
@@ -1907,6 +1927,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix;
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     case ROLE_SHI:
         b.pAtkB = npc.lvl * 60.0;
@@ -1933,6 +1955,8 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_DUN | AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_RE | AURA_WU | AURA_DI);
+        b.cDef = 0;
+        b.sDef = 0;
         break;
     }
 
@@ -2413,10 +2437,6 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
     b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
     b.sldM += sldPlus + sldAdd;
-    if (pc.role == ROLE_XIA)
-    {
-        b.sldM += pc.growth > 100000 ? 100000 : pc.growth;
-    }
     b.hp = b.hpM;
     b.spdRR = 0;
     b.spdC = b.spdB + b.spdA;
@@ -2694,7 +2714,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_MO)
             {
-                sldMAdd += 40;
+                sldMAdd += 25;
             }
             if (b[i].role == ROLE_LIN)
             {
@@ -2731,6 +2751,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 b[i].lchP += 10.0;
                 hpMAdd += b[i].growth > 100000 ? 50 : int(b[i].growth * 0.0005);
+            }
+            if (b[i].role == ROLE_XIA)
+            {
+                sldMAdd += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
+                b[i].mAtkR += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
@@ -3002,11 +3027,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b0.myst & MYST_ASSBOW)
         {
-            pa[s] += int(b1.sld * 0.3);
+            pa[s] += int(b1.sld * 0.18);
         }
         if (b0.myst & MYST_SPEAR)
         {
-            ma[s] += int(b1.hp * 0.3);
+            ma[s] += int(b1.hp * 0.18);
         }
         if (isE)
         {
@@ -3411,9 +3436,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         if (b1.role == ROLE_WEI && b1.sklC) b1.sklC = 0;
 
-        hr[s] += ((int64_t)hd[1 - s]) * int(b0.lchP) / 100;
-        sr[s] += ((int64_t)sd[1 - s]) * int(b0.lchP) / 125;
-        if (b0.myst & MYST_VULTURE) hr[s] += ((int64_t)sd[1 - s]) * int(b0.lchP) / 625;
+        hr[s] += int((pa[s] + aa[s]) * b0.lchP / 200.0);
+        sr[s] += int((ma[s] + aa[s]) * b0.lchP / 200.0);
+        if (b0.myst & MYST_VULTURE) hr[s] += int((ma[s] + aa[s]) * b0.lchP / 1000.0);
 
         sldRemain = (int)b0.sld;
         sldActive = (sldRemain > 0);
@@ -3512,9 +3537,9 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (hd2 < 0) hd2 = 0;
             hd[s] += hd2;
         }
-        hr[1 - s] += ((int64_t)hd[s]) * int(b1.lchP) / 200;
-        sr[1 - s] += ((int64_t)sd[s]) * int(b1.lchP) / 250;
-        if (b1.myst & MYST_VULTURE) hr[1 - s] += ((int64_t)sd[s]) * int(b1.lchP) / 1250;
+        hr[1 - s] += int(pRfl * b1.lchP / 400.0);
+        sr[1 - s] += int(mRfl * b1.lchP / 400.0);
+        if (b1.myst & MYST_VULTURE) hr[1 - s] += int(mRfl * b1.lchP / 2000.0);
         if (b1.myst & MYST_WOOD)
         {
             hr[1 - s] += b1.hpS / 20;
