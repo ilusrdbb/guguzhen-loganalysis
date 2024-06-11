@@ -250,6 +250,7 @@ struct BStat
     double mBrcA;   // 附加魔法穿透
     double sRateB;  // 技能释放基数
     double sRateP;  // 技能释放率
+    int sRateR;     // 技能释放率倍率
     double cRateB;  // 暴击释放基数
     double cRateP;  // 暴击释放率
     double cBrcP;   // 百分比暴击穿透
@@ -1220,6 +1221,7 @@ bool readPlayer(FILE* fp, Player& pc)
         b.spdRR = 0;
         b.spdC = b.spdB;
         b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+        b.sRateR = 100;
         b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
         b.pDefA = 0.0;
         b.mDefA = 0.0;
@@ -1971,6 +1973,7 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
     b.spdRR = 0;
     b.spdC = b.spdB * (1 - b.spdRR / 100.0);
     b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+    b.sRateR = 100;
     b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
     b.pDefA = 0.0;
     b.mDefA = 0.0;
@@ -2234,19 +2237,19 @@ void preparePcBStat(const Player& pc, BStat& b)
             b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
             b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
             b.pBrcA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_BOW:
             b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
             b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
             b.spdA += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_STAFF:
             b.pAtkA += int(g.lvl * 10.0 * (g.percent[0] / 10.0)) / 10.0;
             b.mAtkA += int(g.lvl * 10.0 * (g.percent[1] / 10.0)) / 10.0;
             b.mBrcP += int((g.lvl / 20.0 + 5.0) * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             break;
         case GEAR_BLADE:
             pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 20.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
@@ -2277,7 +2280,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_WAND;
             break;
         case GEAR_SHIELD:
-            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[0] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 10.0) * (g.percent[0] / 10.0)) / 10.0;
             b.rflP += int(g.lvl / 15.0 * (g.percent[1] / 10.0)) / 10.0;
             b.pDefA += int(g.lvl * (g.percent[2] / 10.0)) / 10.0;
             b.mDefA += int(g.lvl * (g.percent[3] / 10.0)) / 10.0;
@@ -2294,7 +2297,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             pAtkPlus += round(b.pAtkB * (int((g.lvl / 5.0 + 50.0) * (g.percent[0] / 10.0)) / 1000.0) * 100.0) / 100.0;
             b.pBrcP += int((g.lvl / 20.0 + 10.0) * (g.percent[1] / 10.0)) / 10.0;
             b.mBrcA += int(g.lvl * 2.0 * (g.percent[2] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 10.0) * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_SPEAR;
             break;
         case GEAR_COLORFUL:
@@ -2325,9 +2328,9 @@ void preparePcBStat(const Player& pc, BStat& b)
             if (g.isMyst) b.myst |= MYST_BRACELET;
             break;
         case GEAR_VULTURE:
-            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[0] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[1] / 10.0)) / 10.0;
-            b.lchP += int((g.lvl / 15.0 + 1.0) * (g.percent[2] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 1.0) * (g.percent[0] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 1.0) * (g.percent[1] / 10.0)) / 10.0;
+            b.lchP += int((g.lvl / 20.0 + 1.0) * (g.percent[2] / 10.0)) / 10.0;
             b.spdA += int(g.lvl * 2.0 * (g.percent[3] / 10.0)) / 10.0;
             if (g.isMyst) b.myst |= MYST_VULTURE;
             break;
@@ -2435,6 +2438,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.mAtkB += mAtkPlus;
     b.spdB += spdPlus;
     b.sRateP = round((b.sRateB * 100.0 / (b.sRateB + 99.0)) * 100.0) / 100.0;
+    b.sRateR = 100;
     b.cRateP = round((b.cRateB * 100.0 / (b.cRateB + 99.0)) * 100.0) / 100.0;
     b.sldM += sldPlus + sldAdd;
     b.hp = b.hpM;
@@ -2559,7 +2563,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         int sldMAdd = 0;
         b[i].sRateB = (b[i].sRateB > sRateRdc ? b[i].sRateB - sRateRdc : 0.0);
         b[i].cRateB = (b[i].cRateB > cRateRdc ? b[i].cRateB - cRateRdc : 0.0);
-        b[i].sRateP = b[i].sRateB * 100 / (b[i].sRateB + 99);
+        if (b[i].role == ROLE_WEI)
+        {
+            b[i].sRateR += 10;
+        }
+        b[i].sRateR += b[i].amul[AMUL_SKL];
+        b[i].sRateP = (b[i].sRateB * 100 / (b[i].sRateB + 99)) * (b[i].sRateR / 100.0);
         b[i].cRateP = b[i].cRateB * 100 / (b[i].cRateB + 99);
         b[i].pAtkR = b[i].amul[AMUL_PATK];
         b[i].mAtkR = b[i].amul[AMUL_MATK];
@@ -2649,10 +2658,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[i].mBrcP = int(b[i].mBrcP * 1.15);
             b[i].mBrcA = int(b[i].mBrcA * 1.15);
         }
-        if (b[i].role == ROLE_WEI)
-        {
-            b[i].sRateP += 10.0;
-        }
         if (b[i].role == ROLE_WU)
         {
             b[i].pAtkR += 30.0;
@@ -2667,7 +2672,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         b[i].sldRecRR -= b[i].amul[AMUL_REC];
         b[i].spdRR -= b[i].amul[AMUL_SPD];
         b[i].cRateP += b[i].amul[AMUL_CRT];
-        b[i].sRateP += b[i].amul[AMUL_SKL];
         b[i].cDef += b[i].amul[AMUL_CRTR];
         b[i].sDef += b[i].amul[AMUL_SKLR];
 //        if (int(b[i].cRateP) > 100) b[i].cRateP = 100.0;
@@ -2973,6 +2977,10 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             b0.sklC += (b0.myst & MYST_DAGGER ? 2 : 1);
             aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 9 * (b0.myst & MYST_DAGGER ? 20 + b0.sklC * 3 : 20) / 400.0);
+            b1.pAtkB *= 0.99;
+            b1.pAtkA *= 0.99;
+            b1.mAtkB *= 0.99;
+            b1.mAtkA *= 0.99;
         }
         if (b0.role == ROLE_MENG)
         {
