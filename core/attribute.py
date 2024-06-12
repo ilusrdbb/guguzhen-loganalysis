@@ -86,6 +86,7 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
         m_damage -= battle_data.cache_p_damage
     # 葡萄
     atk_aumlet_ratio = 1 + aumlet_from_str(aumlet_str, 'PATK') / 100
+    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[7]) / 100)
     if enemy_data.enemy_card == 'WU':
         atk_aumlet_ratio += 0.3
     m_damage /= atk_aumlet_ratio
@@ -201,6 +202,7 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
         battle_data.cache_p_damage = p_damage
     # 葡萄
     atk_aumlet_ratio = 1 + aumlet_from_str(aumlet_str, 'PATK') / 100
+    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[6]) / 100)
     if enemy_data.enemy_card == 'WU':
         atk_aumlet_ratio += 0.3
     p_damage /= atk_aumlet_ratio
