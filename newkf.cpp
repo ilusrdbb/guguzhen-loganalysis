@@ -2687,17 +2687,23 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].rflP += 25.0;
             }
             // todo bug
-            if (i == 0 && b[i].psvSkl & AURA_SHI)
+            if (i == 1)
+            {
+                b[1].wish[WISH_SHI_BUF] = 0;
+                b[1].wish[WISH_FENG_BUF] = 0;
+                b[1].wish[WISH_XIN_BUF] = 0;
+            }
+            if (b[i].psvSkl & AURA_SHI)
             {
                 b[i].pRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
                 b[i].mRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
             }
-            if (i == 0 && b[i].psvSkl & AURA_FENG)
+            if (b[i].psvSkl & AURA_FENG)
             {
                 b[i].pAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
                 b[i].mAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
             }
-            if (i == 0 && b[i].psvSkl & AURA_XIN)
+            if (b[i].psvSkl & AURA_XIN)
             {
                 b[i].hpM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
                 b[i].sldM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
