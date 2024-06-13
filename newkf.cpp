@@ -676,12 +676,6 @@ inline int rand100(int* rseed)
     return myrand(rseed, 100);
 }
 
-inline int bugRand100(int* rseed)
-{
-    // TODO this is a guguzhen bug,(return myrand(rseed, 100)) is correct
-    return 1 + myrand(rseed, 100);
-}
-
 bool isSignedNumberDot(const char* s)
 {
     for (; *s; ++s) if ((*s < '0' || *s > '9') && *s != '.' && *s != '-') return false;
@@ -2692,17 +2686,18 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             {
                 b[i].rflP += 25.0;
             }
-            if (b[i].psvSkl & AURA_SHI)
+            // todo bug
+            if (i == 0 && b[i].psvSkl & AURA_SHI)
             {
                 b[i].pRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
                 b[i].mRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
             }
-            if (b[i].psvSkl & AURA_FENG)
+            if (i == 0 && b[i].psvSkl & AURA_FENG)
             {
                 b[i].pAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
                 b[i].mAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
             }
-            if (b[i].psvSkl & AURA_XIN)
+            if (i == 0 && b[i].psvSkl & AURA_XIN)
             {
                 b[i].hpM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
                 b[i].sldM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
@@ -2945,8 +2940,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         }
         else
         {
-            isS = (bugRand100(rseed) < int(b0.sRateP));
-            isC = (bugRand100(rseed) < int(b0.cRateP));
+            isS = (rand100(rseed) < int(b0.sRateP));
+            isC = (rand100(rseed) < int(b0.cRateP));
             isE = (b0.psvSkl & AURA_E && rand100(rseed) < 1);
             if (b0.myst & MYST_CLAYMORE)
             {
