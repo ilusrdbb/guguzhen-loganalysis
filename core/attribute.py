@@ -127,9 +127,9 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
     # 黑夜雅
     if battle_data.my_card == 'YA':
         base_matk /= 0.7
-    # 启程风
-    if 'FENG' in battle_data.talent_list:
-        base_matk -= 5 * (1 + int(config.read_config('wish_config').split(' ')[4]) * 0.05) * enemy_data.card_level
+    # 启程风 todo bug
+    # if 'FENG' in battle_data.talent_list:
+    #     base_matk -= 5 * (1 + int(config.read_config('wish_config').split(' ')[4]) * 0.05) * enemy_data.card_level
     # 装备 附加魔攻
     gear_add = 0
     if gear_list[1] == 'GLOVES':
@@ -251,9 +251,9 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
     # 黑夜雅
     if battle_data.my_card == 'YA':
         base_patk /= 0.7
-    # 启程风
-    if 'FENG' in battle_data.talent_list:
-        base_patk -= 5 * (1 + int(config.read_config('wish_config').split(' ')[4]) * 0.05) * enemy_data.card_level
+    # 启程风 todo bug
+    # if 'FENG' in battle_data.talent_list:
+    #     base_patk -= 5 * (1 + int(config.read_config('wish_config').split(' ')[4]) * 0.05) * enemy_data.card_level
     # 装备 附加物攻
     gear_add = 0
     if gear_list[1] == 'GLOVES':
@@ -584,10 +584,10 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     if kf_level >= 2000:
         kf_level = 2000
     t_spr_mul = 65 + int(kf_level / 100) * 3.4
-    # 启程心 附加护盾
+    # 启程心 附加护盾 todo bug
     xin_ratio = 0
-    if 'XIN' in battle_data.talent_list:
-        xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
+    # if 'XIN' in battle_data.talent_list:
+    #     xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
     xin_add = xin_ratio * enemy_data.card_level * 10
     # 许愿池 附加护盾
     wish_add = int(config.read_config('wish_config').split(' ')[8]) * 20
@@ -727,10 +727,10 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     if kf_level >= 2000:
         kf_level = 2000
     t_vm_mul = 35 + int(kf_level / 100) * 1.7
-    # 启程心 附加生命
+    # 启程心 附加生命 todo bug
     xin_ratio = 0
-    if 'XIN' in battle_data.talent_list:
-        xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
+    # if 'XIN' in battle_data.talent_list:
+    #     xin_ratio = 1 + int(config.read_config('wish_config').split(' ')[3]) * 0.05
     xin_add = xin_ratio * enemy_data.card_level * 10
     # 许愿池 附加生命
     wish_add = int(config.read_config('wish_config').split(' ')[7]) * 12
