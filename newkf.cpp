@@ -2639,6 +2639,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         if (b[i].psvSkl & AURA_XUE)
         {
             b[i].hpRecRR -= 10;
+            b[i].sldRecRR -= 10;
         }
         if (b[i].psvSkl & AURA_SHANG)
         {
@@ -2685,13 +2686,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b[i].myst & MYST_THORN)
             {
                 b[i].rflP += 25.0;
-            }
-            // todo bug
-            if (i == 1)
-            {
-                b[1].wish[WISH_SHI_BUF] = 0;
-                b[1].wish[WISH_FENG_BUF] = 0;
-                b[1].wish[WISH_XIN_BUF] = 0;
             }
             if (b[i].psvSkl & AURA_SHI)
             {
