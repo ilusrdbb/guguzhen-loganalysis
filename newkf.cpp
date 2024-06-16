@@ -235,10 +235,8 @@ struct BStat
     int hpRecRR;    // 生命回复减少率(百分比)
     double pAtkB;   // 基础物理攻击
     double pAtkA;   // 附加物理攻击
-    int pAtkR;   // 物理攻击增加率(百分比)
     double mAtkB;   // 基础魔法攻击
     double mAtkA;   // 附加魔法攻击
-    int mAtkR;   // 魔法攻击增加率(百分比)
     double aAtk;    // 绝对攻击
     double spdB;    // 基础攻击速度
     double spdA;    // 附加攻击速度
@@ -280,6 +278,11 @@ struct BStat
     bool ziFlag;  // 自信回头是否已发动
     bool minFlag; // 先兆感知是否存在
     int growth;   // 成长值
+
+    int pAtkR;    // 物理攻击增加率(百分比)
+    int mAtkR;    // 魔法攻击增加率(百分比)
+    int hpMR;     // 最大生命值增加率(百分比)
+    int sldMR;    // 最大护盾值增加率(百分比)
 
     int tStr; // 力量加点
     int tAgi; // 敏捷加点
@@ -1223,6 +1226,8 @@ bool readPlayer(FILE* fp, Player& pc)
         b.sldRecRR = 0.0;
         b.pAtkR = 0;
         b.mAtkR = 0;
+        b.hpMR = 0;
+        b.sldMR = 0;
         b.sklC = (b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
         b.houC = 0;
         b.alias = pc.alias;
@@ -1668,8 +1673,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_ZHU:
         b.pAtkB = npc.lvl * 2.0;
@@ -1695,8 +1698,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_DENG:
         b.pAtkB = 1.0;
@@ -1722,8 +1723,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_SHOU:
         b.pAtkB = npc.lvl * 33.0;
@@ -1749,8 +1748,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix * 5 + npc.prefixCount;
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_MU2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1776,8 +1773,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_REN | AURA_WU | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_ZHU2:
         b.pAtkB = 0.0;
@@ -1803,8 +1798,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_DENG2:
         b.pAtkB = 1.0;
@@ -1830,8 +1823,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_DUN | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_SHOU2:
         b.pAtkB = npc.lvl * 80.0;
@@ -1857,8 +1848,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHANG | AURA_SHEN | AURA_CI | AURA_REN | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_YU2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1884,8 +1873,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_XIAO | AURA_SHANG | AURA_SHEN | AURA_RE | AURA_WU | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_HAO2:
         b.pAtkB = npc.lvl * 30.0;
@@ -1911,8 +1898,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_CI | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_LIU:
         // Init base status later
@@ -1925,8 +1910,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = npc.prefix;
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     case ROLE_SHI:
         b.pAtkB = npc.lvl * 60.0;
@@ -1953,8 +1936,6 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
         b.defLvl = b.atkLvl = 0;
         b.tAgi = npc.lvl * 1.0;
         b.psvSkl = (AURA_DUN | AURA_SHENG | AURA_SHANG | AURA_SHEN | AURA_REN | AURA_RE | AURA_WU | AURA_DI);
-        b.cDef = 0;
-        b.sDef = 0;
         break;
     }
 
@@ -1978,6 +1959,10 @@ void prepareNpcBStat(const NonPlayer& npc, BStat& b)
     b.sldRecRR = 0.0;
     b.pAtkR = 0;
     b.mAtkR = 0;
+    b.hpMR = 0;
+    b.sldMR = 0;
+    b.cDef = 0;
+    b.sDef = 0;
     b.myst = 0;
     b.sklC = 0;
     b.houC = 0;
@@ -2176,14 +2161,15 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.hpRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.hpRecA = 0.0;
     b.hpRecRR = 0;
+    b.hpMR = pc.wish[WISH_HPM] / 100;
     b.cDef = 0;
     b.sDef = 0;
     b.pAtkB = tStr * (10.0 + (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
     b.pAtkA = pc.wish[WISH_PATKA] * 5.0;
-    b.pAtkR = int(pc.wish[WISH_PATKA] / 100);
+    b.pAtkR = pc.wish[WISH_PATKA] / 100;
     b.mAtkB = tInt * (10.0 + (pc.kfLvl >= 2000 ? 20.0 : int(pc.kfLvl / 100) * 1.0));
     b.mAtkA = pc.wish[WISH_MATKA] * 5.0;
-    b.mAtkR = int(pc.wish[WISH_MATKA] / 100);
+    b.mAtkR = pc.wish[WISH_MATKA] / 100;
     b.aAtk = 0.0;
     b.spdB = tAgi * 3.0;
     b.spdA = int(tAgi * (pc.kfLvl >= 1000 ? 0.5 : 0.0)) + pc.wish[WISH_SPDA];
@@ -2207,6 +2193,7 @@ void preparePcBStat(const Player& pc, BStat& b)
     b.sldRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.sldRecA = 0.0;
     b.sldRecRR = 0.0;
+    b.sldMR = pc.wish[WISH_SLDM] / 100;
     b.rflP = 0.0;
     b.psvSkl = pc.auraSkl;
     b.myst = 0;
@@ -2559,8 +2546,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     double cRateRdc = ((b[0].cRateB + b[1].cRateB) * reduceRateA + reduceRateB / 2) / reduceRateB;
     for (int i = 0; i < 2; ++i)
     {
-        int hpMAdd = 0;
-        int sldMAdd = 0;
+        int hpMAdd = b[i].hpMR;
+        int sldMAdd = b[i].sldMR;
         b[i].sRateB = (b[i].sRateB > sRateRdc ? b[i].sRateB - sRateRdc : 0.0);
         b[i].cRateB = (b[i].cRateB > cRateRdc ? b[i].cRateB - cRateRdc : 0.0);
         b[i].sRateR += b[i].amul[AMUL_SKL];
