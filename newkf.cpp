@@ -2154,10 +2154,11 @@ void preparePcBStat(const Player& pc, BStat& b)
     int tVit = pc.attr[ATTR_VIT] + pc.amul[AMUL_VIT] + pc.amul[AMUL_AAA];
     int tSpr = pc.attr[ATTR_SPR] + pc.amul[AMUL_SPR] + pc.amul[AMUL_AAA];
     int tMnd = pc.attr[ATTR_MND] + pc.amul[AMUL_MND] + pc.amul[AMUL_AAA];
-    int vitMnd = tVit + tMnd;
     b.role = pc.role;
     b.lvl = pc.lvl;
-    b.hpM = vitMnd * 35.0 + int(vitMnd * (pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7));
+    b.hpM = (tVit + tMnd) * 35.0 +
+        int(tVit * (pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7)) +
+        int(tMnd * (pc.kfLvl >= 2000 ? 34.0 : int(pc.kfLvl / 100) * 1.7));
     b.hpRecP = (pc.kfLvl >= 200 ? 2 : 0) + (pc.kfLvl >= 500 ? 3 : 0);
     b.hpRecA = 0.0;
     b.hpRecRR = 0;
