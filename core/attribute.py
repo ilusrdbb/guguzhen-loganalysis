@@ -86,7 +86,7 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
         m_damage -= battle_data.cache_p_damage
     # 葡萄
     atk_aumlet_ratio = 1 + aumlet_from_str(aumlet_str, 'PATK') / 100
-    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[6]) / 100)
+    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[6]) / 100) / 100
     if enemy_data.enemy_card == 'WU':
         atk_aumlet_ratio += 0.3
     m_damage /= atk_aumlet_ratio
@@ -202,7 +202,7 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
         battle_data.cache_p_damage = p_damage
     # 葡萄
     atk_aumlet_ratio = 1 + aumlet_from_str(aumlet_str, 'PATK') / 100
-    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[6]) / 100)
+    atk_aumlet_ratio += int(int(config.read_config('wish_config').split(' ')[6]) / 100) / 100
     if enemy_data.enemy_card == 'WU':
         atk_aumlet_ratio += 0.3
     p_damage /= atk_aumlet_ratio
@@ -612,7 +612,7 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'SLD') / 100
-    final_ratio += int(int(config.read_config('wish_config').split(' ')[8]) / 100)
+    final_ratio += int(int(config.read_config('wish_config').split(' ')[8]) / 100) / 100
     if gear_list[2] == 'CLOAK' and gear_mystery_list[2] == '1':
         final_ratio += 0.5
     if enemy_data.enemy_card == 'MO':
@@ -773,7 +773,7 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'HP') / 100
-    final_ratio += int(int(config.read_config('wish_config').split(' ')[7]) / 100)
+    final_ratio += int(int(config.read_config('wish_config').split(' ')[7]) / 100) / 100
     if enemy_data.enemy_card == 'LIN':
         final_ratio += 0.3
     if enemy_data.enemy_card == 'YI':
