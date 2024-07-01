@@ -515,7 +515,7 @@ int attrSeedMax = 1000000;
 int auraFilter = AURA_DI;
 bool verbose = false;
 int defMode = 0; // 0:off 1:on 2:mix
-bool debug = true;
+bool debug = false;
 
 pthread_mutex_t threadMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t attrEvalTaskCond = PTHREAD_COND_INITIALIZER;
