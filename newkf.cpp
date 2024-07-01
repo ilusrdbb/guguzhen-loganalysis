@@ -515,7 +515,7 @@ int attrSeedMax = 1000000;
 int auraFilter = AURA_DI;
 bool verbose = false;
 int defMode = 0; // 0:off 1:on 2:mix
-bool debug = false;
+bool debug = true;
 
 pthread_mutex_t threadMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t attrEvalTaskCond = PTHREAD_COND_INITIALIZER;
@@ -2454,7 +2454,7 @@ inline int calcDefRate(double def, int defP, double brc, double cBrc, double brc
     int brcP = (int)(brc * (isDunh ? 0.65 : 1.0)) + (int)(cBrc * (isDunh ? 0.65 : 1.0));
     int r = int((isDian ? int(def * 1.3) : def) * (100 + defP - brcP));
     r = (r >= 0 ? r : r - 99) / 100 - int(brcA);
-    r = (r >= 0 ? r / 10 : isZhi && isDunh ? 5 : isZhi ? 10 : -30);
+    r = (r >= 0 ? r / 10 : isZhi ? 10 : -30);
     if (r > defMax) r = defMax;
     if (debug)
     {
