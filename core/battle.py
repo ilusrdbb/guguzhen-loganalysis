@@ -203,6 +203,8 @@ class Battle:
         for talent in talent_list:
             talent = talent.replace('|', '').replace('<br>', '')
             if talent:
+                if talent == '启程之风' or talent == '等级挑战' or talent == '等级压制':
+                    continue
                 result_list.append(config.read_config('talent_map')[talent])
         return result_list
 

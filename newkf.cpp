@@ -116,42 +116,42 @@ enum
     GEAR_FIERCE,    // 凶神耳环
     GEAR_COUNT,
 
-    AURA_SHI = 0x000000001, // 启程之誓
-    AURA_XIN = 0x000000002, // 启程之心
-    AURA_FENG = 0x000000004, // 启程之风
-    AURA_TIAO = 0x000000008, // 等级挑战
-    AURA_YA = 0x000000010, // 等级压制
-    AURA_ZOU = 0x000000020, // 致命节奏
-    AURA_PIAO = 0x000000040, // 往返车票
-    AURA_PEN = 0x000000080, // 天降花盆
-    AURA_BI = 0x000000100, // 破壁之心
-    AURA_MO = 0x000000200, // 破魔之心
-    AURA_DUN = 0x000000400, // 复合护盾
-    AURA_XUE = 0x000000800, // 鲜血渴望
-    AURA_XIAO = 0x000001000, // 削骨之痛
-    AURA_SHENG = 0x000002000, // 圣盾祝福
-    AURA_E = 0x000004000, // 恶意抽奖
-    AURA_SHANG = 0x000008000, // 伤口恶化
-    AURA_SHEN = 0x000010000, // 精神创伤
-    AURA_CI = 0x000020000, // 铁甲尖刺
-    AURA_REN = 0x000040000, // 忍无可忍
-    AURA_RE = 0x000080000, // 热血战魂
-    AURA_DIAN = 0x000100000, // 点到为止
-    AURA_WU = 0x000200000, // 午时已到
-    AURA_ZHI = 0x000400000, // 纸薄命硬
-    AURA_SHAN = 0x000800000, // 不动如山
-    AURA_FEI = 0x001000000, // 沸血之志
-    AURA_BO = 0x002000000, // 波澜不惊
-    AURA_JU = 0x004000000, // 飓风之力
-    AURA_HONG = 0x008000000, // 红蓝双刺
-    AURA_JUE = 0x010000000, // 荧光护盾
-    AURA_HOU = 0x020000000, // 后发制人
-    AURA_DUNH = 0x040000000, // 钝化锋芒
-    AURA_ZI = 0x080000000, // 自信回头
-    AURA_DI = 0x100000000, // 绝对底线(野怪专用)
+    AURA_SHI = 0x00000001, // 启程之誓
+    AURA_XIN = 0x00000002, // 启程之心
+//    AURA_FENG = 0x00000004, // 启程之风
+//    AURA_TIAO = 0x00000008, // 等级挑战
+//    AURA_YA = 0x00000010, // 等级压制
+    AURA_ZOU = 0x00000004, // 致命节奏
+    AURA_PIAO = 0x00000008, // 往返车票
+    AURA_PEN = 0x00000010, // 天降花盆
+    AURA_BI = 0x00000020, // 破壁之心
+    AURA_MO = 0x00000040, // 破魔之心
+    AURA_DUN = 0x00000080, // 复合护盾
+    AURA_XUE = 0x00000100, // 鲜血渴望
+    AURA_XIAO = 0x00000200, // 削骨之痛
+    AURA_SHENG = 0x00000400, // 圣盾祝福
+    AURA_E = 0x00000800, // 恶意抽奖
+    AURA_SHANG = 0x00001000, // 伤口恶化
+    AURA_SHEN = 0x00002000, // 精神创伤
+    AURA_CI = 0x00004000, // 铁甲尖刺
+    AURA_REN = 0x00008000, // 忍无可忍
+    AURA_RE = 0x00010000, // 热血战魂
+    AURA_DIAN = 0x00020000, // 点到为止
+    AURA_WU = 0x00040000, // 午时已到
+    AURA_ZHI = 0x00080000, // 纸薄命硬
+    AURA_SHAN = 0x00100000, // 不动如山
+    AURA_FEI = 0x00200000, // 沸血之志
+    AURA_BO = 0x00400000, // 波澜不惊
+    AURA_JU = 0x00800000, // 飓风之力
+    AURA_HONG = 0x01000000, // 红蓝双刺
+    AURA_JUE = 0x02000000, // 荧光护盾
+    AURA_HOU = 0x04000000, // 后发制人
+    AURA_DUNH = 0x08000000, // 钝化锋芒
+    AURA_ZI = 0x10000000, // 自信回头
+    AURA_DI = 0x20000000, // 绝对底线(野怪专用)
 
-    AURA_COUNT = 33,
-    FLAG_STAT = 1LL << AURA_COUNT,
+    AURA_COUNT = 30,
+    FLAG_STAT = 1 << AURA_COUNT,
 
     MYST_BLADE = 0x000001, // 暴击时附带(物理攻击力*50%)的绝对伤害
     MYST_ASSBOW = 0x000002, // 攻击附带(对方当前护盾值*30%)的物理伤害
@@ -270,7 +270,7 @@ struct BStat
     double rflP;    // 百分比伤害反弹
     int cDef;       // 基础暴击抵抗
     int sDef;       // 基础技能防御
-    long long psvSkl; // 被动技能组合(光环、flag)
+    int psvSkl; // 被动技能组合(光环、flag)
     int myst;       // 神秘属性组合
     int sklC;       // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
     int houC;       // 后发制人计数
@@ -350,13 +350,13 @@ const char* const gearName[GEAR_COUNT] = {
     "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON", "HUNT", "FIERCE" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
-    "SHI", "XIN", "FENG", "TIAO", "YA", "ZOU", "PIAO", "PEN",
+    "SHI", "XIN", "ZOU", "PIAO", "PEN",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
     "SHANG", "SHEN", "CI", "REN", "RE", "DIAN", "WU", "ZHI", "SHAN",
     "FEI", "BO", "JU", "HONG", "JUE", "HOU", "DUNH", "ZI",
     "DI" };
 const int auraCost[AURA_COUNT] = {
-    0, 0, 0, 0, 0, 120, 120, 120,
+    0, 0, 120, 120, 120,
     20, 20, 20, 20, 20, 20, 20,
     30, 30, 30, 30, 30, 30, 30, 30, 30,
     100, 100, 100, 100, 100, 100, 100, 100,
@@ -2569,65 +2569,65 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             b[1 - i].hpRecRR += 40;
             b[1 - i].sldRecRR += 40;
         }
-        if (b[i].psvSkl & AURA_TIAO && b[i].lvl < b[1 - i].lvl)
-        {
-            int lvlDiff = b[1 - i].lvl - b[i].lvl;
-            if (b[1 - i].role < ROLE_PC && lvlDiff > 100) lvlDiff = 100;
-            b[i].pAtkA += lvlDiff * 20.0;
-            b[i].mAtkA += lvlDiff * 20.0;
-            if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_BI)
-            {
-                b[i].pBrcA += int(lvlDiff * 2.3);
-            }
-            else
-            {
-                b[i].pBrcA += lvlDiff * 2.0;
-            }
-            if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_MO)
-            {
-                b[i].mBrcA += int(lvlDiff * 2.3);
-            }
-            else
-            {
-                b[i].mBrcA += lvlDiff * 2.0;
-            }
-        }
-        if (b[i].psvSkl & AURA_YA && b[i].lvl > b[1 - i].lvl)
-        {
-            int lvlDiff = b[i].lvl - b[1 - i].lvl;
-            if (b[1 - i].role < ROLE_PC && lvlDiff > 100) lvlDiff = 100;
-            if (b[i].psvSkl & FLAG_STAT)
-            {
-                if (b[i].psvSkl & AURA_JU)
-                {
-                    b[i].spdA += int(lvlDiff * 3.9);
-                }
-                else
-                {
-                    b[i].spdA += lvlDiff * 3.0;
-                }
-                double defMul = 1.0;
-                double intFlag = false;
-                if (b[i].psvSkl & AURA_DIAN)
-                {
-                    defMul *= 1.3;
-                    intFlag = true;
-                }
-                if (b[i].role == ROLE_MING)
-                {
-                    defMul *= 0.5;
-                    intFlag = true;
-                }
-                b[i].pDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
-                b[i].mDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
-            }
-            else
-            {
-                b[i].spdA += lvlDiff * 3.0;
-                b[i].pDefA += lvlDiff * 3.0;
-                b[i].mDefA += lvlDiff * 3.0;
-            }
-        }
+//        if (b[i].psvSkl & AURA_TIAO && b[i].lvl < b[1 - i].lvl)
+//        {
+//            int lvlDiff = b[1 - i].lvl - b[i].lvl;
+//            if (b[1 - i].role < ROLE_PC && lvlDiff > 100) lvlDiff = 100;
+//            b[i].pAtkA += lvlDiff * 20.0;
+//            b[i].mAtkA += lvlDiff * 20.0;
+//            if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_BI)
+//            {
+//                b[i].pBrcA += int(lvlDiff * 2.3);
+//            }
+//            else
+//            {
+//                b[i].pBrcA += lvlDiff * 2.0;
+//            }
+//            if (b[i].psvSkl & FLAG_STAT && b[i].psvSkl & AURA_MO)
+//            {
+//                b[i].mBrcA += int(lvlDiff * 2.3);
+//            }
+//            else
+//            {
+//                b[i].mBrcA += lvlDiff * 2.0;
+//            }
+//        }
+//        if (b[i].psvSkl & AURA_YA && b[i].lvl > b[1 - i].lvl)
+//        {
+//            int lvlDiff = b[i].lvl - b[1 - i].lvl;
+//            if (b[1 - i].role < ROLE_PC && lvlDiff > 100) lvlDiff = 100;
+//            if (b[i].psvSkl & FLAG_STAT)
+//            {
+//                if (b[i].psvSkl & AURA_JU)
+//                {
+//                    b[i].spdA += int(lvlDiff * 3.9);
+//                }
+//                else
+//                {
+//                    b[i].spdA += lvlDiff * 3.0;
+//                }
+//                double defMul = 1.0;
+//                double intFlag = false;
+//                if (b[i].psvSkl & AURA_DIAN)
+//                {
+//                    defMul *= 1.3;
+//                    intFlag = true;
+//                }
+//                if (b[i].role == ROLE_MING)
+//                {
+//                    defMul *= 0.5;
+//                    intFlag = true;
+//                }
+//                b[i].pDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
+//                b[i].mDefA += intFlag ? int(lvlDiff * 3.0 * defMul) : lvlDiff * 3.0;
+//            }
+//            else
+//            {
+//                b[i].spdA += lvlDiff * 3.0;
+//                b[i].pDefA += lvlDiff * 3.0;
+//                b[i].mDefA += lvlDiff * 3.0;
+//            }
+//        }
         if (b[i].psvSkl & AURA_XUE)
         {
             b[i].hpRecRR -= 10;
@@ -2690,11 +2690,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].pRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
                 b[i].mRdc += int(b[i].lvl * 2.0 * (1 + b[i].wish[WISH_SHI_BUF] * 0.05));
             }
-            if (b[i].psvSkl & AURA_FENG)
-            {
-                b[i].pAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
-                b[i].mAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
-            }
+//            if (b[i].psvSkl & AURA_FENG)
+//            {
+//                b[i].pAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
+//                b[i].mAtkA += int(b[i].lvl * 5.0 * (1 + b[i].wish[WISH_FENG_BUF] * 0.05));
+//            }
             if (b[i].psvSkl & AURA_XIN)
             {
                 b[i].hpM += int(b[i].lvl * 10.0 * (1 + b[i].wish[WISH_XIN_BUF] * 0.05));
