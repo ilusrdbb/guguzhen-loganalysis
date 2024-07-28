@@ -151,7 +151,7 @@ enum
     AURA_DI = 0x100000000, // 绝对底线(野怪专用)
 
     AURA_COUNT = 33,
-    FLAG_STAT = 1ULL << AURA_COUNT,
+    FLAG_STAT = 1LL << AURA_COUNT,
 
     MYST_BLADE = 0x000001, // 暴击时附带(物理攻击力*50%)的绝对伤害
     MYST_ASSBOW = 0x000002, // 攻击附带(对方当前护盾值*30%)的物理伤害
@@ -270,7 +270,7 @@ struct BStat
     double rflP;    // 百分比伤害反弹
     int cDef;       // 基础暴击抵抗
     int sDef;       // 基础技能防御
-    unsigned long long psvSkl; // 被动技能组合(光环、flag)
+    long long psvSkl; // 被动技能组合(光环、flag)
     int myst;       // 神秘属性组合
     int sklC;       // 角色技能计数(星火、星芒、神秘法杖的初次技能、闪避充能、成长值、蛛网)
     int houC;       // 后发制人计数
@@ -516,7 +516,7 @@ int pcWeightA = 1;
 int pcWeightB = 1;
 int maxAttr[ATTR_COUNT] = {};
 int attrSeedMax = 1000000;
-unsigned long long auraFilter = AURA_DI;
+long long auraFilter = AURA_DI;
 bool verbose = false;
 int defMode = 0; // 0:off 1:on 2:mix
 bool debug = false;
