@@ -12,7 +12,7 @@ my_kf_level: 1400
 skl_def: 0
 crt_def: 0
 # 时间范围，如果为空则全量抓取，因为3s环境变化较快不建议设置太久远
-start_date: '2024-06-14'
+start_date: '2024-07-28'
 end_date: ''
 # 段位限制，只分析此段位的出击记录，填空字符串为不限制，注意此选项需要最新版收割机的支持
 rank_limit: 'SSS'
@@ -272,11 +272,15 @@ talent_map:
   钝化锋芒: 'DUNH'
   自信回头: 'ZI'
   不动如山: 'SHAN'
+  致命节奏: 'ZOU'
+  往返车票: 'PIAO'
+  天降花盆: 'PEN'
 # xpath设置
 xpath_config:
     attr: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-outline'')]//text()'
     attr2: '//div[contains(@class,''alert-info'')]/div//span[contains(@class,''label-outline'')]//i/@class'
     talent: '//div[contains(@class,''alert-info'')]/div//div[contains(@class,''fyg_tr'')]//text()'
+    mytalent: '//div[contains(@class,''alert-danger'')]/div//div[contains(@class,''fyg_tr'')]//text()'
     gear: '//button[contains(@class,''fyg_colpzbg'')]/@data-original-title'
     level: '//button[contains(@class,''fyg_colpzbg'')]//text()'
     color: '//button[contains(@class,''fyg_colpzbg'')]/@style'

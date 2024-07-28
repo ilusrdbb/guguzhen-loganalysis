@@ -18,8 +18,10 @@ class Battle:
         battle_log_dom = html.fromstring(battle_log)
         # 卡片六围比例图标
         self.attr_list = self.get_attr_list(battle_log_dom)
-        # 天赋
+        # 对手天赋
         self.talent_list = self.get_talent_list(battle_log_dom)
+        # 自身天赋
+        self.my_talent_list = self.get_my_talent_list(battle_log_dom)
         # 装备
         self.gear_list = self.get_gear_list(battle_log_dom, 'enemy')
         # 装备等级
@@ -192,10 +194,22 @@ class Battle:
                 re.findall(config.read_config('match_config')['spr'], attr_str)[0],
                 re.findall(config.read_config('match_config')['mnd'], attr_str)[0]]
 
-    # 获取天赋list
+    # 获取对手天赋list
     @classmethod
     def get_talent_list(cls, battle_log_dom):
         talent_str = ''.join(battle_log_dom.xpath(config.read_config('xpath_config')['talent']))
+        result_list = []
+        talent_list = re.findall(config.read_config('match_config')['talent'], talent_str)
+        for talent in talent_list:
+            talent = talent.replace('|', '').replace('<br>', '')
+            if talent:
+                result_list.append(config.read_config('talent_map')[talent])
+        return result_list
+
+    # 获取自身天赋list
+    @classmethod
+    def get_my_talent_list(cls, battle_log_dom):
+        talent_str = ''.join(battle_log_dom.xpath(config.read_config('xpath_config')['mytalent']))
         result_list = []
         talent_list = re.findall(config.read_config('match_config')['talent'], talent_str)
         for talent in talent_list:

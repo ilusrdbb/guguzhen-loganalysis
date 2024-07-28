@@ -14,7 +14,7 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 装备 彩金对剑 COLORFUL 猎魔耳环 HUNT 清澄长杖 LIMPIDWAND 折光戒指 REFRACT 凶神耳环 FIERCE
 
-天赋 不动如山 SHAN
+天赋 不动如山 SHAN 致命节奏 ZOU 往返车票 PIAO 天降花盆 PEN
 
 樱桃 全属性 AAA 暴击抵抗 CRTR 技能抵抗 SKLR
 

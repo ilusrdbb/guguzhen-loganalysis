@@ -326,6 +326,16 @@ def cal_final_ratio(enemy_data, battle_data):
         final_ratio *= 1.5
     if 'DIAN' in battle_data.talent_list:
         final_ratio *= 0.7
+    if 'ZOU' in battle_data.talent_list or 'ZOU' in battle_data.my_talent_list:
+        zou_ratio = 0.3 + (battle_data.turn_num - 1) * 0.2
+        if zou_ratio > 10:
+            zou_ratio = 10
+        final_ratio *= zou_ratio
+    if 'PEN' in battle_data.talent_list or 'PEN' in battle_data.my_talent_list:
+        if battle_data.crt_flag:
+            final_ratio *= 1.4
+        else:
+            final_ratio *= 0.6
     return final_ratio
 
 
