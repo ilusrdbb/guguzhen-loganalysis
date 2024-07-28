@@ -2643,6 +2643,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             b[1 - i].sldRecRR += 70;
         }
+        b[i].piaoFlag = false;
         if (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO)
         {
             b[i].piaoFlag = true;
