@@ -121,33 +121,33 @@ enum
 //    AURA_FENG = 0x00000004, // 启程之风
 //    AURA_TIAO = 0x00000008, // 等级挑战
 //    AURA_YA = 0x00000010, // 等级压制
-    AURA_ZOU = 0x00000004, // 致命节奏
-    AURA_PIAO = 0x00000008, // 往返车票
-    AURA_PEN = 0x00000010, // 天降花盆
-    AURA_BI = 0x00000020, // 破壁之心
-    AURA_MO = 0x00000040, // 破魔之心
-    AURA_DUN = 0x00000080, // 复合护盾
-    AURA_XUE = 0x00000100, // 鲜血渴望
-    AURA_XIAO = 0x00000200, // 削骨之痛
-    AURA_SHENG = 0x00000400, // 圣盾祝福
-    AURA_E = 0x00000800, // 恶意抽奖
-    AURA_SHANG = 0x00001000, // 伤口恶化
-    AURA_SHEN = 0x00002000, // 精神创伤
-    AURA_CI = 0x00004000, // 铁甲尖刺
-    AURA_REN = 0x00008000, // 忍无可忍
-    AURA_RE = 0x00010000, // 热血战魂
-    AURA_DIAN = 0x00020000, // 点到为止
-    AURA_WU = 0x00040000, // 午时已到
-    AURA_ZHI = 0x00080000, // 纸薄命硬
-    AURA_SHAN = 0x00100000, // 不动如山
-    AURA_FEI = 0x00200000, // 沸血之志
-    AURA_BO = 0x00400000, // 波澜不惊
-    AURA_JU = 0x00800000, // 飓风之力
-    AURA_HONG = 0x01000000, // 红蓝双刺
-    AURA_JUE = 0x02000000, // 荧光护盾
-    AURA_HOU = 0x04000000, // 后发制人
-    AURA_DUNH = 0x08000000, // 钝化锋芒
-    AURA_ZI = 0x10000000, // 自信回头
+    AURA_BI = 0x00000004, // 破壁之心
+    AURA_MO = 0x00000008, // 破魔之心
+    AURA_DUN = 0x00000010, // 复合护盾
+    AURA_XUE = 0x00000020, // 鲜血渴望
+    AURA_XIAO = 0x00000040, // 削骨之痛
+    AURA_SHENG = 0x00000080, // 圣盾祝福
+    AURA_E = 0x00000100, // 恶意抽奖
+    AURA_SHANG = 0x00000200, // 伤口恶化
+    AURA_SHEN = 0x00000400, // 精神创伤
+    AURA_CI = 0x00000800, // 铁甲尖刺
+    AURA_REN = 0x00001000, // 忍无可忍
+    AURA_RE = 0x00002000, // 热血战魂
+    AURA_DIAN = 0x00004000, // 点到为止
+    AURA_WU = 0x00008000, // 午时已到
+    AURA_ZHI = 0x00010000, // 纸薄命硬
+    AURA_SHAN = 0x00020000, // 不动如山
+    AURA_FEI = 0x00040000, // 沸血之志
+    AURA_BO = 0x00080000, // 波澜不惊
+    AURA_JU = 0x00100000, // 飓风之力
+    AURA_HONG = 0x00200000, // 红蓝双刺
+    AURA_JUE = 0x00400000, // 荧光护盾
+    AURA_HOU = 0x00800000, // 后发制人
+    AURA_DUNH = 0x01000000, // 钝化锋芒
+    AURA_ZI = 0x02000000, // 自信回头
+    AURA_ZOU = 0x04000000, // 致命节奏
+    AURA_PIAO = 0x08000000, // 往返车票
+    AURA_PEN = 0x10000000, // 天降花盆
     AURA_DI = 0x20000000, // 绝对底线(野怪专用)
 
     AURA_COUNT = 30,
@@ -350,16 +350,18 @@ const char* const gearName[GEAR_COUNT] = {
     "PLATE", "LEATHER", "CLOTH", "CLOAK", "THORN", "WOOD", "CAPE", "SCARF", "TIARA", "RIBBON", "HUNT", "FIERCE" };
 const int gearSlot[GEAR_COUNT] = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
 const char* const auraName[AURA_COUNT] = {
-    "SHI", "XIN", "ZOU", "PIAO", "PEN",
+    "SHI", "XIN",
     "BI", "MO", "DUN", "XUE", "XIAO", "SHENG", "E",
     "SHANG", "SHEN", "CI", "REN", "RE", "DIAN", "WU", "ZHI", "SHAN",
     "FEI", "BO", "JU", "HONG", "JUE", "HOU", "DUNH", "ZI",
+    "ZOU", "PIAO", "PEN",
     "DI" };
 const int auraCost[AURA_COUNT] = {
-    0, 0, 120, 120, 120,
+    0, 0,
     20, 20, 20, 20, 20, 20, 20,
     30, 30, 30, 30, 30, 30, 30, 30, 30,
     100, 100, 100, 100, 100, 100, 100, 100,
+    120, 120, 120,
     0 };
 int auraRandCount = 1;
 int wishMax[WISH_COUNT] = { 100, 100, 100, 100, 100, 3000, 3000, 3000, 3000, 500, 500, 500, 500, 500 };
@@ -516,7 +518,7 @@ int pcWeightA = 1;
 int pcWeightB = 1;
 int maxAttr[ATTR_COUNT] = {};
 int attrSeedMax = 1000000;
-long long auraFilter = AURA_DI;
+int auraFilter = AURA_DI;
 bool verbose = false;
 int defMode = 0; // 0:off 1:on 2:mix
 bool debug = false;
