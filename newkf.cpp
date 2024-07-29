@@ -2643,13 +2643,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             b[1 - i].sldRecRR += 70;
         }
-        b[i].piaoFlag = false;
-        if (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO)
-        {
-            b[i].piaoFlag = true;
-            b[i].hpRecRR += 80;
-            b[i].sldRecRR += 80;
-        }
         if (!(b[i].psvSkl & FLAG_STAT) && (b[i].psvSkl & AURA_BI))
         {
             b[i].pBrcP = int(b[i].pBrcP * 1.15);
@@ -2821,17 +2814,24 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
         }
     }
-    for (int i = 0; i < 2; ++i)
-    {
-        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
-    }
-
     //if (b[0].hpRecRR > 100) b[0].hpRecRR = 100;
     //if (b[0].sldRecRR > 100) b[0].sldRecRR = 100;
     if (b[0].role == ROLE_YI && b[0].hpRecRR > 0) b[0].hpRecRR = 0;
     //if (b[1].hpRecRR > 100) b[1].hpRecRR = 100;
     //if (b[1].sldRecRR > 100) b[1].sldRecRR = 100;
     if (b[1].role == ROLE_YI && b[1].hpRecRR > 0) b[1].hpRecRR = 0;
+
+    for (int i = 0; i < 2; ++i)
+    {
+        b[i].piaoFlag = false;
+        if (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO)
+        {
+            b[i].piaoFlag = true;
+            b[i].hpRecRR += 80;
+            b[i].sldRecRR += 80;
+        }
+        b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
+    }
 
     if (showDetail)
     {
@@ -3667,10 +3667,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 sd[i] = 0;
                 b[i].sklC = 1;
             }
-            else if (i == 1 - s && b[i].piaoFlag && hd[i] >= b[i].hp + hr[i])
+            else if (b[i].piaoFlag && hd[i] >= b[i].hp + hr[i])
             {
                 hd[i] = 0;
                 sd[i] = 0;
+                hr[i] = 0;
+                sr[i] = 0;
                 b[i].hp = b[i].hpM;
                 b[i].sld = b[i].sldM;
                 b[i].piaoFlag = false;
