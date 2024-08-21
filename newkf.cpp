@@ -2749,7 +2749,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b[i].role == ROLE_XI)
             {
                 b[i].lchP += 10.0;
-                hpMAdd += b[i].growth > 200000 ? 100 : int(b[i].growth * 0.0005);
+                hpMAdd += b[i].growth > 100000 ? 50 : int(b[i].growth * 0.0005);
             }
             if (b[i].role == ROLE_XIA)
             {
