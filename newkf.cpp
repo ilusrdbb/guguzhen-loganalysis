@@ -2753,8 +2753,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             }
             if (b[i].role == ROLE_XIA)
             {
-                sldMAdd += b[i].growth > 200000 ? 40 : int(b[i].growth * 0.0002);
-                b[i].mAtkR += b[i].growth > 200000 ? 40 : int(b[i].growth * 0.0002);
+                sldMAdd += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
+                b[i].mAtkR += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
