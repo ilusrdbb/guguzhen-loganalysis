@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Time : 2023/9/27 15:44
 # @Author : chaocai
-from lxml import html
 
-from core import config, util, sql
+from core import config
 
 
 class Templete:

@@ -19,7 +19,7 @@ class Enemy:
         # 自身争夺等级
         self.my_kf_level = config.read_config('my_kf_level')
         # 争夺等级
-        if self.card_level == 850:
+        if self.card_level >= 850:
             self.kf_level = config.read_config('max_kf_level')
         else:
             self.kf_level = self.card_level - 200

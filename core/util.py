@@ -3,11 +3,10 @@
 # @Time : 2023/3/29 10:28
 # @Author : chaocai
 
+import datetime
 import json
 import os
 import time
-import datetime
-import random
 
 import requests
 
@@ -53,7 +52,7 @@ def get_w_dict(filter_enemy_dict):
                                                    'kf_level': attack_enemy.kf_level,
                                                    'weight': 1}
             if config.read_config('is_search_level') and config.read_config('cookie') \
-                    and attack_enemy.card_level == 850:
+                    and attack_enemy.card_level >= 850:
                 # 通过论坛发帖获取真实的系数
                 kf_level = enemy.get_kf_level(attack_enemy.enemy_name)
                 if kf_level:

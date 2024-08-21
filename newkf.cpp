@@ -2749,12 +2749,12 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             if (b[i].role == ROLE_XI)
             {
                 b[i].lchP += 10.0;
-                hpMAdd += b[i].growth > 100000 ? 50 : int(b[i].growth * 0.0005);
+                hpMAdd += b[i].growth > 200000 ? 100 : int(b[i].growth * 0.0005);
             }
             if (b[i].role == ROLE_XIA)
             {
-                sldMAdd += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
-                b[i].mAtkR += b[i].growth > 100000 ? 20 : int(b[i].growth * 0.0002);
+                sldMAdd += b[i].growth > 200000 ? 40 : int(b[i].growth * 0.0002);
+                b[i].mAtkR += b[i].growth > 200000 ? 40 : int(b[i].growth * 0.0002);
             }
             hpMAdd += b[i].amul[AMUL_HP];
             sldMAdd += b[i].amul[AMUL_SLD];
@@ -3316,8 +3316,6 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
             pa[s] *= penR;
             ma[s] *= penR;
             aa[s] *= penR;
-            pRfl *= 0.6;
-            mRfl *= 0.6;
         }
         if (b0.atkLvl > b1.atkLvl && b1.atkLvl > 0 && b0.atkLvl > 0)
         {
