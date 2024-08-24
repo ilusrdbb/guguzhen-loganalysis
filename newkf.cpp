@@ -2982,10 +2982,8 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
         {
             b0.sklC += (b0.myst & MYST_DAGGER ? 2 : 1);
             aa[s] += int((b0.pAtkB + b0.pAtkA + b0.mAtkB + b0.mAtkA) * 9 * (b0.myst & MYST_DAGGER ? 20 + b0.sklC * 3 : 20) / 400.0);
-            b1.pAtkB *= 0.99;
-            b1.pAtkA *= 0.99;
-            b1.mAtkB *= 0.99;
-            b1.mAtkA *= 0.99;
+            b1.pAtkR -= 1;
+            b1.mAtkR -= 1;
         }
         if (b0.role == ROLE_MENG)
         {
