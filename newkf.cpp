@@ -1634,6 +1634,16 @@ void readConfig(const char* fileName)
             }
             verbose = x;
         }
+        else if (strcmp(buf, "GRIDSIZE") == 0)
+        {
+            int x;
+            if (fscanf(fp, "%d", &x) != 1 || x < 4 || x > 12)
+            {
+                printf("Error reading GRIDSIZE setting\n");
+                exit(-1);
+            }
+            gridSize = x;
+        }
         else if (buf[0] == '/' && buf[1] == '/')
         {
             fgets(buf, sizeof(buf), fp);
