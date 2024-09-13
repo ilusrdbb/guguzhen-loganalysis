@@ -280,7 +280,7 @@ struct BStat
     bool sldPot;   // 护盾药水是否已使用
     bool ziFlag;   // 自信回头是否已发动
     bool minFlag;  // 先兆感知是否存在
-    bool piaoFlag; // 往返车票是否已发动
+    bool piaoFlag; // 往返车票的复活是否已发动
     int growth;    // 成长值
 
     int pAtkR;    // 物理攻击增加率(百分比)
@@ -844,10 +844,10 @@ bool readGear(FILE* fp, Gear& gear)
         if (fscanf(fp, "%d%d%d%d%d%d", &gear.lvl, &gear.percent[0], &gear.percent[1],
             &gear.percent[2], &gear.percent[3], &b) != 6 ||
             gear.lvl < 1 ||
-            gear.percent[0] < 50 || gear.percent[0] > 150 ||
-            gear.percent[1] < 50 || gear.percent[1] > 150 ||
-            gear.percent[2] < 50 || gear.percent[2] > 150 ||
-            gear.percent[3] < 50 || gear.percent[3] > 150 ||
+            gear.percent[0] < 40 || gear.percent[0] > 150 ||
+            gear.percent[1] < 40 || gear.percent[1] > 150 ||
+            gear.percent[2] < 40 || gear.percent[2] > 150 ||
+            gear.percent[3] < 40 || gear.percent[3] > 150 ||
             b < 0 || b > 1)
         {
             fseek(fp, pos, SEEK_SET);
@@ -1029,6 +1029,11 @@ bool readPlayer(FILE* fp, Player& pc)
     {
         pc.pBStat = new BStat();
         BStat& b = *pc.pBStat;
+        if (fscanf(fp, "%d", &pc.kfLvl) != 1 || pc.kfLvl < 0)
+        {
+            fseek(fp, pos, SEEK_SET);
+            return false;
+        }
         if (fscanf(fp, "%s", buf) != 1)
         {
             fseek(fp, pos, SEEK_SET);
@@ -1110,46 +1115,22 @@ bool readPlayer(FILE* fp, Player& pc)
             fseek(fp, pos, SEEK_SET);
             return false;
         }
-        int mAtkAdd = -1;
         if (fscanf(fp, "%d%s", &b.mAtkB, buf) != 2)
         {
             fseek(fp, pos, SEEK_SET);
             return false;
         }
-        if (buf[0] == 'M' && buf[1] == '+' && isNumber(buf + 2))
+        if (!isNumber(buf) || sscanf(buf, "%d", &b.aAtk) != 1)
         {
-            if (sscanf(buf + 2, "%d", &mAtkAdd) != 1 || fscanf(fp, "%d", &b.aAtk) != 1)
-            {
-                fseek(fp, pos, SEEK_SET);
-                return false;
-            }
+            fseek(fp, pos, SEEK_SET);
+            return false;
         }
-        else if (buf[0] == 'M' && buf[1] == 'A' && buf[2] == '=' && isNumber(buf + 3))
-        {
-            int mAtkPlus = 0;
-            if (sscanf(buf + 3, "%d", &mAtkPlus) != 1 || fscanf(fp, "%d", &b.aAtk) != 1 ||
-                mAtkPlus > b.mAtkB)
-            {
-                fseek(fp, pos, SEEK_SET);
-                return false;
-            }
-            b.mAtkB -= mAtkPlus;
-            b.mAtkA = mAtkPlus;
-        }
-        else
-        {
-            b.mAtkA = 0;
-            if (!isNumber(buf) || sscanf(buf, "%d", &b.aAtk) != 1)
-            {
-                fseek(fp, pos, SEEK_SET);
-                return false;
-            }
-        }
-        if (fscanf(fp, "%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%.2f%d%.2f%.2f%d%.2f%.2f%.2f%.2f%.2f%d%d",
+        if (fscanf(fp, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d",
             &b.pBrcP, &b.pBrcA, &b.mBrcP, &b.mBrcA, &b.cBrcP,
             &b.spdB, &b.pDefB, &b.pRdc, &b.mDefB, &b.mRdc,
             &b.hpM, &b.hpRecP, &b.hpRecA, &b.sldM, &b.sldRecP, &b.sldRecA,
-            &b.cRateB, &b.sRateB, &b.rflP, &b.lchP, &b.cDef, &b.sDef) != 22)
+            &b.cRateB, &b.sRateB, &b.rflP, &b.lchP, &b.cDef, &b.sDef,
+            &b.tAgi, &b.tInt, &b.tSpr) != 25)
         {
             fseek(fp, pos, SEEK_SET);
             return false;
@@ -1214,12 +1195,7 @@ bool readPlayer(FILE* fp, Player& pc)
         b.hp = b.hpM;
         b.hpRecRR = 0;
         b.pAtkA = 0.0;
-        if (mAtkAdd != -1)
-        {
-            b.mAtkA = b.mAtkB - b.sRateB * 12 * (100 + mAtkAdd) / 100.0;
-            if (b.mAtkA < 0) b.mAtkA = 0.0;
-            b.mAtkB -= b.mAtkA;
-        }
+        b.mAtkA = 0.0;
         b.spdA = 0.0;
         b.spdRR = 0;
         b.spdC = b.spdB;
@@ -1236,6 +1212,8 @@ bool readPlayer(FILE* fp, Player& pc)
         b.sldMR = 0;
         b.sklC = (b.role == ROLE_WU ? (pc.growth > 106800 ? 106800 : pc.growth) : 0);
         b.houC = 0;
+        b.atkLvl = pc.kfLvl >= 1600 ? 16 : pc.kfLvl / 100;
+        b.defLvl = pc.kfLvl >= 1600 ? 16 : pc.kfLvl / 100;
         b.alias = pc.alias;
     }
     else
@@ -2833,13 +2811,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
     for (int i = 0; i < 2; ++i)
     {
-        b[i].piaoFlag = false;
-        if (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO)
-        {
-            b[i].piaoFlag = true;
-            b[i].hpRecRR += 80;
-            b[i].sldRecRR += 80;
-        }
+        b[i].piaoFlag = (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO);
         b[i].spdC = b[i].psvSkl & AURA_SHAN ? 1.0 : (b[i].spdB + b[i].spdA) * (1 - b[i].spdRR / 100.0);
     }
 
@@ -3068,7 +3040,7 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
 
         if (isS)
         {
-            // todo ya is special? maybe blade is special
+            // ya is special? maybe blade is special
             if (b0.role == ROLE_YA)
             {
                 b0.pAtkB += (int(b1.hpM * 0.05) + int(b1.sldM * 0.05));
@@ -3682,6 +3654,11 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
                 b[i].hp = b[i].hpM;
                 b[i].sld = b[i].sldM;
                 b[i].piaoFlag = false;
+            }
+            if (b[i].psvSkl & AURA_PIAO || b[1 - i].psvSkl & AURA_PIAO)
+            {
+                hr[i] *= 0.2;
+                sr[i] *= 0.2;
             }
             b[i].hp = b[i].hp - hd[i] + hr[i];
             if (b[i].hp > b[i].hpM) b[i].hp = b[i].hpM;

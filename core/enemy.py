@@ -40,7 +40,7 @@ class Enemy:
 # 初始化排行榜
 def init_top_players():
     print('开始初始化排行榜玩家的系数...')
-    domain = config.read_config('kf_domain')
+    domain = 'https://kf.miaola.work'
     url = domain + '/kf_no1.php'
     text = util.http_get(url, '', '网络错误')
     if text:
@@ -63,7 +63,7 @@ def init_top_players():
 
 # 通过论坛发帖获取真实的系数
 def get_kf_level(enemy_name):
-    domain = config.read_config('kf_domain')
+    domain = 'https://kf.miaola.work'
     cache_data = sql.query(enemy_name)
     if cache_data:
         if config.read_config('use_cache'):

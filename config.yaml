@@ -82,9 +82,8 @@ ya_mode: 1
 # 注意开启此项虽然使等级相关计算更加精准但是会极大的拖慢程序，考虑到咕咕镇服务器的抗压能力强烈建议开启时一天只跑一次
 is_search_level: false
 # 当is_search_level开启时，需要登录才可以搜索，由于搜索次数的限制（系数*5+20）请确保自身账号的系数和等级分足够
+# 目前仅支持https://kf.miaola.work域名的cookie
 cookie: ''
-# 论坛域名，cookie需配置为此域名的cookie，目前仅支持miaola域名
-kf_domain: 'https://kf.miaola.work'
 # 当is_search_level开启时，对方的幻影等级
 shadow_level: 450
 # 当is_search_level开启时，网络请求时的代理地址，由于咕咕镇机房部署在国外，建议使用代理提升访问速度
