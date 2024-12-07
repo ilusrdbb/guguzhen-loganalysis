@@ -2335,7 +2335,7 @@ void preparePcBStat(const Player& pc, BStat& b)
             b.spdA += int(g.lvl * 2.0 * (g.percent[0] / 10.0)) / 10.0;
             b.cRateB += int(g.lvl * 0.8 * (g.percent[1] / 10.0)) / 10.0;
             b.cBrcP += int(g.lvl / 20.0 * (g.percent[2] / 10.0)) / 10.0;
-            hpAdd += tAgi * (int(int(g.lvl * 0.05) * (g.percent[3] / 10.0)) / 10.0);
+            hpAdd += tAgi * (int(g.lvl * 0.05 * (g.percent[3] / 10.0)) / 10.0);
             if (g.isMyst) b.myst |= MYST_REFRACT;
             break;
         case GEAR_PLATE:
