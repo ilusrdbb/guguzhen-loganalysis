@@ -1386,8 +1386,6 @@ void readConfig(const char* fileName)
     {
         rankLevel = 0;
     }
-    printf("auraMax: %d\n", auraMax);
-    printf("rankLevel: %d\n", rankLevel);
 
     lastPc = NULL;
     if (!readPlayer(fp, myself))
