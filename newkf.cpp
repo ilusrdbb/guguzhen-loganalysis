@@ -389,6 +389,7 @@ double crtRate[NPC_COUNT][2] = { {1.0, 1.0}, {1.0, 1.0}, {0.0, 1.0}, {3.0, 1.0},
                              {4.0, 1.0}};
 
 int auraMax;
+int rankLevel;
 Player myself;
 int totalAttr;
 std::vector<NonPlayer> npcEnemy;
@@ -1381,6 +1382,12 @@ void readConfig(const char* fileName)
         printf("Error reading aura data\n");
         exit(-1);
     }
+    if (fscanf(fp, "%d", &rankLevel) != 1)
+    {
+        rankLevel = 0;
+    }
+    printf("auraMax: %d\n", auraMax);
+    printf("rankLevel: %d\n", rankLevel);
 
     lastPc = NULL;
     if (!readPlayer(fp, myself))
@@ -2519,6 +2526,22 @@ BResult calcBattle(const BStat& attacker, const BStat& defender, bool showDetail
     BStat b[2];
     b[0] = attacker;
     b[1] = defender;
+
+    if (defMode == 0)
+    {
+        if (b[0].atkLvl > 0 && b[0].defLvl > 0 && rankLevel < 0)
+        {
+            b[0].atkLvl -= rankLevel;
+            b[0].defLvl -= rankLevel;
+        }
+        if (b[1].atkLvl > 0 && b[1].defLvl > 0 && rankLevel > 0)
+        {
+            b[1].atkLvl += rankLevel;
+            b[1].defLvl += rankLevel;
+        }
+    }
+
+
     if (rseed == NULL) rseed = &rseedGlobal;
 
     for (int i = 0; i < 2; ++i)
