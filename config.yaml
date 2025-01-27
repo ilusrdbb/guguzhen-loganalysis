@@ -51,7 +51,7 @@ is_search_level: false
 # 目前仅支持https://kf.miaola.work域名的cookie
 cookie: ''
 # 当is_search_level开启时，对方的幻影等级
-shadow_level: 450
+shadow_level: 500
 # 当is_search_level开启时，网络请求时的代理地址，由于咕咕镇机房部署在国外，建议使用代理提升访问速度
 # 注意仅支持http代理，例'http://127.0.0.1:1081'，填空不做代理
 proxy_url: ''
