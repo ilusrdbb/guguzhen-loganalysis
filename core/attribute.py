@@ -133,9 +133,9 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 附加魔攻
     gear_add = 0
     if gear_list[1] == 'GLOVES':
-        gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[1]) / 100
+        gear_add += int(gear_level_list[1]) * 10 * int(config.read_gear('gear_config')['GLOVES'].split(' ')[1]) / 100
     if gear_list[0] == 'STAFF':
-        gear_add += int(gear_level_list[0]) * 10 * int(config.read_config('gear_config')['STAFF'].split(' ')[1]) / 100
+        gear_add += int(gear_level_list[0]) * 10 * int(config.read_gear('gear_config')['STAFF'].split(' ')[1]) / 100
     base_matk -= gear_add
     # 许愿池
     base_matk -= int(config.read_config('wish_config').split(' ')[6]) * 5
@@ -145,17 +145,17 @@ def cal_battle_int(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 百分比魔攻
     gear_mul = 1
     if gear_list[0] == 'COLORFUL':
-        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_config('gear_config')['COLORFUL'].split(' ')[1]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_gear('gear_config')['COLORFUL'].split(' ')[1]) / 10000
     if gear_list[0] == 'DAGGER':
-        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_config('gear_config')['DAGGER'].split(' ')[1]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_gear('gear_config')['DAGGER'].split(' ')[1]) / 10000
     if gear_list[1] == 'BRACELET':
-        gear_mul += (int(gear_level_list[1]) / 5 + 1) * int(config.read_config('gear_config')['BRACELET'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[1]) / 5 + 1) * int(config.read_gear('gear_config')['BRACELET'].split(' ')[0]) / 10000
     if gear_list[0] == 'LIMPIDWAND':
-        gear_mul += (int(gear_level_list[0]) / 5 + 20) * int(config.read_config('gear_config')['LIMPIDWAND'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 20) * int(config.read_gear('gear_config')['LIMPIDWAND'].split(' ')[0]) / 10000
     if gear_list[0] == 'WAND':
-        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_config('gear_config')['WAND'].split(' ')[0]) / 10000
-        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_config('gear_config')['WAND'].split(' ')[1]) / 10000
-        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_config('gear_config')['WAND'].split(' ')[2]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_gear('gear_config')['WAND'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_gear('gear_config')['WAND'].split(' ')[1]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5) * int(config.read_gear('gear_config')['WAND'].split(' ')[2]) / 10000
     # 加点，每点智力有多少魔攻
     kf_level = enemy_data.kf_level
     if kf_level >= 2000:
@@ -257,12 +257,12 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 附加物攻
     gear_add = 0
     if gear_list[1] == 'GLOVES':
-        gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[1]) * 10 * int(config.read_gear('gear_config')['GLOVES'].split(' ')[0]) / 100
     if gear_list[0] == 'CLAYMORE':
-        gear_add += int(gear_level_list[0]) * 20 * int(config.read_config('gear_config')['CLAYMORE'].split(' ')[0]) / 100
-        gear_add += int(gear_level_list[0]) * 20 * int(config.read_config('gear_config')['CLAYMORE'].split(' ')[1]) / 100
+        gear_add += int(gear_level_list[0]) * 20 * int(config.read_gear('gear_config')['CLAYMORE'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[0]) * 20 * int(config.read_gear('gear_config')['CLAYMORE'].split(' ')[1]) / 100
     if gear_list[0] == 'STAFF':
-        gear_add += int(gear_level_list[0]) * 10 * int(config.read_config('gear_config')['STAFF'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[0]) * 10 * int(config.read_gear('gear_config')['STAFF'].split(' ')[0]) / 100
     base_patk -= gear_add
     # 许愿池
     base_patk -= int(config.read_config('wish_config').split(' ')[6]) * 5
@@ -272,17 +272,17 @@ def cal_battle_str(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 百分比物攻
     gear_mul = 1
     if gear_list[0] == 'COLORFUL':
-        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_config('gear_config')['COLORFUL'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_gear('gear_config')['COLORFUL'].split(' ')[0]) / 10000
     if gear_list[0] == 'SPEAR':
-        gear_mul += (int(gear_level_list[0]) / 5 + 50) * int(config.read_config('gear_config')['SPEAR'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 50) * int(config.read_gear('gear_config')['SPEAR'].split(' ')[0]) / 10000
     if gear_list[0] == 'CLAYMORE':
-        gear_mul += (int(gear_level_list[0]) / 5 + 30) * int(config.read_config('gear_config')['CLAYMORE'].split(' ')[2]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 30) * int(config.read_gear('gear_config')['CLAYMORE'].split(' ')[2]) / 10000
     if gear_list[0] == 'DAGGER':
-        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_config('gear_config')['DAGGER'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 10) * int(config.read_gear('gear_config')['DAGGER'].split(' ')[0]) / 10000
     if gear_list[0] == 'ASSBOW':
-        gear_mul += (int(gear_level_list[0]) / 5 + 30) * int(config.read_config('gear_config')['ASSBOW'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 30) * int(config.read_gear('gear_config')['ASSBOW'].split(' ')[0]) / 10000
     if gear_list[0] == 'BLADE':
-        gear_mul += (int(gear_level_list[0]) / 5 + 20) * int(config.read_config('gear_config')['BLADE'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[0]) / 5 + 20) * int(config.read_gear('gear_config')['BLADE'].split(' ')[0]) / 10000
     # 加点，每点力量有多少物攻
     kf_level = enemy_data.kf_level
     if kf_level >= 2000:
@@ -347,6 +347,10 @@ def get_level_ratio(enemy_data, level_type):
     my_kf_level = enemy_data.my_kf_level
     if my_kf_level >= 2000:
         my_kf_level = 2000
+    if config.read_config('rank_level') > 0:
+        enemy_kf_level += config.read_config('rank_level') * 100
+    if config.read_config('rank_level') < 0:
+        my_kf_level += config.read_config('rank_level') * 100
     if enemy_kf_level > my_kf_level and level_type == 'attack':
         return 1 + 0.03 * int((enemy_kf_level - my_kf_level) / 100)
     if my_kf_level > enemy_kf_level and level_type == 'defense':
@@ -604,21 +608,21 @@ def cal_sld(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 附加护盾
     gear_add = 0
     if gear_list[1] == 'BRACELET':
-        gear_add += int(gear_level_list[1]) * 20 * int(config.read_config('gear_config')['BRACELET'].split(' ')[2]) / 100
+        gear_add += int(gear_level_list[1]) * 20 * int(config.read_gear('gear_config')['BRACELET'].split(' ')[2]) / 100
     if gear_list[2] == 'CLOAK':
-        gear_add += int(gear_level_list[2]) * 50 * int(config.read_config('gear_config')['CLOAK'].split(' ')[3]) / 100
+        gear_add += int(gear_level_list[2]) * 50 * int(config.read_gear('gear_config')['CLOAK'].split(' ')[3]) / 100
     if gear_list[2] == 'CAPE':
-        gear_add += int(gear_level_list[2]) * 100 * int(config.read_config('gear_config')['CAPE'].split(' ')[1]) / 100
+        gear_add += int(gear_level_list[2]) * 100 * int(config.read_gear('gear_config')['CAPE'].split(' ')[1]) / 100
     if gear_list[3] == 'TIARA':
-        gear_add += int(gear_level_list[3]) * 20 * int(config.read_config('gear_config')['TIARA'].split(' ')[2]) / 100
+        gear_add += int(gear_level_list[3]) * 20 * int(config.read_gear('gear_config')['TIARA'].split(' ')[2]) / 100
     # 装备 百分比护盾
     gear_mul = 1
     if gear_list[2] == 'CLOAK':
-        gear_mul += (int(gear_level_list[2]) / 5 + 25) * int(config.read_config('gear_config')['CLOAK'].split(' ')[2]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 25) * int(config.read_gear('gear_config')['CLOAK'].split(' ')[2]) / 10000
     if gear_list[2] == 'CAPE':
-        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['CAPE'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_gear('gear_config')['CAPE'].split(' ')[0]) / 10000
     if gear_list[3] == 'TIARA':
-        gear_mul += int(gear_level_list[3]) / 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[1]) / 10000
+        gear_mul += int(gear_level_list[3]) / 5 * int(config.read_gear('gear_config')['TIARA'].split(' ')[1]) / 10000
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'SLD') / 100
@@ -748,38 +752,38 @@ def cal_hp(enemy_data, battle_data, attr_data, aumlet_str):
     # 装备 附加生命
     gear_add = 0
     if gear_list[1] == 'GLOVES':
-        gear_add += int(gear_level_list[1]) * 10 * int(config.read_config('gear_config')['GLOVES'].split(' ')[3]) / 100
+        gear_add += int(gear_level_list[1]) * 10 * int(config.read_gear('gear_config')['GLOVES'].split(' ')[3]) / 100
     # 根据箭头大致加点
     t_str = get_about_point(icon_list[0], attr_data.final_apple_point, 'str', attr_data.t_str)
     t_agi = get_about_point(icon_list[1], attr_data.final_apple_point, 'agi', None)
     t_vit = get_about_point(icon_list[3], attr_data.final_apple_point, 'vit', None)
     t_mnd = get_about_point(icon_list[5], attr_data.final_apple_point, 'mnd', None)
     if gear_list[1] == 'DEVOUR':
-        gear_add += t_str * int(gear_level_list[1]) * 0.08 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[2]) / 100
+        gear_add += t_str * int(gear_level_list[1]) * 0.08 * int(config.read_gear('gear_config')['DEVOUR'].split(' ')[2]) / 100
     if gear_list[1] == 'REFRACT':
-        gear_add += t_agi * int(gear_level_list[1]) * 0.05 * int(config.read_config('gear_config')['REFRACT'].split(' ')[3]) / 100
+        gear_add += t_agi * int(gear_level_list[1]) * 0.05 * int(config.read_gear('gear_config')['REFRACT'].split(' ')[3]) / 100
     if gear_list[2] == 'CLOAK':
-        gear_add += int(gear_level_list[2]) * 10 * int(config.read_config('gear_config')['CLOAK'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[2]) * 10 * int(config.read_gear('gear_config')['CLOAK'].split(' ')[0]) / 100
     if gear_list[3] == 'SCARF':
-        gear_add += int(gear_level_list[3]) * 10 * int(config.read_config('gear_config')['SCARF'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[3]) * 10 * int(config.read_gear('gear_config')['SCARF'].split(' ')[0]) / 100
     if gear_list[3] == 'TIARA':
-        gear_add += int(gear_level_list[3]) * 5 * int(config.read_config('gear_config')['TIARA'].split(' ')[0]) / 100
+        gear_add += int(gear_level_list[3]) * 5 * int(config.read_gear('gear_config')['TIARA'].split(' ')[0]) / 100
     if gear_list[3] == 'RIBBON':
-        gear_add += t_vit * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[2]) / 100
-        gear_add += t_mnd * int(gear_level_list[3]) / 30 * int(config.read_config('gear_config')['RIBBON'].split(' ')[3]) / 100
+        gear_add += t_vit * int(gear_level_list[3]) / 30 * int(config.read_gear('gear_config')['RIBBON'].split(' ')[2]) / 100
+        gear_add += t_mnd * int(gear_level_list[3]) / 30 * int(config.read_gear('gear_config')['RIBBON'].split(' ')[3]) / 100
     if gear_list[3] == 'HUNT':
-        gear_add += t_str * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[1]) / 100
-        gear_add += t_agi * int(gear_level_list[3]) * 0.08 * int(config.read_config('gear_config')['HUNT'].split(' ')[2]) / 100
+        gear_add += t_str * int(gear_level_list[3]) * 0.08 * int(config.read_gear('gear_config')['HUNT'].split(' ')[1]) / 100
+        gear_add += t_agi * int(gear_level_list[3]) * 0.08 * int(config.read_gear('gear_config')['HUNT'].split(' ')[2]) / 100
     # 装备 百分比生命
     gear_mul = 1
     if gear_list[1] == 'DEVOUR':
-        gear_mul += int(gear_level_list[1]) * 0.07 * int(config.read_config('gear_config')['DEVOUR'].split(' ')[3]) / 10000
+        gear_mul += int(gear_level_list[1]) * 0.07 * int(config.read_gear('gear_config')['DEVOUR'].split(' ')[3]) / 10000
     if gear_list[2] == 'THORN':
-        gear_mul += (int(gear_level_list[2]) / 5 + 20) * int(config.read_config('gear_config')['THORN'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 20) * int(config.read_gear('gear_config')['THORN'].split(' ')[0]) / 10000
     if gear_list[2] == 'WOOD':
-        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_config('gear_config')['WOOD'].split(' ')[0]) / 10000
+        gear_mul += (int(gear_level_list[2]) / 5 + 50) * int(config.read_gear('gear_config')['WOOD'].split(' ')[0]) / 10000
     if gear_list[3] == 'HUNT':
-        gear_mul += int(gear_level_list[3]) * 0.06 * int(config.read_config('gear_config')['HUNT'].split(' ')[3]) / 10000
+        gear_mul += int(gear_level_list[3]) * 0.06 * int(config.read_gear('gear_config')['HUNT'].split(' ')[3]) / 10000
     # 最后乘算因素
     final_ratio = 1
     final_ratio += aumlet_from_str(aumlet_str, 'HP') / 100

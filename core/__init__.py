@@ -6,9 +6,10 @@ from core import config, util, enemy, battle, sql, attribute, template
 
 
 def start():
-    print('Version 2.9.6')
+    print('Version 2.10.0')
     # 加载配置文件
     config._init()
+    config.gear_init()
     # 加载模板
     template_list = template.init_template()
     # 加载系数缓存数据库文件
@@ -33,7 +34,7 @@ def start():
         # 争夺等级
         enemy_data.kf_level = w_dict.get(enemy_data.enemy_name).get('kf_level')
         # 初始化战斗数据
-        battle_data = battle.Battle(enemy_data.battle_log)
+        battle_data = battle.Battle(enemy_data.battle_log, enemy_data.enemy_card)
         # 获取护符
         aumlet_str = build_aumlet_str(enemy_data.enemy_card, battle_data.gear_list[0])
         # 模板匹配
@@ -74,7 +75,7 @@ def start():
 def build_eight_line(battle_data):
     return battle_data.gear_list[3] + ' ' \
            + battle_data.gear_level_list[3] + ' ' \
-           + config.read_config('gear_config')[battle_data.gear_list[3]] + ' ' \
+           + config.read_gear('gear_config')[battle_data.gear_list[3]] + ' ' \
            + battle_data.gear_mystery_list[3]
 
 
@@ -82,7 +83,7 @@ def build_eight_line(battle_data):
 def build_seven_line(battle_data):
     return battle_data.gear_list[2] + ' ' \
            + battle_data.gear_level_list[2] + ' ' \
-           + config.read_config('gear_config')[battle_data.gear_list[2]] + ' ' \
+           + config.read_gear('gear_config')[battle_data.gear_list[2]] + ' ' \
            + battle_data.gear_mystery_list[2]
 
 
@@ -90,7 +91,7 @@ def build_seven_line(battle_data):
 def build_six_line(battle_data):
     return battle_data.gear_list[1] + ' ' \
            + battle_data.gear_level_list[1] + ' ' \
-           + config.read_config('gear_config')[battle_data.gear_list[1]] + ' ' \
+           + config.read_gear('gear_config')[battle_data.gear_list[1]] + ' ' \
            + battle_data.gear_mystery_list[1]
 
 
@@ -98,7 +99,7 @@ def build_six_line(battle_data):
 def build_five_line(battle_data):
     return battle_data.gear_list[0] + ' ' \
         + battle_data.gear_level_list[0] + ' ' \
-        + config.read_config('gear_config')[battle_data.gear_list[0]] + ' ' \
+        + config.read_gear('gear_config')[battle_data.gear_list[0]] + ' ' \
         + battle_data.gear_mystery_list[0]
 
 

@@ -8,6 +8,8 @@ min_card_level: 840
 max_kf_level: 1400
 # 自身争夺等级，当分析战斗记录时，用于计算进攻等级差带来的伤害影响，目前最高争夺加成等级为2000
 my_kf_level: 1400
+# 段位强化等级 正数强化对方 负数强化自身 当分析战斗记录时，此项影响对方伤害计算
+rank_level: 2
 # 自身技能、暴击抵抗，同上用于分析战斗记录，目前上限为3
 skl_def: 0
 crt_def: 0
@@ -33,44 +35,8 @@ amulet_config:
   YA: 'STR 80 AGI 80 INT 80 VIT 60 MND 60 HP 10 SPD 10 REC 10 LCH 10 PATK 10 CRT 10 SKL 10 PDEF 10 MDEF 10 AAA 8'
 # 默认许愿池
 wish_config: '100 100 100 100 100 500 500 500 500 100 100 100 100 100'
-# 无视颜色默认携带神秘的装备，未填写的装备只有红装才会拥有神秘
-default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'THORN', 'DAGGER', 'WAND',
-                       'LIMPIDWAND', 'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL',
-                       'CLOAK', 'HUNT', 'REFRACT', 'FIERCE']
 # 默认成长值
 default_g: 100000
-# 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
-gear_config:
-  STAFF: '150 150 150 150'
-  BLADE: '100 150 150 130'
-  ASSBOW: '100 150 150 120'
-  DAGGER: '100 130 150 150'
-  WAND: '120 120 130 150'
-  SHIELD: '100 150 130 140'
-  CLAYMORE: '110 110 150 150'
-  SPEAR: '100 150 150 120'
-  GLOVES: '150 150 150 150'
-  BRACELET: '150 150 100 150'
-  VULTURE: '120 120 130 150'
-  CLOAK: '100 120 150 150'
-  THORN: '150 100 120 150'
-  WOOD: '150 120 120 130'
-  CAPE: '150 150 150 100'
-  SCARF: '150 150 150 150'
-  TIARA: '150 150 150 100'
-  RIBBON: '100 150 150 150'
-  RING: '100 150 150 150'
-  DEVOUR: '100 150 150 150'
-  SWORD: '150 150 150 150'
-  BOW: '150 150 150 150'
-  PLATE: '150 150 150 150'
-  LEATHER: '150 150 150 150'
-  CLOTH: '150 150 150 150'
-  COLORFUL: '120 100 150 150'
-  HUNT: '150 100 150 150'
-  LIMPIDWAND: '100 150 150 120'
-  REFRACT: '120 100 150 150'
-  FIERCE: '100 150 150 150'
 # 是否加入权重，会根据出现次数加入w值，目前匹配池不平均建议开启
 is_add_w: true
 # 指定雅的模式 0白天1黑夜
@@ -126,103 +92,6 @@ int_prop_u: 0.4
 int_prop_d: 0.2
 # 智力双下 智力在全部点数中的占比，此值必须大于0小于等于0.1
 int_prop_dd: 0.001
-
-
-# 固定加点模板列表 符合模板的会无视推测过程按照point值加点
-# enemy 匹配具体玩家名称 如果匹配全部则填空字符串''
-# card 匹配卡片 如果匹配全部则填空字符串''
-# gear 匹配四件装备 如匹配任意装备则填NONE
-# attribute 匹配六围加点箭头 如匹配任意箭头则填any dd双下d单下u单上du双上
-# 如果有多个符合的模板会按照第一个模板配置 下例
-template:
-  - enemy: 'ilusrdbb'
-    card: 'AI'
-    gear: 'BOW NONE NONE NONE'
-    attribute: 'any any any any any any'
-    point: '1 1 114 1 514 1'
-  - enemy: ''
-    card: ''
-    gear: 'SWORD GLOVES PLATE SCARF'
-    attribute: 'dd d u du any any'
-    point: '1 1919 1 810 1 1'
-
-
-# 装备映射
-# 如果是自定义主题的装备，需要在这里补充映射
-gear_map:
-  探险者短杖: 'STAFF'
-  狂信者的荣誉之刃: 'BLADE'
-  反叛者的刺杀弓: 'ASSBOW'
-  幽梦匕首: 'DAGGER'
-  光辉法杖: 'WAND'
-  荆棘剑盾: 'SHIELD'
-  陨铁重剑: 'CLAYMORE'
-  饮血长枪: 'SPEAR'
-  探险者手套: 'GLOVES'
-  命师的传承手环: 'BRACELET'
-  秃鹫手套: 'VULTURE'
-  旅法师的灵光袍: 'CLOAK'
-  战线支撑者的荆棘重甲: 'THORN'
-  复苏木甲: 'WOOD'
-  挑战斗篷: 'CAPE'
-  探险者头巾: 'SCARF'
-  占星师的发饰: 'TIARA'
-  天使缎带: 'RIBBON'
-  海星戒指: 'RING'
-  噬魔戒指: 'DEVOUR'
-  探险者之剑: 'SWORD'
-  探险者短弓: 'BOW'
-  探险者铁甲: 'PLATE'
-  探险者皮甲: 'LEATHER'
-  探险者布甲: 'CLOTH'
-  萌爪耳钉: 'RIBBON'
-  荆棘盾剑: 'SHIELD'
-  饮血魔剑: 'SPEAR'
-  探险者手环: 'GLOVES'
-  秃鹫手环: 'VULTURE'
-  复苏战衣: 'WOOD'
-  探险者耳环: 'SCARF'
-  占星师的耳饰: 'TIARA'
-  彩金长剑: 'COLORFUL'
-  香木法杖: 'STAFF'
-  妖刀血鸦: 'BLADE'
-  深渊之弓: 'ASSBOW'
-  黑曜石天黑剑: 'DAGGER'
-  棒棒糖手杖: 'WAND'
-  盖亚之斧: 'SHIELD'
-  勇气星核剑: 'CLAYMORE'
-  混沌之刃: 'SPEAR'
-  毁灭之伤冥神枪: 'SPEAR'
-  旅者手镯: 'GLOVES'
-  旅者拳套: 'GLOVES'
-  睿智手镯: 'BRACELET'
-  朋克手镯: 'VULTURE'
-  深红爪: 'VULTURE'
-  魔导师的长袍: 'CLOAK'
-  霸王树之棘针铠: 'THORN'
-  翠绿灵衣: 'WOOD'
-  黑玛瑙之祈装衣: 'CAPE'
-  旅者耳环: 'SCARF'
-  旅者头巾: 'SCARF'
-  海神耳饰: 'TIARA'
-  樱花的月夜簪: 'TIARA'
-  精灵王护石: 'RIBBON'
-  细冰姬的蝴蝶结: 'RIBBON'
-  永恒绿戒: 'RING'
-  深结晶变异水晶: 'DEVOUR'
-  旅人剑: 'SWORD'
-  猎人弓: 'BOW'
-  重金属护甲: 'PLATE'
-  皮革工作服: 'LEATHER'
-  旅者长袍: 'CLOTH'
-  辉光剑雅德玛斯: 'COLORFUL'
-  猎魔耳环: 'HUNT'
-  清澄长杖: 'LIMPIDWAND'
-  冰树杖弗洛斯特斯塔弗: 'LIMPIDWAND'
-  辉光剑征服者: 'COLORFUL'
-  狱天耳环: 'HUNT'
-  折光戒指: 'REFRACT'
-  凶神耳环: 'FIERCE'
 
 
 # 下面的设置最好不要乱动，除非你对游戏以及源码有足够的了解

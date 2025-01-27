@@ -16,3 +16,15 @@ def _init():
 # 读取配置文件的值
 def read_config(key):
     return config_data.get(key)
+
+
+# 初始化加载装备yaml配置文件
+def gear_init():
+    with open('gear.yaml', 'r', encoding='utf-8') as f:
+        global gear_data
+        gear_data = yaml.safe_load(f)
+
+
+# 读取装备配置文件的值
+def read_gear(key):
+    return gear_data.get(key)

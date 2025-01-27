@@ -8,11 +8,12 @@ import re
 from lxml import html
 
 from core import config
+from core.gear import Gear
 
 
 class Battle:
     # 初始化
-    def __init__(self, battle_log):
+    def __init__(self, battle_log, enemy_card):
         super().__init__()
         # 解析html
         battle_log_dom = html.fromstring(battle_log)
@@ -23,11 +24,11 @@ class Battle:
         # 自身天赋
         self.my_talent_list = self.get_my_talent_list(battle_log_dom)
         # 装备
-        self.gear_list = self.get_gear_list(battle_log_dom, 'enemy')
+        self.gear_list = self.get_gear_list(battle_log_dom, self.attr_list, self.talent_list, enemy_card)
         # 装备等级
         self.gear_level_list = self.get_gear_level_list(battle_log_dom)
         # 装备是否神秘 0否1是
-        self.gear_mystery_list = self.get_gear_mystery_list(battle_log_dom, self.gear_list, 'enemy')
+        self.gear_mystery_list = self.get_gear_mystery_list(battle_log_dom, self.gear_list)
         # 对手最大生命
         self.hp = int(battle_log_dom.xpath(config.read_config('xpath_config')['hp'])[0].replace('生命', ''))
         # 对手最大护盾
@@ -66,11 +67,8 @@ class Battle:
         self.cache_p_damage = 0
         # 解析战斗记录
         if config.read_config('is_analyse_battle'):
-            # 神秘斗篷判断，默认红色神秘
-            my_gear_list = self.get_gear_list(battle_log_dom, 'my')
-            my_mystery_list = self.get_gear_mystery_list(battle_log_dom, my_gear_list, 'my')
-            if my_gear_list[2] == 'CAPE' and my_mystery_list[2] == 1:
-                self.is_cape = True
+            # 神秘斗篷判断
+            self.is_cape = config.read_gear('is_mystery_cape')
             # 自身卡片
             self.my_card = self.get_my_card(battle_log_dom.xpath(config.read_config('xpath_config')['mycard'])[0])
             # 自身生命护盾
@@ -123,35 +121,27 @@ class Battle:
 
     # 获取装备神秘
     @classmethod
-    def get_gear_mystery_list(cls, battle_log_dom, gear_list, type):
+    def get_gear_mystery_list(cls, battle_log_dom, gear_list):
         result_list = []
         try:
-            if type == 'enemy':
-                color_list = [int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[4])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[5])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[6])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[7])[0][-1])]
-            else:
-                color_list = [int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[0])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[1])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[2])[0][-1]),
-                              int(re.findall(config.read_config('match_config')['color'],
-                                             battle_log_dom.xpath(config.read_config('xpath_config')['color'])[3])[0][-1])]
+            color_list = [int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[4])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[5])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[6])[0][-1]),
+                          int(re.findall(config.read_config('match_config')['color'],
+                                         battle_log_dom.xpath(config.read_config('xpath_config')['color'])[7])[0][-1])]
         except:
             color_list = [0, 0, 0, 0]
         for i in range(0, len(gear_list)):
             gear = gear_list[i]
             color = color_list[i]
-            if gear in config.read_config('default_gear_mystery'):
+            if gear in config.read_gear('default_gear_mystery'):
                 result_list.append('1')
             elif color == 5:
+                result_list.append('1')
+            elif config.read_gear('all_mystery'):
                 result_list.append('1')
             else:
                 result_list.append('0')
@@ -160,24 +150,28 @@ class Battle:
     # 获取装备等级list
     @classmethod
     def get_gear_level_list(cls, battle_log_dom):
-        return [battle_log_dom.xpath(config.read_config('xpath_config')['level'])[4],
-                battle_log_dom.xpath(config.read_config('xpath_config')['level'])[5],
-                battle_log_dom.xpath(config.read_config('xpath_config')['level'])[6],
-                battle_log_dom.xpath(config.read_config('xpath_config')['level'])[7]]
+        try:
+            return [battle_log_dom.xpath(config.read_config('xpath_config')['level'])[4],
+                    battle_log_dom.xpath(config.read_config('xpath_config')['level'])[5],
+                    battle_log_dom.xpath(config.read_config('xpath_config')['level'])[6],
+                    battle_log_dom.xpath(config.read_config('xpath_config')['level'])[7]]
+        except:
+            return [config.read_gear('gear_level'),
+                    config.read_gear('gear_level'),
+                    config.read_gear('gear_level'),
+                    config.read_gear('gear_level')]
 
     # 获取装备list
     @classmethod
-    def get_gear_list(cls, battle_log_dom, type):
-        if type == 'enemy':
-            return [config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[4]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[5]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[6]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[7]]]
-        else:
-            return [config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[0]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[1]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[2]],
-                    config.read_config('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[3]]]
+    def get_gear_list(cls, battle_log_dom, attr_list, talent_list, enemy_card):
+        try:
+            return [config.read_gear('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[4]],
+                    config.read_gear('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[5]],
+                    config.read_gear('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[6]],
+                    config.read_gear('gear_map')[battle_log_dom.xpath(config.read_config('xpath_config')['gear'])[7]]]
+        except:
+            # 模板匹配
+            return Gear(attr_list, talent_list, enemy_card).get_match_gear()
 
     # 获取六围list
     @classmethod

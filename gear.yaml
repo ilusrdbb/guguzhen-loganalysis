@@ -1,0 +1,205 @@
+# 装备默认百分比，觉得欧狗多就设置的高些，注意设置的太高胜率容易尿崩
+gear_config:
+  STAFF: '150 150 150 150'
+  BLADE: '100 150 150 130'
+  ASSBOW: '100 150 150 120'
+  DAGGER: '100 130 150 150'
+  WAND: '120 120 130 150'
+  SHIELD: '100 150 130 140'
+  CLAYMORE: '110 110 150 150'
+  SPEAR: '100 150 150 120'
+  GLOVES: '150 150 150 150'
+  BRACELET: '150 150 100 150'
+  VULTURE: '120 120 130 150'
+  CLOAK: '100 120 150 150'
+  THORN: '150 100 120 150'
+  WOOD: '150 120 120 130'
+  CAPE: '150 150 150 100'
+  SCARF: '150 150 150 150'
+  TIARA: '150 150 150 100'
+  RIBBON: '100 150 150 150'
+  RING: '100 150 150 150'
+  DEVOUR: '100 150 150 150'
+  SWORD: '150 150 150 150'
+  BOW: '150 150 150 150'
+  PLATE: '150 150 150 150'
+  LEATHER: '150 150 150 150'
+  CLOTH: '150 150 150 150'
+  COLORFUL: '120 100 150 150'
+  HUNT: '150 100 150 150'
+  LIMPIDWAND: '100 150 150 120'
+  REFRACT: '120 100 150 150'
+  FIERCE: '100 150 150 150'
+# 无视颜色默认携带神秘的装备
+default_gear_mystery: ['SHIELD', 'CLAYMORE', 'SPEAR', 'THORN', 'DAGGER', 'WAND',
+                       'LIMPIDWAND', 'TIARA', 'RIBBON', 'RING', 'DEVOUR', 'COLORFUL',
+                       'CLOAK', 'HUNT', 'REFRACT', 'FIERCE']
+# 默认装备等级
+gear_level: 285
+# 是否默认装备都带神秘，如果不是则依照default_gear_mystery配置判断装备神秘
+all_mystery: false
+# 自身是否装备了神秘斗篷 当开启分析战斗记录时，此配置项会影响伤害算点
+is_mystery_cape: false
+
+
+# 装备模板 根据配置匹配装备 请根据自身环境进行配置
+# attribute 匹配六围加点箭头 格式['属性名1:箭头', '属性名2:箭头', ...] 属性名STR力量AGI敏捷INT智力SPR精神VIT体魄MND意志 箭头dd双下d单下u单上du双上
+# talent 匹配光环 格式['光环1', '光环2', ...]
+# mode 匹配模式and各个配置间（比如配置了两个光环，则对于这两个光环之间）都满足才能匹配or满足其中一条就能匹配 不填默认and 加点与光环大类别之间默认and匹配
+# gear 匹配四件装备 格式['武器', '手部', '身体', '头部']
+# 如果有多个符合的模板会按照第一个模板配置 如果没有模板匹配则按照全部配置中的第一个模板配置
+# 一些流派无法根据模板区分，比如重甲命斗篷命 剑盾伊长杖伊 剑盾冥枪冥，对于这种情况我只能说xyfnmsl
+template:
+  MO:
+    - talent: [ 'HOU' ]
+      gear: [ 'WAND', 'BRACELET', 'CLOAK', 'TIARA' ]
+    - talent: [ 'JUE', 'BO', 'REN' ]
+      gear: [ 'WAND', 'BRACELET', 'CLOAK', 'TIARA' ]
+    - attribute: [ 'INT:dd', 'INT:d' ]
+      mode: 'or'
+      gear: [ 'SHIELD', 'RING', 'CLOAK', 'TIARA' ]
+    - gear: [ 'SHIELD', 'BRACELET', 'CLOAK', 'TIARA' ]
+  LIN:
+    - attribute: [ 'STR:u', 'STR:du' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'DEVOUR', 'THORN', 'HUNT' ]
+    - gear: [ 'SHIELD', 'BRACELET', 'THORN', 'RIBBON' ]
+  AI:
+    - gear: [ 'DAGGER', 'VULTURE', 'THORN', 'HUNT' ]
+  MENG:
+    - gear: [ 'DAGGER', 'VULTURE', 'CLOAK', 'TIARA' ]
+  YI:
+    - attribute: [ 'STR:u', 'STR:du' ]
+      talent: [ 'XUE' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'VULTURE', 'THORN', 'HUNT' ]
+    - attribute: [ 'STR:u', 'STR:du' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'DEVOUR', 'THORN', 'HUNT' ]
+    - gear: [ 'SHIELD', 'BRACELET', 'THORN', 'HUNT' ]
+  WEI:
+    - talent: [ 'DUNH' ]
+      gear: [ 'SHIELD', 'DEVOUR', 'THORN', 'HUNT' ]
+    - attribute: [ 'STR:u', 'STR:d' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'REFRACT', 'THORN', 'HUNT' ]
+    - attribute: [ 'INT:du', 'SPR:du' ]
+      talent: [ 'PIAO' ]
+      gear: [ 'LIMPIDWAND', 'BRACELET', 'CLOAK', 'HUNT' ]
+    - attribute: [ 'INT:du', 'SPR:du' ]
+      gear: [ 'SHIELD', 'BRACELET', 'CLOAK', 'HUNT' ]
+    - attribute: [ 'INT:u', 'MND:du' ]
+      gear: [ 'SHIELD', 'BRACELET', 'THORN', 'HUNT' ]
+    - attribute: [ 'INT:u', 'MND:du' ]
+      gear: [ 'SHIELD', 'BRACELET', 'THORN', 'HUNT' ]
+    - talent: [ 'XUE' ]
+      gear: [ 'DAGGER', 'VULTURE', 'THORN', 'HUNT' ]
+    - gear: [ 'DAGGER', 'DEVOUR', 'THORN', 'HUNT' ]
+  MING:
+    - attribute: [ 'AGI:du' ]
+      gear: [ 'COLORFUL', 'REFRACT', 'CLOAK', 'HUNT' ]
+    - attribute: [ 'AGI:u', 'STR:u' ]
+      talent: [ 'FEI' ]
+      gear: [ 'ASSBOW', 'DEVOUR', 'THORN', 'HUNT' ]
+    - attribute: [ 'AGI:u' ]
+      gear: [ 'BLADE', 'DEVOUR', 'THORN', 'HUNT' ]
+    - gear: [ 'SHIELD', 'BRACELET', 'THORN', 'HUNT' ]
+  MIN:
+    - attribute: [ 'STR:u', 'STR:du' ]
+      mode: 'or'
+      gear: [ 'ASSBOW', 'REFRACT', 'THORN', 'HUNT' ]
+    - gear: [ 'COLORFUL', 'REFRACT', 'THORN', 'HUNT' ]
+  XI:
+    - attribute: [ 'STR:u', 'STR:du' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'VULTURE', 'THORN', 'HUNT' ]
+    - gear: [ 'COLORFUL', 'REFRACT', 'THORN', 'HUNT' ]
+  XIA:
+    - talent: [ 'DUNH' ]
+      gear: [ 'LIMPIDWAND', 'BRACELET', 'THORN', 'HUNT' ]
+    - gear: [ 'LIMPIDWAND', 'BRACELET', 'CLOAK', 'TIARA' ]
+  YA:
+    - attribute: [ 'INT:du' ]
+      gear: [ 'LIMPIDWAND', 'RING', 'CLOAK', 'TIARA' ]
+    - attribute: [ 'SPR:d', 'SPR:u', 'SPR:du' ]
+      mode: 'or'
+      gear: [ 'BLADE', 'REFRACT', 'CLOAK', 'HUNT' ]
+    - gear: [ 'BLADE', 'REFRACT', 'THORN', 'HUNT' ]
+
+
+# 装备映射
+# 如果是自定义主题的装备，需要在这里补充映射
+gear_map:
+  探险者短杖: 'STAFF'
+  狂信者的荣誉之刃: 'BLADE'
+  反叛者的刺杀弓: 'ASSBOW'
+  幽梦匕首: 'DAGGER'
+  光辉法杖: 'WAND'
+  荆棘剑盾: 'SHIELD'
+  陨铁重剑: 'CLAYMORE'
+  饮血长枪: 'SPEAR'
+  探险者手套: 'GLOVES'
+  命师的传承手环: 'BRACELET'
+  秃鹫手套: 'VULTURE'
+  旅法师的灵光袍: 'CLOAK'
+  战线支撑者的荆棘重甲: 'THORN'
+  复苏木甲: 'WOOD'
+  挑战斗篷: 'CAPE'
+  探险者头巾: 'SCARF'
+  占星师的发饰: 'TIARA'
+  天使缎带: 'RIBBON'
+  海星戒指: 'RING'
+  噬魔戒指: 'DEVOUR'
+  探险者之剑: 'SWORD'
+  探险者短弓: 'BOW'
+  探险者铁甲: 'PLATE'
+  探险者皮甲: 'LEATHER'
+  探险者布甲: 'CLOTH'
+  萌爪耳钉: 'RIBBON'
+  荆棘盾剑: 'SHIELD'
+  饮血魔剑: 'SPEAR'
+  探险者手环: 'GLOVES'
+  秃鹫手环: 'VULTURE'
+  复苏战衣: 'WOOD'
+  探险者耳环: 'SCARF'
+  占星师的耳饰: 'TIARA'
+  彩金长剑: 'COLORFUL'
+  香木法杖: 'STAFF'
+  妖刀血鸦: 'BLADE'
+  深渊之弓: 'ASSBOW'
+  黑曜石天黑剑: 'DAGGER'
+  棒棒糖手杖: 'WAND'
+  盖亚之斧: 'SHIELD'
+  勇气星核剑: 'CLAYMORE'
+  混沌之刃: 'SPEAR'
+  毁灭之伤冥神枪: 'SPEAR'
+  旅者手镯: 'GLOVES'
+  旅者拳套: 'GLOVES'
+  睿智手镯: 'BRACELET'
+  朋克手镯: 'VULTURE'
+  深红爪: 'VULTURE'
+  魔导师的长袍: 'CLOAK'
+  霸王树之棘针铠: 'THORN'
+  翠绿灵衣: 'WOOD'
+  黑玛瑙之祈装衣: 'CAPE'
+  旅者耳环: 'SCARF'
+  旅者头巾: 'SCARF'
+  海神耳饰: 'TIARA'
+  樱花的月夜簪: 'TIARA'
+  精灵王护石: 'RIBBON'
+  细冰姬的蝴蝶结: 'RIBBON'
+  永恒绿戒: 'RING'
+  深结晶变异水晶: 'DEVOUR'
+  旅人剑: 'SWORD'
+  猎人弓: 'BOW'
+  重金属护甲: 'PLATE'
+  皮革工作服: 'LEATHER'
+  旅者长袍: 'CLOTH'
+  辉光剑雅德玛斯: 'COLORFUL'
+  猎魔耳环: 'HUNT'
+  清澄长杖: 'LIMPIDWAND'
+  冰树杖弗洛斯特斯塔弗: 'LIMPIDWAND'
+  辉光剑征服者: 'COLORFUL'
+  狱天耳环: 'HUNT'
+  折光戒指: 'REFRACT'
+  凶神耳环: 'FIERCE'
