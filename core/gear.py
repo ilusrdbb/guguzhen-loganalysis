@@ -1,5 +1,3 @@
-import this
-
 from core import config
 
 
