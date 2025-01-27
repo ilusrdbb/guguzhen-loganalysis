@@ -109,6 +109,10 @@ template:
       mode: 'or'
       gear: [ 'ASSBOW', 'REFRACT', 'THORN', 'HUNT' ]
     - gear: [ 'COLORFUL', 'REFRACT', 'THORN', 'HUNT' ]
+  WU:
+    - talent: [ 'PEN' ]
+      gear: [ 'COLORFUL', 'REFRACT', 'THORN', 'HUNT' ]
+    - gear: [ 'BLADE', 'REFRACT', 'THORN', 'HUNT' ]
   XI:
     - attribute: [ 'STR:u', 'STR:du' ]
       mode: 'or'

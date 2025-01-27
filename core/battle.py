@@ -156,10 +156,10 @@ class Battle:
                     battle_log_dom.xpath(config.read_config('xpath_config')['level'])[6],
                     battle_log_dom.xpath(config.read_config('xpath_config')['level'])[7]]
         except:
-            return [config.read_gear('gear_level'),
-                    config.read_gear('gear_level'),
-                    config.read_gear('gear_level'),
-                    config.read_gear('gear_level')]
+            return [str(config.read_gear('gear_level')),
+                    str(config.read_gear('gear_level')),
+                    str(config.read_gear('gear_level')),
+                    str(config.read_gear('gear_level'))]
 
     # 获取装备list
     @classmethod
