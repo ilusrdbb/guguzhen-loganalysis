@@ -6,7 +6,7 @@ from core import config, util, enemy, battle, sql, attribute, template
 
 
 def start():
-    print('Version 2.10.0')
+    print('Version 2.10.1')
     # 加载配置文件
     config._init()
     config.gear_init()
