@@ -3973,7 +3973,8 @@ AttrScore calcScorePc(const BStat& stat, bool showDetail, bool showCI, int* rsee
                 }
             }
         }
-        double winRate = (weight >= 0) ? (numTests2 == draw ? 0.5 : 1.0 * win / (numTests2 - draw)) : (numTests2 == draw ? 0.5 : 1.0 * (numTests2 - draw - win) / (numTests2 - draw));
+        double winRate = (weight >= 0) ? (numTests2 == draw ? 0.5 : 1.0 * win / (numTests2 - draw))
+            : (numTests2 == draw ? 0.5 : 1.0 * (numTests2 - draw - win) / (numTests2 - draw));
         weight = fabs(weight);
         if (showDetail)
         {
