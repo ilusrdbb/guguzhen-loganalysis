@@ -2453,7 +2453,8 @@ inline int calcDefRate(double def, int defP, double brc, double cBrc, double brc
     int brcP = (int)(brc * (isDunh ? 0.65 : 1.0)) + (int)(cBrc * (isDunh ? 0.65 : 1.0));
     int r = int((isDian ? int(def * 1.3) : def) * (100 + defP - brcP));
     r = (r >= 0 ? r : r - 99) / 100 - int(brcA);
-    r = (r >= 0 ? r / 10 : isZhi ? 10 : -30);
+    r = r >= 0 ? r / 10 : -30;
+    r = (isZhi && r < 10) ? 10 : r;
     if (r > defMax) r = defMax;
     if (debug)
     {
