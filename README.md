@@ -2,9 +2,11 @@
 
 更新日志： https://kf.miaola.work/read.php?tid=976407&sf=aa2
 
-本工具分两个部分，咕咕镇收割机战斗记录转计算器PC数据工具、魔改b大的计算器。
+**计算器项目已拆分至：https://github.com/ilusrdbb/guguzhen-calculator **
 
-**如果只使用计算器，解压release的压缩包后，只需将压缩包内的newkf_64.exe覆盖至b大计算器的目录里，其他文件不用管**
+**由于目前战斗记录不显示装备且咕咕镇长时间未更新，本项目战斗记录转PC部分无限期停更**
+
+<del>本工具分两个部分，咕咕镇收割机战斗记录转计算器PC数据工具、魔改b大的计算器。
 
 ## 关于魔改计算器的说明:
 
@@ -22,7 +24,7 @@ b大计算器：https://kf.miaola.work/read.php?fid=86&tid=807309&sf=407
 
 野怪 史莱姆 SHI
 
-其他配置 GRIDSIZE 见release2.9.5版本说明或更新日志
+其他配置 GRIDSIZE 见release2.9.5版本说明或更新日志</del>
 
 ## 关于收割机战斗记录转计算器PC数据工具的说明:
 
